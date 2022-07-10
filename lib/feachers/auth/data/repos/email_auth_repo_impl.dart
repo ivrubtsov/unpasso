@@ -1,8 +1,19 @@
 import 'package:goal_app/feachers/auth/domain/repos/auth_repo.dart';
 import 'package:goal_app/feachers/auth/domain/repos/session_repo.dart';
 
-class AuthRepoImpl implements AuthRepo {
-  AuthRepoImpl(this.sessionRepo);
+class EmailAuthCreds extends AuthCredentials {
+  final String email;
+  final String password;
+  const EmailAuthCreds({
+    required this.email,
+    required this.password,
+  });
+  @override
+  List<Object?> get props => [email, password];
+}
+
+class EmailAuthRepoImpl implements AuthRepo {
+  EmailAuthRepoImpl(this.sessionRepo);
   @override
   SessionRepo sessionRepo;
 

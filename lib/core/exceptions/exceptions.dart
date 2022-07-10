@@ -3,8 +3,28 @@ abstract class DetailedException implements Exception {
   final String? message;
 }
 
+enum AuthExceptionType { wrongPassword, wrondEmail, unknown }
+
 class AuthException extends DetailedException {
-  AuthException(String? message) : super(message: message);
+  final AuthExceptionType? type;
+
+  AuthException(String? message, this.type) : super(message: message);
+
+  factory AuthException.type(AuthExceptionType type) {
+    String typeMessage;
+    switch (type) {
+      case AuthExceptionType.wrongPassword:
+        typeMessage = 'Wrong password';
+        break;
+      case AuthExceptionType.wrondEmail:
+        typeMessage = 'Wrong email';
+        break;
+      case AuthExceptionType.unknown:
+        typeMessage = 'Unknown error. Please try again later';
+        break;
+    }
+    return AuthException(typeMessage, type);
+  }
 }
 
 class ServerException extends DetailedException {}

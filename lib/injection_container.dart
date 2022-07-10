@@ -1,5 +1,5 @@
 import 'package:get_it/get_it.dart';
-import 'package:goal_app/feachers/auth/data/repos/auth_repo_impl.dart';
+import 'package:goal_app/feachers/auth/data/repos/email_auth_repo_impl.dart';
 import 'package:goal_app/feachers/auth/domain/repos/auth_repo.dart';
 import 'package:goal_app/feachers/auth/presentation/auth_cubit/auth_cubit.dart';
 import 'package:goal_app/feachers/auth/presentation/auth_screen/auth_screen.dart';
@@ -41,7 +41,7 @@ void init() {
 
   //! Репозитории
 
-  sl.registerLazySingleton<AuthRepo>(() => AuthRepoImpl(sl()));
+  sl.registerLazySingleton<AuthRepo>(() => EmailAuthRepoImpl(sl()));
 
   sl.registerLazySingleton<SessionRepo>(() => SessionRepoImpl());
 

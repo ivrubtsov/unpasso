@@ -30,14 +30,14 @@ class AuthScreen extends StatelessWidget {
               _TextField(
                 title: 'e-mail',
                 hintText: 'Enter e-mail',
-                onChanged: (value) {},
+                onChanged: model.changeEmail,
               ),
               const SizedBox(height: 15),
               // ТЕКСТОВОЕ ПОЛЕ ПАРОЛЬ
               _TextField(
                 title: 'password',
                 hintText: 'Enter password',
-                onChanged: (value) {},
+                onChanged: model.changePassword,
               ),
               // КНОПКА ЗАБЫЛИ ПАРОЛЬ
               const Align(
