@@ -39,7 +39,6 @@ class AuthScreenCubit extends Cubit<AuthScreenState> {
     } on AuthException catch (e) {
       ErrorPresentor.showError(
           context, e.message ?? 'Unknown error. Please try again later');
-      emit(state.copyWith(status: AuthScreenStateStatus.error));
     }
   }
 

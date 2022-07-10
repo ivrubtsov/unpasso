@@ -27,18 +27,25 @@ class RegisterScreen extends StatelessWidget {
                 style: AppFonts.header1,
               ),
               const SizedBox(height: 30),
+              // ТЕКСТОВОЕ ПОЛЕ ИМЯ
+              _TextField(
+                title: 'name',
+                hintText: 'Enter your name',
+                onChanged: model.changeName,
+              ),
+              const SizedBox(height: 15),
               // ТЕКСТОВОЕ ПОЛЕ EMAIL
               _TextField(
                 title: 'e-mail',
                 hintText: 'Enter e-mail',
-                onChanged: (value) {},
+                onChanged: model.changeEmail,
               ),
               const SizedBox(height: 15),
               // ТЕКСТОВОЕ ПОЛЕ ПАРОЛЬ
               _TextField(
                 title: 'password',
                 hintText: 'Enter password',
-                onChanged: (value) {},
+                onChanged: model.changePassword,
               ),
               const SizedBox(height: 5),
               const _PrivacyPolicyWidget(),
@@ -96,26 +103,35 @@ class _PrivacyPolicyWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = context.read<RegisterScreenCubit>();
-    return Row(
-      children: [
-        Checkbox(value: false, onChanged: (value) {}),
-        RichText(
-          text: TextSpan(
-            children: [
-              const TextSpan(
-                text: 'I agree to ',
-                style: TextStyle(color: Colors.black),
+    return BlocBuilder<RegisterScreenCubit, RegisterScreenState>(
+      builder: (context, state) {
+        return Row(
+          children: [
+            Checkbox(
+              value: state.isTermsAccepted,
+              onChanged: (value) {
+                model.changeTermsAcception(value ?? false);
+              },
+            ),
+            RichText(
+              text: TextSpan(
+                children: [
+                  const TextSpan(
+                    text: 'I agree to ',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  TextSpan(
+                    text: 'Terms and Privacy policy',
+                    style: const TextStyle(color: Colors.blue),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () => model.onPolicyPrivacyTapped(context),
+                  ),
+                ],
               ),
-              TextSpan(
-                text: 'Terms and Privacy policy',
-                style: const TextStyle(color: Colors.blue),
-                recognizer: TapGestureRecognizer()
-                  ..onTap = () => model.onPolicyPrivacyTapped(context),
-              ),
-            ],
-          ),
-        )
-      ],
+            )
+          ],
+        );
+      },
     );
   }
 }

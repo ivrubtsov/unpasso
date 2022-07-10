@@ -1,6 +1,6 @@
 part of 'auth_screen_cubit.dart';
 
-enum AuthScreenStateStatus { loading, loaded, error }
+enum AuthScreenStateStatus { loading, loaded }
 
 class AuthScreenState extends Equatable {
   final String email;
