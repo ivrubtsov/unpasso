@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:goal_app/dependency_injection.dart';
+import 'package:goal_app/injection_container.dart';
 import 'package:goal_app/feachers/auth/presentation/auth_screen/auth_screen.dart';
 import 'package:goal_app/feachers/auth/presentation/auth_screen/cubit/auth_screen_cubit.dart';
 import 'package:goal_app/feachers/auth/presentation/register_screen/cubit/register_screen_cubit.dart';
