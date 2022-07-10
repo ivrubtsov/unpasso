@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:goal_app/presentation/first_screen.dart';
+import 'package:goal_app/core/navigation/app_router.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(GoalsApp(
+    appRouter: AppRouter(),
+  ));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class GoalsApp extends StatelessWidget {
+  const GoalsApp({Key? key, required this.appRouter}) : super(key: key);
 
-  // This widget is the root of your application.
+  final AppRouter appRouter;
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(home: FirstScreen());
+    return MaterialApp(
+      initialRoute: appRouter.initialRoute,
+      onGenerateRoute: appRouter.onGenerateRoutes,
+    );
   }
 }

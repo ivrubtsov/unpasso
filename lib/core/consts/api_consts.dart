@@ -1,0 +1,3 @@
+class ApiConsts {
+  ApiConsts._();
+}
