@@ -30,8 +30,8 @@ class RegisterScreen extends StatelessWidget {
               const SizedBox(height: 30),
               // ТЕКСТОВОЕ ПОЛЕ ИМЯ
               _TextField(
-                title: 'name',
-                hintText: 'Enter your name',
+                title: 'username',
+                hintText: 'Enter username',
                 onChanged: model.changeName,
               ),
               const SizedBox(height: 15),

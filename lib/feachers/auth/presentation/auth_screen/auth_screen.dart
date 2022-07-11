@@ -29,8 +29,8 @@ class AuthScreen extends StatelessWidget {
               const SizedBox(height: 30),
               // ТЕКСТОВОЕ ПОЛЕ EMAIL
               _TextField(
-                title: 'e-mail',
-                hintText: 'Enter e-mail',
+                title: 'username',
+                hintText: 'Enter username',
                 onChanged: model.changeEmail,
               ),
               const SizedBox(height: 15),
