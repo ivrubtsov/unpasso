@@ -1,9 +1,7 @@
 class SessionData {
-  final String id;
-  final String email;
+  final int id;
 
   SessionData({
     required this.id,
-    required this.email,
   });
 }

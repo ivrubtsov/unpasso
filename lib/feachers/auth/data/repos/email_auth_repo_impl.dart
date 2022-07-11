@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:goal_app/core/consts/api_consts.dart';
 import 'package:goal_app/core/entities/user/user.dart';
+import 'package:goal_app/feachers/auth/domain/entities/session_data.dart';
 import 'package:goal_app/feachers/auth/domain/repos/auth_repo.dart';
 import 'package:goal_app/feachers/auth/domain/repos/session_repo.dart';
 
@@ -38,21 +39,38 @@ class EmailAuthRepoImpl implements AuthRepo {
   @override
   SessionRepo sessionRepo;
 
-  static final _basicAuth =
-      'Basic ${base64.encode(utf8.encode('user2:UOEPqllWEHAy4coyEYp*wYcB'))}';
-  static final _dio = Dio(BaseOptions(
-    headers: {
-      'authorization': _basicAuth,
-    },
-  ));
+  static Dio _dio({String? userName, String? password}) {
+    final n = userName ?? 'user2';
+    final p = password ?? 'UOEPqllWEHAy4coyEYp';
+
+    final basicAuth = 'Basic ${base64.encode(utf8.encode('$n:$p'))}';
+    return Dio(BaseOptions(
+      headers: {
+        'authorization': basicAuth,
+      },
+    ));
+  }
+
   @override
   Future<void> autorizeUser(AuthCredentials credentials) async {
     try {
-      final response = await _dio.get(
+      credentials as EmailAuthCreds;
+      final response = await _dio(
+        userName: credentials.email,
+        password: credentials.password,
+      ).get(
         ApiConsts.authUser,
       );
-    } on DioError {
-      throw AuthException.type(AuthExceptionType.unknown);
+      if (response.data == null) {
+        throw AuthException.type(AuthExceptionType.unknown);
+      }
+      final id = response.data['id'];
+      await sessionRepo.saveSessionData(SessionData(
+        id: id,
+      ));
+    } on DioError catch (e) {
+      throw AuthException.fromServerMessage(
+          e.response?.data['error_description']);
     }
   }
 
@@ -65,11 +83,16 @@ class EmailAuthRepoImpl implements AuthRepo {
         credentials.password,
         credentials.user.name,
       );
-      final response = await _dio.post(url);
+      final response = await _dio().post(url);
 
       if (response.data == null) {
         throw AuthException.type(AuthExceptionType.unknown);
+        // FIXME: Вообще должен возвращать id, который я буду сохранять в sessionData
       }
+      final id = response.data['id'];
+      sessionRepo.saveSessionData(SessionData(
+        id: id,
+      ));
     } on DioError catch (e) {
       throw AuthException.fromServerMessage(e.response?.data['message']);
     }

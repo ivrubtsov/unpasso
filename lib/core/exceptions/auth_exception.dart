@@ -6,7 +6,9 @@ enum AuthExceptionType {
   unknown,
   emailExists,
   usernameExists,
-  invalidEmail
+  invalidEmail,
+  userNotExist,
+  incorrectPassword
 }
 
 class AuthException extends DetailedException {
@@ -16,6 +18,10 @@ class AuthException extends DetailedException {
 
   factory AuthException.fromServerMessage(String? message) {
     switch (message) {
+      case 'Username Does not exist.':
+        return AuthException.type(AuthExceptionType.userNotExist);
+      case 'Incorrect password.':
+        return AuthException.type(AuthExceptionType.incorrectPassword);
       case 'Sorry, that username already exists!':
         return AuthException.type(AuthExceptionType.usernameExists);
       case 'Sorry, that email address is already used!':
@@ -48,6 +54,12 @@ class AuthException extends DetailedException {
         break;
       case AuthExceptionType.invalidEmail:
         typeMessage = 'Invalid email';
+        break;
+      case AuthExceptionType.userNotExist:
+        typeMessage = 'User doesn\'t exsist';
+        break;
+      case AuthExceptionType.incorrectPassword:
+        typeMessage = 'Password is incorrect';
         break;
     }
     return AuthException(typeMessage, type);
