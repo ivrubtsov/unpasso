@@ -14,6 +14,7 @@ class RegisterScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = context.read<RegisterScreenCubit>();
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20),

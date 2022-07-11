@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:goal_app/core/exceptions/exceptions.dart';
+import 'package:goal_app/core/exceptions/auth_exception.dart';
 import 'package:goal_app/core/navigation/app_router.dart';
 import 'package:goal_app/core/widgets/error_presentor.dart';
 import 'package:goal_app/feachers/auth/data/repos/email_auth_repo_impl.dart';
@@ -25,7 +25,10 @@ class AuthScreenCubit extends Cubit<AuthScreenState> {
     try {
       emit(state.copyWith(status: AuthScreenStateStatus.loading));
       if (!state.isFieldsFilled) {
-        ErrorPresentor.showError(context, 'Please complete all fields');
+        ErrorPresentor.showError(
+          context,
+          'Please complete all fields',
+        );
         return;
       }
       await _authRepo.autorizeUser(EmailAuthCreds(

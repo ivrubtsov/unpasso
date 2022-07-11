@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:goal_app/core/entities/user/user.dart';
-import 'package:goal_app/core/exceptions/exceptions.dart';
+import 'package:goal_app/core/exceptions/auth_exception.dart';
 import 'package:goal_app/core/navigation/app_router.dart';
 import 'package:goal_app/core/widgets/error_presentor.dart';
 import 'package:goal_app/feachers/auth/data/repos/email_auth_repo_impl.dart';
@@ -39,7 +39,7 @@ class RegisterScreenCubit extends Cubit<RegisterScreenState> {
         return;
       }
       await _authRepo.registerUser(RegisterCreds(
-        email: state.name,
+        email: state.email,
         password: state.password,
         user: User(
           name: state.name,
@@ -52,14 +52,10 @@ class RegisterScreenCubit extends Cubit<RegisterScreenState> {
       );
     } on AuthException catch (e) {
       ErrorPresentor.showError(
-          context, e.message ?? 'Unknown error. Please try again later');
+        context,
+        e.message ?? 'Unknown error. Please try again later',
+      );
     }
-
-    ////
-    Navigator.of(context).pushNamedAndRemoveUntil(
-      MainRoutes.setGoalScreen,
-      (route) => false,
-    );
   }
 
   void changeEmail(String value) {

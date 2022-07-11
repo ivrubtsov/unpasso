@@ -13,6 +13,7 @@ class AuthScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = context.read<AuthScreenCubit>();
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20),
