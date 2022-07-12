@@ -81,7 +81,7 @@ class AppRouter {
   Route _buildSetGoalScreen() {
     return MaterialPageRoute(
         builder: (context) => BlocProvider.value(
-              value: SetGoalScreenCubit(sl()),
+              value: SetGoalScreenCubit(goalsRepo: sl(), sessionRepo: sl()),
               child: const SetGoalScreen(),
             ));
   }

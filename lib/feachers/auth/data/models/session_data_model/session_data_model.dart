@@ -6,12 +6,17 @@ part 'session_data_model.g.dart';
 class SessionDataModel extends SessionData {
   SessionDataModel({
     required int id,
-  }) : super(id: id);
+    required String password,
+    required String username,
+  }) : super(
+          id: id,
+          password: password,
+          username: username,
+        );
 
   factory SessionDataModel.fromSessionData(SessionData data) =>
       SessionDataModel(
-        id: data.id,
-      );
+          id: data.id, password: data.password, username: data.username);
   factory SessionDataModel.fromJson(Map<String, dynamic> json) =>
       _$SessionDataModelFromJson(json);
   Map<String, dynamic> toJson() => _$SessionDataModelToJson(this);

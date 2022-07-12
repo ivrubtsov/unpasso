@@ -30,7 +30,8 @@ void init() {
         sessionRepo: sl(),
       ));
 
-  sl.registerLazySingleton<SetGoalScreenCubit>(() => SetGoalScreenCubit(sl()));
+  sl.registerLazySingleton<SetGoalScreenCubit>(
+      () => SetGoalScreenCubit(sessionRepo: sl(), goalsRepo: sl()));
 
   sl.registerLazySingleton<HistoryScreenCubit>(() => HistoryScreenCubit(sl()));
   //! Экраны
@@ -45,5 +46,5 @@ void init() {
 
   sl.registerLazySingleton<SessionRepo>(() => SessionRepoImpl());
 
-  sl.registerLazySingleton<GoalsRepo>(() => GoalsRepoImpl());
+  sl.registerLazySingleton<GoalsRepo>(() => GoalsRepoImpl(sessionRepo: sl()));
 }

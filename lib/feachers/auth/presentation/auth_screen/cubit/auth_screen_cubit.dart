@@ -32,7 +32,7 @@ class AuthScreenCubit extends Cubit<AuthScreenState> {
         return;
       }
       await _authRepo.autorizeUser(EmailAuthCreds(
-        email: state.email,
+        username: state.email,
         password: state.password,
       ));
       Navigator.of(context).pushNamedAndRemoveUntil(

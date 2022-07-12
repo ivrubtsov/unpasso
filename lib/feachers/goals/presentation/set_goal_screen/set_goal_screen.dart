@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:goal_app/core/widgets/check_box.dart';
 
 import 'package:goal_app/feachers/goals/presentation/history_screen/goals_history_screen.dart';
+import 'package:goal_app/feachers/goals/presentation/set_goal_screen/cubit/set_goal_screen_cubit.dart';
 
 class SetGoalScreen extends StatelessWidget {
   const SetGoalScreen({Key? key}) : super(key: key);
@@ -11,6 +13,7 @@ class SetGoalScreen extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
         elevation: 0,
         actions: [
@@ -65,23 +68,13 @@ class SetGoalScreen extends StatelessWidget {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Goal for today',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                ),
-                Row(
-                  children: const [
-                    CheckBox(),
-                    SizedBox(width: 10),
-                    Expanded(child: GoalTextField())
-                  ],
-                )
+              children: const [
+                _GoalWidget(),
               ],
             ),
             const Align(
               alignment: Alignment.bottomLeft,
-              child: QoauteWidget(),
+              child: QuoteWidget(),
             )
           ],
         ),
@@ -90,8 +83,8 @@ class SetGoalScreen extends StatelessWidget {
   }
 }
 
-class QoauteWidget extends StatelessWidget {
-  const QoauteWidget({
+class QuoteWidget extends StatelessWidget {
+  const QuoteWidget({
     Key? key,
   }) : super(key: key);
 
@@ -146,19 +139,47 @@ class _GoalWidget extends StatelessWidget {
   }
 }
 
-class GoalTextField extends StatelessWidget {
+class GoalTextField extends StatefulWidget {
   const GoalTextField({
     Key? key,
   }) : super(key: key);
 
   @override
+  State<GoalTextField> createState() => _GoalTextFieldState();
+}
+
+class _GoalTextFieldState extends State<GoalTextField> {
+  late final TextEditingController _controller;
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const TextField(
-      style: TextStyle(fontSize: 22),
-      decoration: InputDecoration(
-          hintText: 'Set a goal',
-          hintStyle: TextStyle(fontSize: 22),
-          border: InputBorder.none),
+    final model = context.read<SetGoalScreenCubit>();
+
+    return BlocBuilder<SetGoalScreenCubit, SetGoalScreenState>(
+      builder: (context, state) {
+        _controller.text = state.goal;
+        return TextField(
+          controller: _controller,
+          onChanged: model.changeGoal,
+          onSubmitted: (value) => model.onSubmittedComplete(value, context),
+          style: const TextStyle(fontSize: 22),
+          decoration: const InputDecoration(
+              hintText: 'Set a goal',
+              hintStyle: TextStyle(fontSize: 22),
+              border: InputBorder.none),
+        );
+      },
     );
   }
 }

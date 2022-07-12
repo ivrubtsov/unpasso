@@ -10,15 +10,15 @@ import 'package:goal_app/feachers/auth/domain/repos/session_repo.dart';
 import '../../../../core/exceptions/auth_exception.dart';
 
 class EmailAuthCreds extends AuthCredentials {
-  final String email;
+  final String username;
   final String password;
 
   const EmailAuthCreds({
-    required this.email,
+    required this.username,
     required this.password,
   });
   @override
-  List<Object?> get props => [email, password];
+  List<Object?> get props => [username, password];
 }
 
 class RegisterCreds extends AuthCredentials {
@@ -39,9 +39,11 @@ class EmailAuthRepoImpl implements AuthRepo {
   @override
   SessionRepo sessionRepo;
 
-  static Dio _dio({String? userName, String? password}) {
-    final n = userName ?? 'user2';
-    final p = password ?? 'UOEPqllWEHAy4coyEYp';
+// TODO: Проверить, как авторизация вообще работает, потому что БЫЛ пароль неправильный
+// и потому регистрация реботать не должна
+  static Dio _dio({String? username, String? password}) {
+    final n = username ?? 'user2';
+    final p = password ?? 'UOEPqllWEHAy4coyEYp*wYcB';
 
     final basicAuth = 'Basic ${base64.encode(utf8.encode('$n:$p'))}';
     return Dio(BaseOptions(
@@ -55,8 +57,9 @@ class EmailAuthRepoImpl implements AuthRepo {
   Future<void> autorizeUser(AuthCredentials credentials) async {
     try {
       credentials as EmailAuthCreds;
+
       final response = await _dio(
-        userName: credentials.email,
+        username: credentials.username,
         password: credentials.password,
       ).get(
         ApiConsts.authUser,
@@ -67,6 +70,8 @@ class EmailAuthRepoImpl implements AuthRepo {
       final id = response.data['id'];
       await sessionRepo.saveSessionData(SessionData(
         id: id,
+        password: credentials.password,
+        username: credentials.username,
       ));
     } on DioError catch (e) {
       throw AuthException.fromServerMessage(
@@ -87,11 +92,12 @@ class EmailAuthRepoImpl implements AuthRepo {
 
       if (response.data == null) {
         throw AuthException.type(AuthExceptionType.unknown);
-        // FIXME: Вообще должен возвращать id, который я буду сохранять в sessionData
       }
       final id = response.data['id'];
       sessionRepo.saveSessionData(SessionData(
         id: id,
+        password: credentials.password,
+        username: credentials.user.name,
       ));
     } on DioError catch (e) {
       throw AuthException.fromServerMessage(e.response?.data['message']);

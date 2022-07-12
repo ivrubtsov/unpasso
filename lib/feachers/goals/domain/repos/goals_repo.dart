@@ -7,7 +7,7 @@ abstract class UpdateGoalParams {}
 abstract class GoalsRepo {
   Future<void> createGoal(Goal goal);
 
-  Future<List<Goal>> getGoals(GetGoalsQueryType queryType);
+  Future<Goal?> getTodaysGoal();
 
-  Future<void> updateGoal(UpdateGoalParams params);
+  Future<List<Goal>> getGoals(GetGoalsQueryType queryType);
 }
