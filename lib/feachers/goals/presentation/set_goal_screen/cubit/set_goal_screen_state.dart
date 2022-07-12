@@ -1,6 +1,12 @@
 part of 'set_goal_screen_cubit.dart';
 
-enum SetGoalScreenStateStatus { loading, noGoalSet, goalSet, error }
+enum SetGoalScreenStateStatus {
+  loading,
+  noGoalSet,
+  goalSet,
+  error,
+  goalCompleted,
+}
 
 class SetGoalScreenState extends Equatable {
   final String goal;
@@ -12,7 +18,7 @@ class SetGoalScreenState extends Equatable {
 
   factory SetGoalScreenState.initial() => const SetGoalScreenState(
         goal: '',
-        status: SetGoalScreenStateStatus.loading,
+        status: SetGoalScreenStateStatus.noGoalSet,
       );
 
   SetGoalScreenState copyWith({

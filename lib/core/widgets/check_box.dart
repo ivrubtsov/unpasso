@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:goal_app/feachers/goals/presentation/history_screen/goals_history_screen.dart';
 
 class CheckBox extends StatefulWidget {
-  const CheckBox({Key? key}) : super(key: key);
-
+  const CheckBox(
+      {Key? key, this.onChanged, required this.value, this.readOnly = false})
+      : super(key: key);
+  final Function(bool)? onChanged;
+  final bool value;
+  final bool readOnly;
   @override
   State<CheckBox> createState() => _CheckBoxState();
 }
@@ -22,8 +26,12 @@ class _CheckBoxState extends State<CheckBox> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
         value: isChecked,
         onChanged: (value) {
+          if (widget.readOnly == true) return;
           setState(() {
-            isChecked = value!;
+            isChecked = value ?? false;
+            if (widget.onChanged != null) {
+              widget.onChanged!(value ?? false);
+            }
           });
         },
       ),

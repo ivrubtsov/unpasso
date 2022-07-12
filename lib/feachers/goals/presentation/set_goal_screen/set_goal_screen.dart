@@ -42,40 +42,57 @@ class SetGoalScreen extends StatelessWidget {
         ),
         child: Stack(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 50),
-              child: SizedBox(
-                child: Column(
-                  children: const [
-                    Align(
-                        alignment: Alignment(0, -0.6),
-                        child: Icon(
-                          Icons.check,
-                          size: 60,
-                          color: Colors.green,
-                        )),
-                    Align(
-                        alignment: Alignment(0, -0.4),
-                        child: Text(
-                          'Well done!\nYou did it!',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 20),
-                        )),
-                  ],
-                ),
-              ),
+            BlocBuilder<SetGoalScreenCubit, SetGoalScreenState>(
+              builder: (context, state) {
+                if (state.status == SetGoalScreenStateStatus.goalCompleted) {
+                  return const _GoalCompletedWidget();
+                }
+                return Container();
+              },
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: const [
-                _GoalWidget(),
+                Center(child: _GoalWidget()),
               ],
             ),
             const Align(
               alignment: Alignment.bottomLeft,
               child: QuoteWidget(),
             )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _GoalCompletedWidget extends StatelessWidget {
+  const _GoalCompletedWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 50),
+      child: SizedBox(
+        child: Column(
+          children: const [
+            Align(
+                alignment: Alignment(0, -0.6),
+                child: Icon(
+                  Icons.check,
+                  size: 60,
+                  color: Colors.green,
+                )),
+            Align(
+                alignment: Alignment(0, -0.4),
+                child: Text(
+                  'Well done!\nYou did it!',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                )),
           ],
         ),
       ),
@@ -120,6 +137,7 @@ class _GoalWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model = context.read<SetGoalScreenCubit>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -128,10 +146,24 @@ class _GoalWidget extends StatelessWidget {
           style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
         ),
         Row(
-          children: const [
-            CheckBox(),
-            SizedBox(width: 10),
-            Expanded(child: GoalTextField()),
+          children: [
+            BlocBuilder<SetGoalScreenCubit, SetGoalScreenState>(
+              builder: (context, state) {
+                return CheckBox(
+                  readOnly:
+                      state.status == SetGoalScreenStateStatus.goalCompleted ||
+                              state.status == SetGoalScreenStateStatus.noGoalSet
+                          ? true
+                          : false,
+                  onChanged: (_) => model.completeGoal(),
+                  value: state.status == SetGoalScreenStateStatus.goalCompleted
+                      ? true
+                      : false,
+                );
+              },
+            ),
+            const SizedBox(width: 10),
+            const Expanded(child: GoalTextField()),
           ],
         ),
       ],
@@ -170,6 +202,8 @@ class _GoalTextFieldState extends State<GoalTextField> {
       builder: (context, state) {
         _controller.text = state.goal;
         return TextField(
+          readOnly:
+              state.status == SetGoalScreenStateStatus.noGoalSet ? false : true,
           controller: _controller,
           onChanged: model.changeGoal,
           onSubmitted: (value) => model.onSubmittedComplete(value, context),

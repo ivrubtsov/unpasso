@@ -25,7 +25,9 @@ class SetGoalScreenCubit extends Cubit<SetGoalScreenState> {
     try {
       final todaysGoal = await _goalsRepo.getTodaysGoal();
       if (todaysGoal == null) {
-        emit(state.copyWith(status: SetGoalScreenStateStatus.noGoalSet));
+        emit(state.copyWith(
+          status: SetGoalScreenStateStatus.noGoalSet,
+        ));
       } else {
         emit(state.copyWith(
           goal: todaysGoal.text,
@@ -44,15 +46,21 @@ class SetGoalScreenCubit extends Cubit<SetGoalScreenState> {
   }
 
   void onSubmittedComplete(String value, BuildContext context) async {
+    emit(state.copyWith(status: SetGoalScreenStateStatus.loading));
     final authorId = _sessionRepo.sessionData!.id;
     try {
       await _goalsRepo.createGoal(Goal(
         text: value,
         authorId: authorId,
       ));
+      emit(state.copyWith(status: SetGoalScreenStateStatus.goalSet));
     } on ServerException {
       ErrorPresentor.showError(
           context, 'Unable to create goal. Check internet connection');
     }
+  }
+
+  void completeGoal() {
+    emit(state.copyWith(status: SetGoalScreenStateStatus.goalCompleted));
   }
 }
