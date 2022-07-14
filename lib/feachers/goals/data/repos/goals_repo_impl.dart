@@ -2,10 +2,13 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:goal_app/core/consts/api_consts.dart';
+import 'package:goal_app/core/consts/keys.dart';
 import 'package:goal_app/core/exceptions/exceptions.dart';
 import 'package:goal_app/feachers/auth/domain/repos/session_repo.dart';
+import 'package:goal_app/feachers/goals/data/models/goal_model/goal_model.dart';
 import 'package:goal_app/feachers/goals/domain/entities/goal.dart';
 import 'package:goal_app/feachers/goals/domain/repos/goals_repo.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class GoalsRepoImpl implements GoalsRepo {
   GoalsRepoImpl({required SessionRepo sessionRepo})
@@ -24,36 +27,69 @@ class GoalsRepoImpl implements GoalsRepo {
   }
 
   @override
-  Future<void> createGoal(Goal goal) async {
+  Future<Goal> createGoal(Goal goal) async {
     try {
       final url = ApiConsts.createGoal(
         goal.text,
         goal.authorId,
-        DateTime.now().toIso8601String(),
+        goal.createdAt.toIso8601String(),
       );
-      await _dio().post(url);
-
-      // TODO:
-
-      // Сделать надпись well done, чтобы полявлялась при отметку цели
-      // Цель должна стать неактивная
-      // Сделать историю
-
-    } on DioError catch (e) {
-      print(e);
+      final response = await _dio().post(url);
+      final createdGoal = GoalModel.fromJson(response.data);
+      await _saveGoalToLocal(createdGoal);
+      return createdGoal;
+    } on DioError {
       throw ServerException();
     }
   }
 
   @override
-  Future<List<Goal>> getGoals(GetGoalsQueryType queryType) {
-    // TODO: implement getGoals
-    throw UnimplementedError();
+  Future<List<Goal>> getGoals(GetGoalsQueryType queryType) async {
+    if (_sessionRepo.sessionData == null) throw ServerException();
+    try {
+      final response = await _dio().get<List<dynamic>>(ApiConsts.getUserGoals(
+        _sessionRepo.sessionData!.id,
+      ));
+
+      if (response.data == null) throw ServerException();
+      final goals = response.data!.map((e) => GoalModel.fromJson(e)).toList();
+
+      return goals;
+    } on DioError {
+      throw ServerException();
+    }
   }
 
   @override
-  Future<Goal?> getTodaysGoal() {
-    // TODO: implement getTodaysGoal
-    throw UnimplementedError();
+  Future<Goal?> getTodaysGoal() async {
+    final shP = await SharedPreferences.getInstance();
+    final jsonStr = shP.getString(Keys.todaysGoal);
+    if (jsonStr == null) return null;
+
+    final goal = GoalModel.fromJson(jsonDecode(jsonStr));
+    return goal;
+  }
+
+  Future<void> _saveGoalToLocal(GoalModel goalModel) async {
+    try {
+      final shP = await SharedPreferences.getInstance();
+      final json = goalModel.toJson();
+      shP.setString(Keys.todaysGoal, jsonEncode(json));
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  @override
+  Future<void> completeGoal(Goal goal) async {
+    try {
+      final id = goal.id;
+      if (id == null) throw ServerException();
+      final response = await _dio().post(ApiConsts.completeGoal(id));
+      final updatedGoal = GoalModel.fromJson(response.data);
+      await _saveGoalToLocal(updatedGoal);
+    } on DioError {
+      throw ServerException();
+    }
   }
 }

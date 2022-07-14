@@ -15,4 +15,6 @@ class ApiConsts {
 
   static String getUserGoals(int authorId) =>
       '$_baseUrl/posts?author=$authorId';
+
+  static String completeGoal(int postId) => '$_baseUrl/posts/$postId?tags=8';
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:goal_app/core/widgets/check_box.dart';
 
-import 'package:goal_app/feachers/goals/presentation/history_screen/goals_history_screen.dart';
 import 'package:goal_app/feachers/goals/presentation/set_goal_screen/cubit/set_goal_screen_cubit.dart';
 
 class SetGoalScreen extends StatelessWidget {
@@ -18,12 +17,8 @@ class SetGoalScreen extends StatelessWidget {
         elevation: 0,
         actions: [
           TextButton(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const HistoryScreen()));
-            },
+            onPressed: () =>
+                context.read<SetGoalScreenCubit>().onHistoryTapped(context),
             child: const Text(
               'History',
               style: TextStyle(
@@ -138,35 +133,32 @@ class _GoalWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = context.read<SetGoalScreenCubit>();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Goal for today',
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-        ),
-        Row(
+    return BlocBuilder<SetGoalScreenCubit, SetGoalScreenState>(
+      builder: (context, state) {
+        if (state.status == SetGoalScreenStateStatus.loading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            BlocBuilder<SetGoalScreenCubit, SetGoalScreenState>(
-              builder: (context, state) {
-                return CheckBox(
-                  readOnly:
-                      state.status == SetGoalScreenStateStatus.goalCompleted ||
-                              state.status == SetGoalScreenStateStatus.noGoalSet
-                          ? true
-                          : false,
-                  onChanged: (_) => model.completeGoal(),
-                  value: state.status == SetGoalScreenStateStatus.goalCompleted
-                      ? true
-                      : false,
-                );
-              },
+            const Text(
+              'Goal for today',
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(width: 10),
-            const Expanded(child: GoalTextField()),
+            Row(
+              children: [
+                CheckBox(
+                  readOnly: state.goal.isCompleted,
+                  onChanged: (_) => model.completeGoal(context),
+                  isChecked: state.goal.isCompleted,
+                ),
+                const SizedBox(width: 10),
+                const Expanded(child: GoalTextField()),
+              ],
+            ),
           ],
-        ),
-      ],
+        );
+      },
     );
   }
 }
@@ -200,8 +192,9 @@ class _GoalTextFieldState extends State<GoalTextField> {
 
     return BlocBuilder<SetGoalScreenCubit, SetGoalScreenState>(
       builder: (context, state) {
-        _controller.text = state.goal;
+        _controller.text = state.goal.text;
         return TextField(
+          textDirection: TextDirection.ltr,
           readOnly:
               state.status == SetGoalScreenStateStatus.noGoalSet ? false : true,
           controller: _controller,
@@ -209,9 +202,10 @@ class _GoalTextFieldState extends State<GoalTextField> {
           onSubmitted: (value) => model.onSubmittedComplete(value, context),
           style: const TextStyle(fontSize: 22),
           decoration: const InputDecoration(
-              hintText: 'Set a goal',
-              hintStyle: TextStyle(fontSize: 22),
-              border: InputBorder.none),
+            hintText: 'Set a goal',
+            hintStyle: TextStyle(fontSize: 22),
+            border: InputBorder.none,
+          ),
         );
       },
     );

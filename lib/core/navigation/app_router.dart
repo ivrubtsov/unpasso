@@ -73,7 +73,7 @@ class AppRouter {
   Route _buildGoalsHistoryScreen() {
     return MaterialPageRoute(
         builder: (context) => BlocProvider.value(
-              value: HistoryScreenCubit(sl()),
+              value: sl<HistoryScreenCubit>()..init(),
               child: const HistoryScreen(),
             ));
   }
@@ -81,7 +81,10 @@ class AppRouter {
   Route _buildSetGoalScreen() {
     return MaterialPageRoute(
         builder: (context) => BlocProvider.value(
-              value: SetGoalScreenCubit(goalsRepo: sl(), sessionRepo: sl()),
+              value: SetGoalScreenCubit(
+                goalsRepo: sl(),
+                sessionRepo: sl(),
+              )..getTodaysGoal(),
               child: const SetGoalScreen(),
             ));
   }

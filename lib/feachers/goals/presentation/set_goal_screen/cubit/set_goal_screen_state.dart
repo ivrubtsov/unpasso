@@ -9,20 +9,21 @@ enum SetGoalScreenStateStatus {
 }
 
 class SetGoalScreenState extends Equatable {
-  final String goal;
+  final Goal goal;
   final SetGoalScreenStateStatus status;
+
   const SetGoalScreenState({
     required this.goal,
     required this.status,
   });
 
-  factory SetGoalScreenState.initial() => const SetGoalScreenState(
-        goal: '',
+  factory SetGoalScreenState.initial() => SetGoalScreenState(
+        goal: Goal(text: '', createdAt: DateTime(0), authorId: 0),
         status: SetGoalScreenStateStatus.noGoalSet,
       );
 
   SetGoalScreenState copyWith({
-    String? goal,
+    Goal? goal,
     SetGoalScreenStateStatus? status,
   }) {
     return SetGoalScreenState(

@@ -3,10 +3,13 @@ import 'package:goal_app/feachers/goals/presentation/history_screen/goals_histor
 
 class CheckBox extends StatefulWidget {
   const CheckBox(
-      {Key? key, this.onChanged, required this.value, this.readOnly = false})
+      {Key? key,
+      this.onChanged,
+      required this.isChecked,
+      this.readOnly = false})
       : super(key: key);
   final Function(bool)? onChanged;
-  final bool value;
+  final bool isChecked;
   final bool readOnly;
   @override
   State<CheckBox> createState() => _CheckBoxState();
@@ -24,7 +27,7 @@ class _CheckBoxState extends State<CheckBox> {
             MaterialStateProperty.all(const Color.fromRGBO(71, 77, 175, 1)),
         visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-        value: isChecked,
+        value: widget.isChecked,
         onChanged: (value) {
           if (widget.readOnly == true) return;
           setState(() {

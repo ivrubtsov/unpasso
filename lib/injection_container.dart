@@ -20,20 +20,29 @@ void init() {
 
   sl.registerLazySingleton<AuthCubit>(() => AuthCubit(sessionRepo: sl()));
 
-  sl.registerLazySingleton<AuthScreenCubit>(() => AuthScreenCubit(
+  sl.registerFactory<AuthScreenCubit>(() => AuthScreenCubit(
         authRepo: sl(),
         sessionRepo: sl(),
       ));
 
-  sl.registerLazySingleton<RegisterScreenCubit>(() => RegisterScreenCubit(
+  sl.registerFactory<RegisterScreenCubit>(() => RegisterScreenCubit(
         authRepo: sl(),
         sessionRepo: sl(),
       ));
 
-  sl.registerLazySingleton<SetGoalScreenCubit>(
-      () => SetGoalScreenCubit(sessionRepo: sl(), goalsRepo: sl()));
+  sl.registerFactory<SetGoalScreenCubit>(
+    () => SetGoalScreenCubit(
+      sessionRepo: sl(),
+      goalsRepo: sl(),
+    ),
+  );
 
-  sl.registerLazySingleton<HistoryScreenCubit>(() => HistoryScreenCubit(sl()));
+  sl.registerFactory<HistoryScreenCubit>(
+    () => HistoryScreenCubit(
+      sl(),
+    ),
+  );
+
   //! Экраны
 
   sl.registerLazySingleton<AuthScreen>(
