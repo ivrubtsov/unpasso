@@ -77,7 +77,7 @@ class ListViewItem extends StatelessWidget {
           date,
         ),
         const SizedBox(width: 10),
-        const CheckboxItem(),
+        CheckboxItem(isComleted: goal.isCompleted),
         const SizedBox(width: 10),
         Expanded(
           child: Text(
@@ -91,8 +91,9 @@ class ListViewItem extends StatelessWidget {
 }
 
 class CheckboxItem extends StatelessWidget {
-  const CheckboxItem({Key? key}) : super(key: key);
+  const CheckboxItem({Key? key, required this.isComleted}) : super(key: key);
 
+  final bool isComleted;
   @override
   Widget build(BuildContext context) {
     return Transform.scale(
@@ -102,7 +103,7 @@ class CheckboxItem extends StatelessWidget {
             MaterialStateProperty.all(const Color.fromRGBO(71, 77, 175, 1)),
         visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-        value: true,
+        value: isComleted,
         onChanged: (bool? value) {},
       ),
     );
