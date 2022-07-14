@@ -148,7 +148,7 @@ class _GoalWidget extends StatelessWidget {
             Row(
               children: [
                 CheckBox(
-                  readOnly: state.goal.isCompleted,
+                  readOnly: !state.isCheckboxActive,
                   onChanged: (_) => model.completeGoal(context),
                   isChecked: state.goal.isCompleted,
                 ),

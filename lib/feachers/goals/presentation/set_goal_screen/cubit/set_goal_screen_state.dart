@@ -12,6 +12,9 @@ class SetGoalScreenState extends Equatable {
   final Goal goal;
   final SetGoalScreenStateStatus status;
 
+  bool get isCheckboxActive =>
+      goal.text.isNotEmpty || (goal.isCompleted && goal.text.isNotEmpty);
+
   const SetGoalScreenState({
     required this.goal,
     required this.status,
