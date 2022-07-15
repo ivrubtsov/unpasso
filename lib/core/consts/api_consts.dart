@@ -17,4 +17,9 @@ class ApiConsts {
       '$_baseUrl/posts?author=$authorId';
 
   static String completeGoal(int postId) => '$_baseUrl/posts/$postId?tags=8';
+
+  static const policyPrivacy = 'https://unpasso.org/privacy/';
+
+  static const forgotPassword =
+      'https://unpasso.org/wp-login.php?action=lostpassword';
 }

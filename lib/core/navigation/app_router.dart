@@ -64,7 +64,6 @@ class AppRouter {
         builder: (context) => BlocProvider.value(
               value: RegisterScreenCubit(
                 authRepo: sl(),
-                sessionRepo: sl(),
               ),
               child: const RegisterScreen(),
             ));

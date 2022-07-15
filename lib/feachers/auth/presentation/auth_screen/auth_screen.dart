@@ -38,6 +38,7 @@ class AuthScreen extends StatelessWidget {
               _TextField(
                 title: 'password',
                 hintText: 'Enter password',
+                isPassword: true,
                 onChanged: model.changePassword,
               ),
               // КНОПКА ЗАБЫЛИ ПАРОЛЬ
@@ -74,11 +75,13 @@ class _TextField extends StatelessWidget {
     required this.title,
     required this.hintText,
     required this.onChanged,
+    this.isPassword = false,
   }) : super(key: key);
 
   final String title;
   final String hintText;
   final Function(String value) onChanged;
+  final bool isPassword;
 
   @override
   Widget build(BuildContext context) {
@@ -91,6 +94,7 @@ class _TextField extends StatelessWidget {
         ),
         const SizedBox(height: 5),
         MainTextField(
+          isPassword: isPassword,
           hintText: hintText,
           onChanged: onChanged,
         )

@@ -27,7 +27,6 @@ void init() {
 
   sl.registerFactory<RegisterScreenCubit>(() => RegisterScreenCubit(
         authRepo: sl(),
-        sessionRepo: sl(),
       ));
 
   sl.registerFactory<SetGoalScreenCubit>(

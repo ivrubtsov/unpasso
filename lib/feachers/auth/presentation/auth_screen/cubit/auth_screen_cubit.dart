@@ -1,12 +1,14 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:goal_app/core/consts/api_consts.dart';
 import 'package:goal_app/core/exceptions/auth_exception.dart';
 import 'package:goal_app/core/navigation/app_router.dart';
 import 'package:goal_app/core/widgets/error_presentor.dart';
 import 'package:goal_app/feachers/auth/data/repos/email_auth_repo_impl.dart';
 import 'package:goal_app/feachers/auth/domain/repos/auth_repo.dart';
 import 'package:goal_app/feachers/auth/domain/repos/session_repo.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 part 'auth_screen_state.dart';
 
@@ -52,10 +54,7 @@ class AuthScreenCubit extends Cubit<AuthScreenState> {
   }
 
   void onForgotPasswordTapped(BuildContext context) {
-    // FIXME: Сделать переход
-    // Navigator.of(context).pushNamed(
-
-    // );
+    launchUrlString(ApiConsts.forgotPassword);
   }
 
   void changeEmail(String value) {
