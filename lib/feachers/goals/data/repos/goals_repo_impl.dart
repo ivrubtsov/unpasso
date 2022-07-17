@@ -67,6 +67,30 @@ class GoalsRepoImpl implements GoalsRepo {
     if (jsonStr == null) return null;
 
     final goal = GoalModel.fromJson(jsonDecode(jsonStr));
+
+    final now = DateTime.now();
+    final currentYear = now.year;
+    final currentDay = now.day;
+    final currentMonth = now.month;
+
+    final goalDate = goal.createdAt;
+    final goalYear = goalDate.year;
+    final goalMonth = goalDate.month;
+    final goalDay = goalDate.day;
+
+    // если дата цели не равна сегодняшней дате, тогда удаляем
+    // сравниваем
+    // - год
+    // - месяц
+    // - день
+    // если ничего не равно, тогда удаляем цель
+    if (currentDay != goalDay ||
+        currentMonth != goalMonth ||
+        currentYear != goalYear) {
+      await removeTodaysGoal();
+      return null;
+    }
+
     return goal;
   }
 
@@ -91,5 +115,11 @@ class GoalsRepoImpl implements GoalsRepo {
     } on DioError {
       throw ServerException();
     }
+  }
+
+  @override
+  Future<void> removeTodaysGoal() async {
+    final shP = await SharedPreferences.getInstance();
+    shP.remove(Keys.todaysGoal);
   }
 }

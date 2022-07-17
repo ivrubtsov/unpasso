@@ -163,28 +163,10 @@ class _GoalWidget extends StatelessWidget {
   }
 }
 
-class GoalTextField extends StatefulWidget {
+class GoalTextField extends StatelessWidget {
   const GoalTextField({
     Key? key,
   }) : super(key: key);
-
-  @override
-  State<GoalTextField> createState() => _GoalTextFieldState();
-}
-
-class _GoalTextFieldState extends State<GoalTextField> {
-  late final TextEditingController _controller;
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -192,14 +174,13 @@ class _GoalTextFieldState extends State<GoalTextField> {
 
     return BlocBuilder<SetGoalScreenCubit, SetGoalScreenState>(
       builder: (context, state) {
-        _controller.text = state.goal.text;
-        return TextField(
-          textDirection: TextDirection.ltr,
+        return TextFormField(
+          initialValue: state.goal.text,
           readOnly:
               state.status == SetGoalScreenStateStatus.noGoalSet ? false : true,
-          controller: _controller,
           onChanged: model.changeGoal,
-          onSubmitted: (value) => model.onSubmittedComplete(value, context),
+          onFieldSubmitted: (value) =>
+              model.onSubmittedComplete(value, context),
           style: const TextStyle(fontSize: 22),
           decoration: const InputDecoration(
             hintText: 'Set a goal',
