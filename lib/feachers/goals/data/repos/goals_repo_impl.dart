@@ -62,36 +62,25 @@ class GoalsRepoImpl implements GoalsRepo {
 
   @override
   Future<Goal?> getTodaysGoal() async {
-    final shP = await SharedPreferences.getInstance();
-    final jsonStr = shP.getString(Keys.todaysGoal);
-    if (jsonStr == null) return null;
+    try {
+      if (_sessionRepo.sessionData == null) throw ServerException();
 
-    final goal = GoalModel.fromJson(jsonDecode(jsonStr));
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+      final response = await _dio().get<List<dynamic>>(
+        ApiConsts.getTodaysGoal(
+          _sessionRepo.sessionData!.id,
+          today.toIso8601String(),
+        ),
+      );
 
-    final now = DateTime.now();
-    final currentYear = now.year;
-    final currentDay = now.day;
-    final currentMonth = now.month;
+      if (response.data == null || response.data!.isEmpty) return null;
 
-    final goalDate = goal.createdAt;
-    final goalYear = goalDate.year;
-    final goalMonth = goalDate.month;
-    final goalDay = goalDate.day;
-
-    // если дата цели не равна сегодняшней дате, тогда удаляем
-    // сравниваем
-    // - год
-    // - месяц
-    // - день
-    // если ничего не равно, тогда удаляем цель
-    if (currentDay != goalDay ||
-        currentMonth != goalMonth ||
-        currentYear != goalYear) {
-      await removeTodaysGoal();
+      final goal = GoalModel.fromJson(response.data!.first);
+      return goal;
+    } on DioError {
       return null;
     }
-
-    return goal;
   }
 
   Future<void> _saveGoalToLocal(GoalModel goalModel) async {
@@ -109,9 +98,9 @@ class GoalsRepoImpl implements GoalsRepo {
     try {
       final id = goal.id;
       if (id == null) throw ServerException();
-      final response = await _dio().post(ApiConsts.completeGoal(id));
-      final updatedGoal = GoalModel.fromJson(response.data);
-      await _saveGoalToLocal(updatedGoal);
+      await _dio().post(ApiConsts.completeGoal(id));
+      // final updatedGoal = GoalModel.fromJson(response.data);
+      // await _saveGoalToLocal(updatedGoal);
     } on DioError {
       throw ServerException();
     }

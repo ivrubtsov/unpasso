@@ -13,7 +13,6 @@ class AuthCubit extends Cubit<AuthState> {
   final SessionRepo _sessionRepo;
 
   Future<void> checkAuth() async {
-    await _sessionRepo.removeSessionData();
     emit(state.copyWith(status: AuthStatus.loading));
     try {
       await _sessionRepo.getSessionData();

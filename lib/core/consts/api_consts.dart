@@ -22,4 +22,7 @@ class ApiConsts {
 
   static const forgotPassword =
       'https://unpasso.org/wp-login.php?action=lostpassword';
+
+  static String getTodaysGoal(int authorId, String date) =>
+      '$_baseUrl/posts?author=$authorId&after=$date';
 }

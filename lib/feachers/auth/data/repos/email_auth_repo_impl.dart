@@ -39,8 +39,6 @@ class EmailAuthRepoImpl implements AuthRepo {
   @override
   SessionRepo sessionRepo;
 
-// TODO: Проверить, как авторизация вообще работает, потому что БЫЛ пароль неправильный
-// и потому регистрация реботать не должна
   static Dio _dio({String? username, String? password}) {
     final n = username ?? 'user2';
     final p = password ?? 'UOEPqllWEHAy4coyEYp*wYcB';
@@ -74,8 +72,10 @@ class EmailAuthRepoImpl implements AuthRepo {
         username: credentials.username,
       ));
     } on DioError catch (e) {
-      throw AuthException.fromServerMessage(
-          e.response?.data['error_description']);
+      throw AuthException(
+          e.response?.data['error_description'], AuthExceptionType.unknown);
+      // throw AuthException.fromServerMessage(
+      //     e.response?.data['error_description']);
     }
   }
 
@@ -93,8 +93,9 @@ class EmailAuthRepoImpl implements AuthRepo {
       if (response.data == null) {
         throw AuthException.type(AuthExceptionType.unknown);
       }
+
       final id = response.data['id'];
-      sessionRepo.saveSessionData(SessionData(
+      await sessionRepo.saveSessionData(SessionData(
         id: id,
         password: credentials.password,
         username: credentials.user.name,
