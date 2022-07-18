@@ -10,7 +10,7 @@
   
 </queries>
    <application
-        android:label="goal_app"
+        android:label="Unpasso"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
