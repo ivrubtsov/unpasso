@@ -38,7 +38,7 @@ class AuthScreenCubit extends Cubit<AuthScreenState> {
         password: state.password,
       ));
       Navigator.of(context).pushNamedAndRemoveUntil(
-        MainRoutes.setGoalScreen,
+        MainRoutes.goalScreen,
         (_) => false,
       );
     } on AuthException catch (e) {
