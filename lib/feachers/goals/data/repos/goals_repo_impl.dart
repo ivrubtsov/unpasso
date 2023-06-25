@@ -32,7 +32,7 @@ class GoalsRepoImpl implements GoalsRepo {
       final url = ApiConsts.createGoal(
         goal.text,
         goal.authorId,
-        goal.createdAt.toIso8601String(),
+        goal.createdAt.toUtc().toIso8601String(),
       );
       final response = await _dio().post(url);
       final createdGoal = GoalModel.fromJson(response.data);
