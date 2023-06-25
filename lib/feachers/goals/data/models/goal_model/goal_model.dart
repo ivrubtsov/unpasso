@@ -30,10 +30,9 @@ class GoalModel extends Goal {
     // Если нет, то выполнена
     // Поэтому не делаю проверку, есть ли 8 в массиве или нет
     tags == null || tags.isEmpty ? isCompleted = false : isCompleted = true;
-
     return GoalModel(
       text: json['title']['rendered'],
-      createdAt: DateTime.parse(json['date']),
+      createdAt: DateTime.parse(json['date']).toLocal(),
       authorId: json['author'],
       isCompleted: isCompleted,
       id: json['id'],

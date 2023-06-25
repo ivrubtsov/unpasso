@@ -229,15 +229,15 @@ class GoalsMainContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<GoalScreenCubit, GoalScreenState>(
       builder: (context, state) {
+        DateTime today = DateTime.now();
         if (goals.isEmpty ||
-            !(goals[goals.length - 1].createdAt.year == DateTime.now().year &&
-                goals[goals.length - 1].createdAt.month ==
-                    DateTime.now().month &&
-                goals[goals.length - 1].createdAt.day == DateTime.now().day)) {
+            !(goals[goals.length - 1].createdAt.year == today.year &&
+                goals[goals.length - 1].createdAt.month == today.month &&
+                goals[goals.length - 1].createdAt.day == today.day)) {
           final model = context.read<GoalScreenCubit>();
           final authorId = model.getUserId();
           goals.add(Goal(
-            createdAt: DateTime.now().toUtc(),
+            createdAt: DateTime.now(),
             text: '%%!!-!!%%',
             authorId: authorId,
             isCompleted: false,
