@@ -89,12 +89,12 @@ class GoalScreenContent extends StatelessWidget {
           children: [
             DatesListView(goals: goals),
             GoalsMainContainer(goals: goals),
-            Expanded(
+            /* Expanded(
               child: Align(
                 alignment: Alignment.bottomLeft,
                 child: QuoteWidget(),
               ),
-            ),
+            ),*/
           ],
         );
       },
@@ -229,7 +229,7 @@ class GoalsMainContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<GoalScreenCubit, GoalScreenState>(
       builder: (context, state) {
-        if (goals.length == 0 ||
+        if (goals.isEmpty ||
             !(goals[goals.length - 1].createdAt.year == DateTime.now().year &&
                 goals[goals.length - 1].createdAt.month ==
                     DateTime.now().month &&
@@ -238,15 +238,18 @@ class GoalsMainContainer extends StatelessWidget {
           final authorId = model.getUserId();
           goals.add(Goal(
             createdAt: DateTime.now().toUtc(),
-            text: '%%-%%',
+            text: '%%!!-!!%%',
             authorId: authorId,
             isCompleted: false,
           ));
         }
         return ListView.builder(
           itemCount: goals.length,
-          itemBuilder: (BuildContext context, int index) =>
-              GoalListViewItem(goal: goals[index]),
+          itemBuilder: (BuildContext context, int index) => GoalListViewItem(
+            goal: goals[index],
+            // index: ValueKey<int>(goals[index]),
+            index: ValueKey<int>(index),
+          ),
         );
       },
     );
@@ -254,77 +257,179 @@ class GoalsMainContainer extends StatelessWidget {
 }
 
 class GoalListViewItem extends StatelessWidget {
-  const GoalListViewItem({Key? key, required this.goal}) : super(key: key);
+  const GoalListViewItem({Key? key, required this.goal, required this.index})
+      : super(key: key);
   final Goal goal;
+  final ValueKey<int> index;
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1,
-      child: Container(
-        width: 24,
-        height: 24,
-        alignment: Alignment.center,
-        child: DateButton(goal: goal),
+    String goalDate;
+    // The goal for today isn't set, we should make a placeholder for it
+    if (goal.text == '%%!!-!!%%') {
+      return EnterGoal();
+    }
+    // The goal for today is set but it isn't completed yet, we should create
+    // a dismissive widget so a user can swipe the goal to complete it
+    DateTime today = DateTime.now();
+    if (today.year == goal.createdAt.year &&
+        today.month == goal.createdAt.month &&
+        today.day == goal.createdAt.day) {
+      goalDate = 'Today';
+    } else {
+      goalDate = DateFormat.yMEd().format(goal.createdAt);
+    }
+    final model = context.read<GoalScreenCubit>();
+    if (!goal.isCompleted &&
+        today.year == goal.createdAt.year &&
+        today.month == goal.createdAt.month &&
+        today.day == goal.createdAt.day) {
+      return Dismissible(
+        direction: DismissDirection.up,
+        onDismissed: (_) => model.completeGoal(context),
+        background: const CompleteGoalBG(),
+        key: index,
+        child: GoalItem(goal: goal, goalDate: goalDate),
+      );
+    }
+    return GoalItem(goal: goal, goalDate: goalDate);
+  }
+}
+
+class GoalItem extends StatelessWidget {
+  const GoalItem({Key? key, required this.goal, required this.goalDate})
+      : super(key: key);
+  final Goal goal;
+  final String goalDate;
+  @override
+  Widget build(BuildContext context) {
+    double goalBoxSize = const BoxConstraints().maxWidth - 40;
+    return Container(
+      width: goalBoxSize,
+      height: goalBoxSize,
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 20),
+      color: AppColors.goalBg,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+      child: Column(
+        children: [
+          Text(
+            goalDate,
+            style: const TextStyle(
+              fontFamily: 'Fredoka',
+              fontWeight: FontWeight.w500,
+              fontSize: 48,
+              color: AppColors.goalDate,
+            ),
+          ),
+          Expanded(
+            child: Text(
+              goal.text,
+              style: const TextStyle(
+                fontFamily: 'Fredoka',
+                fontWeight: FontWeight.w400,
+                fontSize: 24,
+                color: AppColors.goalText,
+              ),
+            ),
+          ),
+          Center(
+            child: CompletedStatus(isCompleted: goal.isCompleted),
+          ),
+        ],
       ),
     );
   }
 }
 
-/*
-            Expanded(child: Stack(
-              children: [
-                BlocBuilder<SetGoalScreenCubit, SetGoalScreenState>(
-                  builder: (context, state) {
-                    if (state.status == SetGoalScreenStateStatus.goalCompleted) {
-                      return const _GoalCompletedWidget();
-                    }
-                    return Container();
-                  },
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Center(child: _GoalWidget()),
-                  ],
-                ),
-                const Align(
-                  alignment: Alignment.bottomLeft,
-                  child: QuoteWidget(),
-                )
-              ],
-
-            ))
-*/
-
-class _GoalCompletedWidget extends StatelessWidget {
-  const _GoalCompletedWidget({
-    Key? key,
-  }) : super(key: key);
-
+class EnterGoal extends StatelessWidget {
+  const EnterGoal({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 50),
-      child: SizedBox(
-        child: Column(
-          children: const [
-            Align(
-                alignment: Alignment(0, -0.6),
-                child: Icon(
-                  Icons.check,
-                  size: 60,
-                  color: AppColors.ok,
-                )),
-            Align(
-                alignment: Alignment(0, -0.4),
-                child: Text(
-                  'Well done!\nYou did it!',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                )),
-          ],
-        ),
+    double goalBoxSize = const BoxConstraints().maxWidth - 40;
+    return Container(
+      width: goalBoxSize,
+      height: goalBoxSize,
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 20),
+      color: AppColors.goalBg,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
       ),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+      child: Column(
+        children: [
+          Text(
+            'Today',
+            style: const TextStyle(
+              fontFamily: 'Fredoka',
+              fontWeight: FontWeight.w500,
+              fontSize: 48,
+              color: AppColors.goalDate,
+            ),
+          ),
+          Expanded(
+            child: GoalTextField(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CompletedStatus extends StatelessWidget {
+  const CompletedStatus({Key? key, required this.isCompleted})
+      : super(key: key);
+  final bool isCompleted;
+  @override
+  Widget build(BuildContext context) {
+    if (isCompleted) {
+      return Container(
+        height: 40,
+        alignment: Alignment.center,
+        child: Column(children: const [
+          Icon(
+            Icons.check_circle,
+            color: AppColors.goalCompleted,
+            size: 20,
+          ),
+          Text(
+            'The goal is completed!',
+            style: TextStyle(
+              fontFamily: 'Fredoka',
+              fontWeight: FontWeight.w400,
+              fontSize: 12,
+              color: AppColors.goalCompleted,
+            ),
+          ),
+        ]),
+      );
+    } else {
+      return Container(
+        height: 40,
+        alignment: Alignment.center,
+        child: const Text(
+          'Swipe down to complete!',
+          style: TextStyle(
+            fontFamily: 'Fredoka',
+            fontWeight: FontWeight.w400,
+            fontSize: 12,
+            color: AppColors.goalCompleted,
+          ),
+        ),
+      );
+    }
+  }
+}
+
+class CompleteGoalBG extends StatelessWidget {
+  const CompleteGoalBG({Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 75,
+      alignment: Alignment.center,
+      child: Image.asset('assets/goodjob.png'),
     );
   }
 }
@@ -359,44 +464,6 @@ class QuoteWidget extends StatelessWidget {
   }
 }
 
-class _GoalWidget extends StatelessWidget {
-  const _GoalWidget({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final model = context.read<GoalScreenCubit>();
-    return BlocBuilder<GoalScreenCubit, GoalScreenState>(
-      builder: (context, state) {
-        if (state.status == GoalScreenStateStatus.loading) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Goal for today',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-            ),
-            Row(
-              children: [
-                CheckBox(
-                  readOnly: !state.isCheckboxActive,
-                  onChanged: (_) => model.completeGoal(context),
-                  isChecked: state.goal.isCompleted,
-                ),
-                const SizedBox(width: 10),
-                const Expanded(child: GoalTextField()),
-              ],
-            ),
-          ],
-        );
-      },
-    );
-  }
-}
-
 class GoalTextField extends StatelessWidget {
   const GoalTextField({
     Key? key,
@@ -409,39 +476,30 @@ class GoalTextField extends StatelessWidget {
     return BlocBuilder<GoalScreenCubit, GoalScreenState>(
       builder: (context, state) {
         return TextFormField(
-          initialValue: state.goal.text,
+          initialValue: '',
           readOnly:
               state.status == GoalScreenStateStatus.noGoalSet ? false : true,
           onChanged: model.changeGoal,
           onFieldSubmitted: (value) =>
               model.onSubmittedComplete(value, context),
-          style: const TextStyle(fontSize: 22),
+          style: const TextStyle(
+            fontFamily: 'Fredoka',
+            fontWeight: FontWeight.w400,
+            fontSize: 24,
+            color: AppColors.goalText,
+          ),
           decoration: const InputDecoration(
             hintText: 'Set a goal',
-            hintStyle: TextStyle(fontSize: 22),
+            hintStyle: TextStyle(
+              fontFamily: 'Fredoka',
+              fontWeight: FontWeight.w400,
+              fontSize: 24,
+              color: AppColors.goalText,
+            ),
             border: InputBorder.none,
           ),
         );
       },
-    );
-  }
-}
-
-class CheckboxItem extends StatelessWidget {
-  const CheckboxItem({Key? key, required this.isComleted}) : super(key: key);
-
-  final bool isComleted;
-  @override
-  Widget build(BuildContext context) {
-    return Transform.scale(
-      scale: 1.2,
-      child: Checkbox(
-        fillColor: MaterialStateProperty.all(AppColors.checkbox),
-        visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-        value: isComleted,
-        onChanged: (bool? value) {},
-      ),
     );
   }
 }

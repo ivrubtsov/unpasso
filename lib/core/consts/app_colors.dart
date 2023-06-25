@@ -14,6 +14,12 @@ class AppColors {
   static const selectedDateBg = Colors.black;
   static const selectedDateText = Colors.white;
   static const dateIcon = Colors.black;
+  // Cards with goals
+  static const goalBg = Color.fromRGBO(220, 231, 255, 1);
+  static const goalDate = Colors.black;
+  static const goalText = Colors.black;
+  static const goalCompleted = Color.fromRGBO(43, 39, 239, 1);
+
   static const ok = Colors.green;
   static const checkbox = Color.fromRGBO(71, 77, 175, 1);
 }
