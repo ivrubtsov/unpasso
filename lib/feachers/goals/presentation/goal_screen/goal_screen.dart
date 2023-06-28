@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:goal_app/core/consts/app_colors.dart';
+import 'package:goal_app/core/consts/app_fonts.dart';
 
 import '../../domain/entities/goal.dart';
 
@@ -20,13 +21,10 @@ class GoalScreen extends StatelessWidget {
         automaticallyImplyLeading: false,
         backgroundColor: AppColors.bg,
         elevation: 0,
-        title: const Text('Your goals',
-            style: TextStyle(
-              fontFamily: 'Fredoka',
-              fontWeight: FontWeight.w500,
-              color: AppColors.header,
-              fontSize: 32,
-            )),
+        title: const Text(
+          'My goals',
+          style: AppFonts.header,
+        ),
         actions: [
           IconButton(
             onPressed: () =>
@@ -169,12 +167,7 @@ class DateButton extends StatelessWidget {
             backgroundColor: AppColors.selectedDateBg,
             child: Text(
               DateFormat('dd').format(goal.createdAt),
-              style: const TextStyle(
-                fontFamily: 'Fredoka',
-                fontWeight: FontWeight.w600,
-                fontSize: 16,
-                color: AppColors.selectedDateText,
-              ),
+              style: AppFonts.dateSelected,
             ),
           );
         } else {
@@ -185,12 +178,7 @@ class DateButton extends StatelessWidget {
             backgroundColor: AppColors.dateBg,
             child: Text(
               DateFormat('dd').format(goal.createdAt),
-              style: const TextStyle(
-                fontFamily: 'Fredoka',
-                fontWeight: FontWeight.w600,
-                fontSize: 16,
-                color: AppColors.dateText,
-              ),
+              style: AppFonts.date,
             ),
           );
         }
@@ -316,22 +304,12 @@ class GoalItem extends StatelessWidget {
         children: [
           Text(
             goalDate,
-            style: const TextStyle(
-              fontFamily: 'Fredoka',
-              fontWeight: FontWeight.w500,
-              fontSize: 48,
-              color: AppColors.goalDate,
-            ),
+            style: AppFonts.goalHeader,
           ),
           Expanded(
             child: Text(
               goal.text,
-              style: const TextStyle(
-                fontFamily: 'Fredoka',
-                fontWeight: FontWeight.w400,
-                fontSize: 24,
-                color: AppColors.goalText,
-              ),
+              style: AppFonts.goal,
             ),
           ),
           Center(
@@ -361,12 +339,7 @@ class EnterGoal extends StatelessWidget {
         children: [
           Text(
             'Today',
-            style: const TextStyle(
-              fontFamily: 'Fredoka',
-              fontWeight: FontWeight.w500,
-              fontSize: 48,
-              color: AppColors.goalDate,
-            ),
+            style: AppFonts.goalHeader,
           ),
           Expanded(
             child: GoalTextField(),
@@ -390,17 +363,12 @@ class CompletedStatus extends StatelessWidget {
         child: Column(children: const [
           Icon(
             Icons.check_circle,
-            color: AppColors.goalCompleted,
+            color: AppColors.goalHint,
             size: 20,
           ),
           Text(
             'The goal is completed!',
-            style: TextStyle(
-              fontFamily: 'Fredoka',
-              fontWeight: FontWeight.w400,
-              fontSize: 12,
-              color: AppColors.goalCompleted,
-            ),
+            style: AppFonts.goalHint,
           ),
         ]),
       );
@@ -410,12 +378,7 @@ class CompletedStatus extends StatelessWidget {
         alignment: Alignment.center,
         child: const Text(
           'Swipe down to complete!',
-          style: TextStyle(
-            fontFamily: 'Fredoka',
-            fontWeight: FontWeight.w400,
-            fontSize: 12,
-            color: AppColors.goalCompleted,
-          ),
+          style: AppFonts.goalHint,
         ),
       );
     }
@@ -446,17 +409,14 @@ class QuoteWidget extends StatelessWidget {
       children: const [
         Text(
           '"A journey of a thousand miles begins with a single step"',
-          style: TextStyle(fontSize: 18),
+          style: AppFonts.goal,
         ),
         SizedBox(height: 20),
         Align(
           alignment: Alignment.bottomRight,
           child: Text(
             'Lao Tzu',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+            style: AppFonts.goalHint,
           ),
         ),
       ],
@@ -482,20 +442,10 @@ class GoalTextField extends StatelessWidget {
           onChanged: model.changeGoal,
           onFieldSubmitted: (value) =>
               model.onSubmittedComplete(value, context),
-          style: const TextStyle(
-            fontFamily: 'Fredoka',
-            fontWeight: FontWeight.w400,
-            fontSize: 24,
-            color: AppColors.goalText,
-          ),
+          style: AppFonts.goal,
           decoration: const InputDecoration(
             hintText: 'Set a goal',
-            hintStyle: TextStyle(
-              fontFamily: 'Fredoka',
-              fontWeight: FontWeight.w400,
-              fontSize: 24,
-              color: AppColors.goalText,
-            ),
+            hintStyle: AppFonts.goal,
             border: InputBorder.none,
           ),
         );

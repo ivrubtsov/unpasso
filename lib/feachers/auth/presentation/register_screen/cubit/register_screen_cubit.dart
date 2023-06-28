@@ -58,6 +58,12 @@ class RegisterScreenCubit extends Cubit<RegisterScreenState> {
     }
   }
 
+  void onLogInTapped(BuildContext context) {
+    Navigator.of(context).pushNamed(
+      AuthRoutes.authScreen,
+    );
+  }
+
   void changeEmail(String value) {
     if (state.email == value) return;
     emit(state.copyWith(email: value));

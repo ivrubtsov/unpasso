@@ -13,6 +13,7 @@ class AuthScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = context.read<AuthScreenCubit>();
     return Scaffold(
+      backgroundColor: AppColors.altBg,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Padding(
@@ -21,46 +22,57 @@ class AuthScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 30),
-              // ЗАГОЛОВОК
-              const Text(
-                'Authentication',
-                style: AppFonts.header1,
+              // HEADER
+              Center(
+                child: Column(children: const [
+                  Text(
+                    'Log In',
+                    style: AppFonts.header,
+                  ),
+                  Text(
+                    'First step towards a big goal',
+                    style: AppFonts.subHeader,
+                  ),
+                ]),
               ),
               const SizedBox(height: 30),
-              // ТЕКСТОВОЕ ПОЛЕ EMAIL
+              // FORM
+              const SizedBox(height: 30),
+              // TEXT FIELD EMAIL
               _TextField(
                 title: 'username',
-                hintText: 'Enter username',
+                hintText: 'Username',
                 onChanged: model.changeEmail,
               ),
               const SizedBox(height: 15),
-              // ТЕКСТОВОЕ ПОЛЕ ПАРОЛЬ
+              // TEXT FIELD ПАРОЛЬ
               _TextField(
                 title: 'password',
-                hintText: 'Enter password',
+                hintText: 'Password',
                 isPassword: true,
                 onChanged: model.changePassword,
               ),
-              // КНОПКА ЗАБЫЛИ ПАРОЛЬ
+              // FORGET PASSWORD BUTTON
               const Align(
                 alignment: Alignment.centerRight,
                 child: _ForgotPasswordButton(),
               ),
               const SizedBox(height: 30),
-              // КНОПКА LOGIN
+              // LOGIN BUTTON
               Align(
                 alignment: Alignment.center,
-                child: MainButtion(
+                child: MainButton(
                   onPressed: () => model.onLoginTapped(context),
                   title: 'Log in',
                 ),
               ),
-              Expanded(child: Container()),
-              // КНОПКА SIGN UP
+              const SizedBox(height: 15),
+              // SIGN UP BUTTON
               const Align(
                 alignment: Alignment.center,
                 child: _SignUpButton(),
               ),
+              Expanded(child: Container()),
             ],
           ),
         ),
@@ -88,16 +100,18 @@ class _TextField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        /*
         Text(
           title,
           style: AppFonts.header2,
         ),
-        const SizedBox(height: 5),
+        */
         MainTextField(
           isPassword: isPassword,
           hintText: hintText,
           onChanged: onChanged,
-        )
+        ),
+        const SizedBox(height: 5),
       ],
     );
   }
@@ -112,11 +126,9 @@ class _ForgotPasswordButton extends StatelessWidget {
     return TextButton(
         onPressed: () => model.onForgotPasswordTapped(context),
         style: TextButton.styleFrom(padding: EdgeInsets.zero),
-        child: Text(
+        child: const Text(
           'Forgot password?',
-          style: AppFonts.header2.copyWith(
-            color: AppColors.links,
-          ),
+          style: AppFonts.inputLink,
         ));
   }
 }
@@ -127,17 +139,20 @@ class _SignUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = context.read<AuthScreenCubit>();
-    return TextButton(
-      onPressed: () => model.onSignUpTapped(context),
-      child: const Text(
-        'Sign Up',
-        style: TextStyle(
-          fontSize: 16,
-          color: Colors.black,
-          decoration: TextDecoration.underline,
-          fontWeight: FontWeight.w600,
+    return Row(
+      children: [
+        const Text(
+          'Don\'t have an account? ',
+          style: AppFonts.inputText,
         ),
-      ),
+        TextButton(
+          onPressed: () => model.onSignUpTapped(context),
+          child: const Text(
+            'Sign up',
+            style: AppFonts.inputLink,
+          ),
+        )
+      ],
     );
   }
 }
