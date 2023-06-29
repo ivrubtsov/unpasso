@@ -1,42 +1,32 @@
 import 'package:equatable/equatable.dart';
 
 class Profile extends Equatable {
-  final String text;
-  final int authorId;
-  final bool isCompleted;
-  final DateTime createdAt;
-  final int? id;
+  final int id;
+  final List<int> achievements;
 
   const Profile({
-    required this.text,
-    required this.createdAt,
-    required this.authorId,
-    this.id,
-    this.isCompleted = false,
+    required this.id,
+    this.achievements = const [],
   });
 
   Profile copyWith({
-    String? text,
-    int? authorId,
-    bool? isCompleted,
-    DateTime? createdAt,
     int? id,
+    List<int>? achievements,
   }) {
     return Profile(
-      text: text ?? this.text,
-      authorId: authorId ?? this.authorId,
-      isCompleted: isCompleted ?? this.isCompleted,
-      createdAt: createdAt ?? this.createdAt,
       id: id ?? this.id,
+      achievements: achievements ?? this.achievements,
     );
+  }
+
+  Profile addAchievement(int newAch) {
+    this.achievements.add(newAch);
+    return this;
   }
 
   @override
   List<Object?> get props => [
-        text,
-        authorId,
-        createdAt,
-        isCompleted,
         id,
+        achievements,
       ];
 }

@@ -8,6 +8,7 @@ class AppColors {
   static const altBg = Color.fromRGBO(236, 242, 255, 1);
   static const header = Colors.black;
   static const headerIcon = Colors.black;
+  // Auth screens elements
   static const border = Color.fromRGBO(194, 201, 209, 1);
   static const disabled = Color.fromRGBO(43, 39, 239, 0.5);
   static const enabled = Color.fromRGBO(43, 39, 239, 1);
@@ -25,4 +26,9 @@ class AppColors {
 
   static const ok = Colors.green;
   static const checkbox = Color.fromRGBO(71, 77, 175, 1);
+  // Profile and achievements
+  static const achBg = Color.fromRGBO(0, 26, 52, 0.9);
+  static const achText = Colors.white;
+  static const achIconActive = Colors.amber;
+  static const achIconNonActive = Colors.blueGrey;
 }

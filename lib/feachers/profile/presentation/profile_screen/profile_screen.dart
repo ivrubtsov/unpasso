@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:goal_app/core/consts/app_colors.dart';
+import 'package:goal_app/core/consts/app_fonts.dart';
 
-import '../../domain/entities/profile.dart';
+import 'package:goal_app/feachers/profile/domain/entities/profile.dart';
 
 import 'package:goal_app/feachers/profile/presentation/profile_screen/cubit/profile_screen_cubit.dart';
 
@@ -13,69 +14,33 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: AppColors.bg,
-          elevation: 0,
-          title: const Text('Your goals',
-              style: TextStyle(
-                fontFamily: 'Fredoka',
-                fontWeight: FontWeight.w500,
-                color: AppColors.header,
-                fontSize: 32,
-              )),
-          actions: [
-            IconButton(
-              onPressed: () =>
-                  context.read<GoalScreenCubit>().onProfileTapped(context),
-              icon: const Icon(Icons.person),
-              color: AppColors.headerIcon,
-            )
-          ],
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        automaticallyImplyLeading: true,
+        backgroundColor: AppColors.altBg,
+        elevation: 0,
+        title: const Text(
+          'Profile',
+          style: AppFonts.header,
         ),
-        backgroundColor: AppColors.bg,
-        body: Column(
-          children: [
-            const ProfilesListView(),
-            const ProfilesMainContainer(),
-            Expanded(child: const Align(
-              alignment: Alignment.bottomLeft,
-              child: QuoteWidget(),
-            ))
-          ],
-        )
-        /* body: Padding(
-        padding: const EdgeInsets.only(
-          left: 30,
-          right: 30,
-          bottom: 50,
-        ),
-        child: Stack(
-          children: [
-            BlocBuilder<SetGoalScreenCubit, SetGoalScreenState>(
-              builder: (context, state) {
-                if (state.status == SetGoalScreenStateStatus.goalCompleted) {
-                  return const _GoalCompletedWidget();
-                }
-                return Container();
-              },
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Center(child: _GoalWidget()),
-              ],
-            ),
-            const Align(
-              alignment: Alignment.bottomLeft,
-              child: QuoteWidget(),
-            )
-          ],
-        ),
-      ), */
-        );
+        actions: [
+          IconButton(
+            onPressed: () =>
+                context.read<ProfileScreenCubit>().onProfileTapped(context),
+            icon: const Icon(Icons.person),
+            color: AppColors.headerIcon,
+          )
+        ],
+      ),
+      backgroundColor: AppColors.altBg,
+      body: Column(
+        children: [
+          PersonalData(),
+          Achievements(),
+          Expanded(child: Settings())
+        ],
+      )
+    );
   }
 }
 

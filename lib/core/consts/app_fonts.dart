@@ -80,4 +80,18 @@ class AppFonts {
     fontSize: 12,
     color: AppColors.goalHint,
   );
+
+  static const achHeader = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w500,
+    fontSize: 32,
+    color: AppColors.achText,
+  );
+
+  static const achText = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 16,
+    color: AppColors.achText,
+  );
 }

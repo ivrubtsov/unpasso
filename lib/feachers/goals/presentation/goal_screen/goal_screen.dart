@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:goal_app/core/consts/app_colors.dart';
 import 'package:goal_app/core/consts/app_fonts.dart';
 
-import '../../domain/entities/goal.dart';
+import 'package:goal_app/feachers/goals/domain/entities/goal.dart';
 
 import 'package:goal_app/feachers/goals/presentation/goal_screen/cubit/goal_screen_cubit.dart';
 
