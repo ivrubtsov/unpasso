@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:goal_app/core/consts/app_colors.dart';
+import 'package:goal_app/core/consts/app_fonts.dart';
 
 class MainTextField extends StatefulWidget {
   const MainTextField({
@@ -34,25 +35,28 @@ class _MainTextFieldState extends State<MainTextField> {
                   }),
                   child: Icon(
                     Icons.remove_red_eye,
-                    color: isHidden ? Colors.grey : AppColors.main,
+                    color: isHidden ? AppColors.disabled : AppColors.enabled,
                   ),
                 ),
               )
             : null,
-        enabledBorder: const OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Color.fromARGB(255, 187, 187, 187),
+        enabledBorder: OutlineInputBorder(
+          borderSide: const BorderSide(
+            color: AppColors.border,
             width: 1.5,
           ),
+          borderRadius: BorderRadius.circular(8),
         ),
-        focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(
-            color: AppColors.main,
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(
+            color: AppColors.enabled,
             width: 1,
           ),
+          borderRadius: BorderRadius.circular(8),
         ),
         hintText: widget.hintText,
       ),
+      style: AppFonts.input,
     );
   }
 }

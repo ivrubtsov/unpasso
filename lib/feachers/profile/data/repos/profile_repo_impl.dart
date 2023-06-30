@@ -5,13 +5,13 @@ import 'package:goal_app/core/consts/api_consts.dart';
 import 'package:goal_app/core/consts/keys.dart';
 import 'package:goal_app/core/exceptions/exceptions.dart';
 import 'package:goal_app/feachers/auth/domain/repos/session_repo.dart';
-import 'package:goal_app/feachers/goals/data/models/goal_model/goal_model.dart';
-import 'package:goal_app/feachers/goals/domain/entities/goal.dart';
-import 'package:goal_app/feachers/goals/domain/repos/goals_repo.dart';
+import 'package:goal_app/feachers/profile/data/models/profile_model/profile_model.dart';
+import 'package:goal_app/feachers/profile/domain/entities/profile.dart';
+import 'package:goal_app/feachers/profile/domain/repos/profile_repo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class GoalsRepoImpl implements GoalsRepo {
-  GoalsRepoImpl({required SessionRepo sessionRepo})
+class ProfileRepoImpl implements ProfileRepo {
+  ProfileRepoImpl({required SessionRepo sessionRepo})
       : _sessionRepo = sessionRepo;
   final SessionRepo _sessionRepo;
   Dio _dio() {
@@ -32,7 +32,7 @@ class GoalsRepoImpl implements GoalsRepo {
       final url = ApiConsts.createGoal(
         goal.text,
         goal.authorId,
-        goal.createdAt.toUtc().toIso8601String(),
+        goal.createdAt.toIso8601String(),
       );
       final response = await _dio().post(url);
       final createdGoal = GoalModel.fromJson(response.data);
@@ -44,17 +44,18 @@ class GoalsRepoImpl implements GoalsRepo {
   }
 
   @override
-  Future<List<Goal>> getGoals(GetGoalsQueryType queryType) async {
+  Future<List<Goal>> getProfile(GetProfileQueryType queryType) async {
     if (_sessionRepo.sessionData == null) throw ServerException();
     try {
-      final response = await _dio().get<List<dynamic>>(ApiConsts.getUserGoals(
+      final response = await _dio().get<List<dynamic>>(ApiConsts.getUserProfile(
         _sessionRepo.sessionData!.id,
       ));
 
       if (response.data == null) throw ServerException();
-      final goals = response.data!.map((e) => GoalModel.fromJson(e)).toList();
+      final profile =
+          response.data!.map((e) => ProfileModel.fromJson(e)).toList();
 
-      return goals;
+      return profile;
     } on DioError {
       throw ServerException();
     }

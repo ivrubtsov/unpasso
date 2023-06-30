@@ -5,51 +5,51 @@ import 'package:goal_app/core/exceptions/exceptions.dart';
 import 'package:goal_app/core/navigation/app_router.dart';
 import 'package:goal_app/core/widgets/error_presentor.dart';
 import 'package:goal_app/feachers/auth/domain/repos/session_repo.dart';
-import 'package:goal_app/feachers/goals/domain/entities/goal.dart';
-import 'package:goal_app/feachers/goals/domain/repos/goals_repo.dart';
+import 'package:goal_app/feachers/profile/domain/entities/profile.dart';
+import 'package:goal_app/feachers/profile/domain/repos/profile_repo.dart';
 
-part 'set_goal_screen_state.dart';
+part 'profile_screen_state.dart';
 
-class SetGoalScreenCubit extends Cubit<SetGoalScreenState> {
-  SetGoalScreenCubit({
-    required GoalsRepo goalsRepo,
+class ProfileScreenCubit extends Cubit<ProfileScreenState> {
+  ProfileScreenCubit({
+    required ProfileRepo profileRepo,
     required SessionRepo sessionRepo,
-  })  : _goalsRepo = goalsRepo,
+  })  : _profileRepo = profileRepo,
         _sessionRepo = sessionRepo,
-        super(SetGoalScreenState.initial());
+        super(ProfileScreenState.initial());
 
-  final GoalsRepo _goalsRepo;
+  final ProfileRepo _profileRepo;
   final SessionRepo _sessionRepo;
 
 // ПОЛУЧАЕМ СЕГОДНЯШНЮЮ ЦЕЛЬ
-  Future<void> getTodaysGoal() async {
+  Future<void> getAchieves() async {
     // (await SharedPreferences.getInstance()).remove(Keys.todaysGoal);
-    emit(state.copyWith(status: SetGoalScreenStateStatus.loading));
+    emit(state.copyWith(status: ProfileScreenStateStatus.loading));
     try {
-      final todaysGoal = await _goalsRepo.getTodaysGoal();
+      final todaysGoal = await _profileRepo.getTodaysGoal();
       if (todaysGoal == null) {
         emit(state.copyWith(
-          status: SetGoalScreenStateStatus.noGoalSet,
+          status: ProfileScreenStateStatus.noGoalSet,
           goal: todaysGoal,
         ));
       } else if (todaysGoal.isCompleted) {
         emit(state.copyWith(
           goal: todaysGoal,
-          status: SetGoalScreenStateStatus.goalCompleted,
+          status: ProfileScreenStateStatus.goalCompleted,
         ));
       } else {
         emit(state.copyWith(
           goal: todaysGoal,
-          status: SetGoalScreenStateStatus.goalSet,
+          status: ProfileScreenStateStatus.goalSet,
         ));
       }
     } on ServerException {
-      emit(state.copyWith(status: SetGoalScreenStateStatus.error));
+      emit(state.copyWith(status: ProfileScreenStateStatus.error));
     }
   }
 
 // МЕНЯЕМ ТЕКСТ ЦЕЛИ В STATE
-  void changeGoal(String value) {
+  void changeProfile(String value) {
     emit(state.copyWith(goal: state.goal.copyWith(text: value)));
   }
 
@@ -59,16 +59,16 @@ class SetGoalScreenCubit extends Cubit<SetGoalScreenState> {
       ErrorPresentor.showError(context, 'Enter a goal');
       return;
     }
-    emit(state.copyWith(status: SetGoalScreenStateStatus.loading));
+    emit(state.copyWith(status: ProfileScreenStateStatus.loading));
     final authorId = _sessionRepo.sessionData!.id;
     try {
-      final goal = await _goalsRepo.createGoal(Goal(
-          createdAt: DateTime.now(),
+      final goal = await _profileRepo.createGoal(Goal(
+          createdAt: DateTime.now().toUtc(),
           text: value,
           authorId: authorId,
           isCompleted: false));
       emit(
-          state.copyWith(status: SetGoalScreenStateStatus.goalSet, goal: goal));
+          state.copyWith(status: ProfileScreenStateStatus.goalSet, goal: goal));
     } on ServerException {
       ErrorPresentor.showError(
           context, 'Unable to create goal. Check internet connection');
@@ -80,18 +80,23 @@ class SetGoalScreenCubit extends Cubit<SetGoalScreenState> {
     try {
       emit(state.copyWith(
         goal: state.goal.copyWith(isCompleted: true),
-        status: SetGoalScreenStateStatus.goalCompleted,
+        status: ProfileScreenStateStatus.goalCompleted,
       ));
 
-      await _goalsRepo.completeGoal(state.goal);
+      await _profileRepo.completeGoal(state.goal);
     } on ServerException {
       ErrorPresentor.showError(
           context, 'Unable to change goal. Check internet connection');
     }
   }
 
-// КНОПКА ИСТОРИЯ
-  void onHistoryTapped(BuildContext context) {
-    Navigator.of(context).pushNamed(MainRoutes.goalsHistoryScreen);
+// КНОПКА НАЗАД
+  void onBackTapped(BuildContext context) {
+    Navigator.of(context).pushNamed(MainRoutes.goalScreen);
+  }
+
+// КНОПКА ПРОФИЛЬ
+  void onProfileTapped(BuildContext context) {
+    Navigator.of(context).pushNamed(MainRoutes.profileScreen);
   }
 }

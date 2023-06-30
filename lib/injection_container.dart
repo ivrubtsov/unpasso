@@ -5,13 +5,15 @@ import 'package:goal_app/feachers/auth/presentation/auth_cubit/auth_cubit.dart';
 import 'package:goal_app/feachers/auth/presentation/auth_screen/auth_screen.dart';
 import 'package:goal_app/feachers/auth/presentation/register_screen/cubit/register_screen_cubit.dart';
 import 'package:goal_app/feachers/goals/domain/repos/goals_repo.dart';
-import 'package:goal_app/feachers/goals/presentation/history_screen/cubit/history_screen_cubit.dart';
-import 'package:goal_app/feachers/goals/presentation/set_goal_screen/cubit/set_goal_screen_cubit.dart';
+import 'package:goal_app/feachers/goals/presentation/goal_screen/cubit/goal_screen_cubit.dart';
+import 'package:goal_app/feachers/profile/domain/repos/profile_repo.dart';
+import 'package:goal_app/feachers/profile/presentation/profile_screen/cubit/profile_screen_cubit.dart';
 
 import 'feachers/auth/data/repos/session_repo_impl.dart';
 import 'feachers/auth/domain/repos/session_repo.dart';
 import 'feachers/auth/presentation/auth_screen/cubit/auth_screen_cubit.dart';
 import 'feachers/goals/data/repos/goals_repo_impl.dart';
+import 'feachers/profile/data/repos/profile_repo_impl.dart';
 
 final sl = GetIt.instance;
 void init() {
@@ -29,16 +31,17 @@ void init() {
         authRepo: sl(),
       ));
 
-  sl.registerFactory<SetGoalScreenCubit>(
-    () => SetGoalScreenCubit(
+  sl.registerFactory<GoalScreenCubit>(
+    () => GoalScreenCubit(
       sessionRepo: sl(),
       goalsRepo: sl(),
     ),
   );
 
-  sl.registerFactory<HistoryScreenCubit>(
-    () => HistoryScreenCubit(
-      sl(),
+  sl.registerFactory<ProfileScreenCubit>(
+    () => ProfileScreenCubit(
+      sessionRepo: sl(),
+      profileRepo: sl(),
     ),
   );
 
@@ -55,4 +58,7 @@ void init() {
   sl.registerLazySingleton<SessionRepo>(() => SessionRepoImpl());
 
   sl.registerLazySingleton<GoalsRepo>(() => GoalsRepoImpl(sessionRepo: sl()));
+
+  sl.registerLazySingleton<ProfileRepo>(
+      () => ProfileRepoImpl(sessionRepo: sl()));
 }

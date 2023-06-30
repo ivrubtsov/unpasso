@@ -1,35 +1,31 @@
 import 'package:equatable/equatable.dart';
 
-class Goal extends Equatable {
+class Profile extends Equatable {
   final String text;
   final int authorId;
   final bool isCompleted;
-  final bool isExist;
   final DateTime createdAt;
   final int? id;
 
-  const Goal({
+  const Profile({
     required this.text,
     required this.createdAt,
     required this.authorId,
     this.id,
     this.isCompleted = false,
-    this.isExist = true,
   });
 
-  Goal copyWith({
+  Profile copyWith({
     String? text,
     int? authorId,
     bool? isCompleted,
-    bool? isExist,
     DateTime? createdAt,
     int? id,
   }) {
-    return Goal(
+    return Profile(
       text: text ?? this.text,
       authorId: authorId ?? this.authorId,
       isCompleted: isCompleted ?? this.isCompleted,
-      isExist: isExist ?? this.isExist,
       createdAt: createdAt ?? this.createdAt,
       id: id ?? this.id,
     );
@@ -41,7 +37,6 @@ class Goal extends Equatable {
         authorId,
         createdAt,
         isCompleted,
-        isExist,
         id,
       ];
 }

@@ -2,9 +2,10 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/consts/app_fonts.dart';
-import '../../../../core/widgets/main_button.dart';
-import '../../../../core/widgets/main_text_field.dart';
+import 'package:goal_app/core/consts/app_colors.dart';
+import 'package:goal_app/core/consts/app_fonts.dart';
+import 'package:goal_app/core/widgets/main_button.dart';
+import 'package:goal_app/core/widgets/main_text_field.dart';
 import 'cubit/register_screen_cubit.dart';
 
 class RegisterScreen extends StatelessWidget {
@@ -14,6 +15,7 @@ class RegisterScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = context.read<RegisterScreenCubit>();
     return Scaffold(
+      backgroundColor: AppColors.altBg,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Padding(
@@ -22,44 +24,60 @@ class RegisterScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 30),
-              // ЗАГОЛОВОК
-              const Text(
-                'Registration',
-                style: AppFonts.header1,
+              // HEADER
+              Center(
+                child: Column(children: const [
+                  Text(
+                    'Create Account',
+                    style: AppFonts.header,
+                  ),
+                  Text(
+                    'First step towards a big goal',
+                    style: AppFonts.subHeader,
+                  ),
+                ]),
               ),
+              // FORM
               const SizedBox(height: 30),
-              // ТЕКСТОВОЕ ПОЛЕ ИМЯ
+              // TEXT FIELD NAME
               _TextField(
                 title: 'username',
-                hintText: 'Enter username',
+                hintText: 'Username',
                 onChanged: model.changeName,
               ),
               const SizedBox(height: 15),
-              // ТЕКСТОВОЕ ПОЛЕ EMAIL
+              // TEXT FIELD EMAIL
               _TextField(
                 title: 'e-mail',
-                hintText: 'Enter e-mail',
+                hintText: 'E-mail',
                 onChanged: model.changeEmail,
               ),
               const SizedBox(height: 15),
-              // ТЕКСТОВОЕ ПОЛЕ ПАРОЛЬ
+              // TEXT FIELD ПАРОЛЬ
               _TextField(
                 title: 'password',
-                hintText: 'Enter password',
+                hintText: 'Password',
                 isPassword: true,
                 onChanged: model.changePassword,
               ),
               const SizedBox(height: 5),
               const _PrivacyPolicyWidget(),
               const SizedBox(height: 15),
-              // КНОПКА LOGIN
+              // REGISTRATION BUTTON
               Align(
                 alignment: Alignment.center,
-                child: MainButtion(
+                child: MainButton(
                   onPressed: () => model.onSignUpTapped(context),
-                  title: 'Sign Up',
+                  title: 'Create account',
                 ),
               ),
+              const SizedBox(height: 15),
+              // LOG IN BUTTON
+              const Align(
+                alignment: Alignment.center,
+                child: _LogInButton(),
+              ),
+              Expanded(child: Container()),
             ],
           ),
         ),
@@ -87,16 +105,18 @@ class _TextField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        /*
         Text(
           title,
           style: AppFonts.header2,
         ),
-        const SizedBox(height: 5),
+        */
         MainTextField(
           isPassword: isPassword,
           hintText: hintText,
           onChanged: onChanged,
-        )
+        ),
+        const SizedBox(height: 20),
       ],
     );
   }
@@ -117,17 +137,19 @@ class _PrivacyPolicyWidget extends StatelessWidget {
               onChanged: (value) {
                 model.changeTermsAcception(value ?? false);
               },
+              checkColor: AppColors.bg,
+              fillColor: MaterialStateProperty.all(AppColors.enabled),
             ),
             RichText(
               text: TextSpan(
                 children: [
                   const TextSpan(
                     text: 'I agree to ',
-                    style: TextStyle(color: Colors.black),
+                    style: AppFonts.inputText,
                   ),
                   TextSpan(
                     text: 'Terms and Privacy policy',
-                    style: const TextStyle(color: Colors.blue),
+                    style: AppFonts.inputLink,
                     recognizer: TapGestureRecognizer()
                       ..onTap = () => model.onPolicyPrivacyTapped(context),
                   ),
@@ -137,6 +159,30 @@ class _PrivacyPolicyWidget extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+}
+
+class _LogInButton extends StatelessWidget {
+  const _LogInButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final model = context.read<RegisterScreenCubit>();
+    return Row(
+      children: [
+        const Text(
+          'Have an account? ',
+          style: AppFonts.inputText,
+        ),
+        TextButton(
+          onPressed: () => model.onLogInTapped(context),
+          child: const Text(
+            'Log in',
+            style: AppFonts.inputLink,
+          ),
+        )
+      ],
     );
   }
 }

@@ -11,10 +11,10 @@ class ApiConsts {
       '$_baseUrl/users?username=$name&email=$email&password=$password';
 
   static String createGoal(String title, int authorId, String date) =>
-      '$_baseUrl/posts?status=publish&title=$title&author=$authorId&categories=6&date=$date';
+      '$_baseUrl/posts?status=publish&title=$title&author=$authorId&categories=6&date_gmt=$date';
 
   static String getUserGoals(int authorId) =>
-      '$_baseUrl/posts?author=$authorId';
+      '$_baseUrl/posts?per_page=100&status=publish,future&author=$authorId';
 
   static String completeGoal(int postId) => '$_baseUrl/posts/$postId?tags=8';
 

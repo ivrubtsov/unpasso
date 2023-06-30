@@ -47,7 +47,7 @@ class RegisterScreenCubit extends Cubit<RegisterScreenState> {
       ));
 
       Navigator.of(context).pushNamedAndRemoveUntil(
-        MainRoutes.setGoalScreen,
+        MainRoutes.goalScreen,
         (_) => false,
       );
     } on AuthException catch (e) {
@@ -56,6 +56,12 @@ class RegisterScreenCubit extends Cubit<RegisterScreenState> {
         e.message ?? 'Unknown error. Please try again later',
       );
     }
+  }
+
+  void onLogInTapped(BuildContext context) {
+    Navigator.of(context).pushNamed(
+      AuthRoutes.authScreen,
+    );
   }
 
   void changeEmail(String value) {

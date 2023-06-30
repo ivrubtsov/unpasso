@@ -1,7 +1,7 @@
-import '../../../domain/entities/goal.dart';
+import '../../../domain/entities/profile.dart';
 
-class GoalModel extends Goal {
-  GoalModel({
+class ProfileModel extends Profile {
+  ProfileModel({
     required String text,
     required DateTime createdAt,
     required int authorId,
@@ -14,7 +14,7 @@ class GoalModel extends Goal {
           isCompleted: isCompleted,
           id: id,
         );
-  factory GoalModel.fromGoal(Goal goal) => GoalModel(
+  factory ProfileModel.fromGoal(Goal goal) => ProfileModel(
         text: goal.text,
         createdAt: goal.createdAt,
         authorId: goal.authorId,
@@ -22,7 +22,7 @@ class GoalModel extends Goal {
         isCompleted: goal.isCompleted,
       );
 
-  factory GoalModel.fromJson(Map<String, dynamic> json) {
+  factory ProfileModel.fromJson(Map<String, dynamic> json) {
     bool isCompleted;
     final tags = json['tags'] as List<dynamic>?;
     // Если тэг == 8, то цель выполнена
@@ -30,9 +30,10 @@ class GoalModel extends Goal {
     // Если нет, то выполнена
     // Поэтому не делаю проверку, есть ли 8 в массиве или нет
     tags == null || tags.isEmpty ? isCompleted = false : isCompleted = true;
-    return GoalModel(
+
+    return ProfileModel(
       text: json['title']['rendered'],
-      createdAt: DateTime.parse(json['date']).toLocal(),
+      createdAt: DateTime.parse(json['date']),
       authorId: json['author'],
       isCompleted: isCompleted,
       id: json['id'],
