@@ -7,10 +7,10 @@ import 'package:goal_app/feachers/auth/presentation/register_screen/cubit/regist
 import 'package:goal_app/feachers/auth/presentation/register_screen/register_screen.dart';
 import 'package:goal_app/feachers/goals/presentation/goal_screen/cubit/goal_screen_cubit.dart';
 import 'package:goal_app/feachers/goals/presentation/goal_screen/goal_screen.dart';
-//import 'package:goal_app/feachers/profile/presentation/profile_screen/cubit/profile_screen_cubit.dart';
-//import 'package:goal_app/feachers/profile/presentation/profile_screen/profile_screen.dart';
+import 'package:goal_app/feachers/profile/presentation/profile_screen/cubit/profile_screen_cubit.dart';
+import 'package:goal_app/feachers/profile/presentation/profile_screen/profile_screen.dart';
 
-import '../../feachers/auth/presentation/auth_cubit/auth_cubit.dart';
+import 'package:goal_app/feachers/auth/presentation/auth_cubit/auth_cubit.dart';
 
 abstract class AuthRoutes {
   static const authScreen = '/authScreen';
@@ -41,8 +41,8 @@ class AppRouter {
         return _buildRegisterScreen();
       case MainRoutes.goalScreen:
         return _buildGoalScreen();
-//      case MainRoutes.profileScreen:
-//        return _buildProfileScreen();
+      case MainRoutes.profileScreen:
+        return _buildProfileScreen();
       default:
         return _buildNavigationUnkwown();
     }
@@ -80,7 +80,6 @@ class AppRouter {
             ));
   }
 
-/*
   Route _buildProfileScreen() {
     return MaterialPageRoute(
         builder: (context) => BlocProvider.value(
@@ -91,7 +90,6 @@ class AppRouter {
               child: const ProfileScreen(),
             ));
   }
-  */
 
   Route _buildNavigationUnkwown() {
     return MaterialPageRoute(

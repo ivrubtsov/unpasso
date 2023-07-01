@@ -1,19 +1,9 @@
-import 'package:goal_app/feachers/goals/domain/entities/goal.dart';
+import 'package:goal_app/feachers/profile/domain/entities/profile.dart';
 
 enum GetProfileQueryType { userHistory }
 
-/// completeGoal - завершает цель
-/// createGoal - получаем цель на сегодня
-/// createGoal - создаем цель
-/// getGoals - получаем историю целей пользователя
 abstract class ProfileRepo {
-  Future<Goal> createGoal(Goal goal);
+  Future<Profile?> getAchievements();
 
-  Future<Goal?> getTodaysGoal();
-
-  Future<void> removeTodaysGoal();
-
-  Future<List<Goal>> getGoals(GetProfileQueryType queryType);
-
-  Future<void> completeGoal(Goal goal);
+  Future<void> setAchievements(List<int> achievements);
 }

@@ -2,37 +2,34 @@ part of 'profile_screen_cubit.dart';
 
 enum ProfileScreenStateStatus {
   loading,
-  noGoalSet,
+  loaded,
   error,
 }
 
 class ProfileScreenState extends Equatable {
-  final Profile goal;
+  final Profile profile;
   final ProfileScreenStateStatus status;
 
-  bool get isCheckboxActive =>
-      goal.text.isNotEmpty || (goal.isCompleted && goal.text.isNotEmpty);
-
   const ProfileScreenState({
-    required this.goal,
+    required this.profile,
     required this.status,
   });
 
   factory ProfileScreenState.initial() => ProfileScreenState(
-        goal: Profile(text: '', createdAt: DateTime(0), authorId: 0),
-        status: ProfileScreenStateStatus.noGoalSet,
+        profile: Profile(id: 0, achievements: []),
+        status: ProfileScreenStateStatus.loaded,
       );
 
   ProfileScreenState copyWith({
-    Profile? goal,
+    Profile? profile,
     ProfileScreenStateStatus? status,
   }) {
     return ProfileScreenState(
-      goal: goal ?? this.goal,
+      profile: profile ?? this.profile,
       status: status ?? this.status,
     );
   }
 
   @override
-  List<Object> get props => [goal, status];
+  List<Object> get props => [profile, status];
 }
