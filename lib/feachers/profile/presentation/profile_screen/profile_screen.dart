@@ -52,26 +52,30 @@ class PersonalData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model = context.read<ProfileScreenCubit>();
+    final name = model.getName();
+    final username = model.getUsername();
     return Padding(
-      padding: const EdgeInsets.only(top: 50),
-      child: SizedBox(
-        child: Column(
-          children: const [
-            Align(
-                alignment: Alignment(0, -0.6),
-                child: Icon(
-                  Icons.check,
-                  size: 60,
-                  color: AppColors.ok,
-                )),
-            Align(
-                alignment: Alignment(0, -0.4),
-                child: Text(
-                  'Well done!\nYou did it!',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                )),
-          ],
-        ),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      child: Row(
+        children: [
+          Icon(
+            Icons.person,
+            size: 56,
+          ),
+          Column(
+            children: [
+              Text(
+                name,
+                style: AppFonts.profileName,
+              ),
+              Text(
+                username,
+                style: AppFonts.profileUsername,
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

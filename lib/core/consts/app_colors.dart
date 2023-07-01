@@ -33,4 +33,6 @@ class AppColors {
   static const achIconNonActive = Colors.blueGrey;
   static const profileBg = Color.fromRGBO(237, 242, 255, 1);
   static const profileAchBg = Colors.white;
+  static const profileName = Colors.black;
+  static const profileUsername = Color.fromRGBO(80, 85, 92, 1);
 }

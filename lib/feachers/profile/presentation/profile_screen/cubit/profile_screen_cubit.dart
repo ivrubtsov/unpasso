@@ -26,6 +26,19 @@ class ProfileScreenCubit extends Cubit<ProfileScreenState> {
   final ProfileRepo _profileRepo;
   final SessionRepo _sessionRepo;
 
+// ПОЛУЧАЕМ ДАННЫЕ ПОЛЬЗОВАТЕЛЯ
+  int getUserId() {
+    return _sessionRepo.sessionData!.id;
+  }
+
+  String getName() {
+    return _sessionRepo.sessionData!.username;
+  }
+
+  String getUsername() {
+    return '';
+  }
+
 // ПОЛУЧАЕМ АЧИВКИ
   Future<void> getAchieves() async {
     emit(state.copyWith(status: ProfileScreenStateStatus.loading));

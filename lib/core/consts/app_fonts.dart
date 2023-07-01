@@ -81,6 +81,20 @@ class AppFonts {
     color: AppColors.goalHint,
   );
 
+  static const profileName = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w500,
+    fontSize: 24,
+    color: AppColors.profileName,
+  );
+
+  static const profileUsername = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 12,
+    color: AppColors.profileUsername,
+  );
+
   static const achHeader = TextStyle(
     fontFamily: 'Fredoka',
     fontWeight: FontWeight.w500,
