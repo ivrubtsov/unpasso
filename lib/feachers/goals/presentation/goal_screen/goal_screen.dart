@@ -109,7 +109,7 @@ class DatesListView extends StatelessWidget {
       builder: (context, state) {
         final goals = state.goals;
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             controller: dateListScrollController,
@@ -129,19 +129,19 @@ class DateListViewItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 24,
-      height: 38,
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      width: 24.0,
+      height: 38.0,
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
       child: Column(children: [
         Container(
-          width: 24,
-          height: 24,
+          width: 24.0,
+          height: 24.0,
           alignment: Alignment.center,
           child: DateButton(goal: goal),
         ),
         Container(
-          width: 24,
-          height: 14,
+          width: 24.0,
+          height: 14.0,
           alignment: Alignment.center,
           child: DateStatus(goal: goal),
         ),
@@ -196,14 +196,14 @@ class DateStatus extends StatelessWidget {
       return const Icon(
         Icons.check,
         color: AppColors.dateIcon,
-        size: 14,
+        size: 14.0,
       );
     }
     if (goal.isExist) {
       return const Icon(
         Icons.circle,
         color: AppColors.dateIcon,
-        size: 4,
+        size: 4.0,
       );
     }
     return const Text('');
@@ -294,12 +294,12 @@ class GoalItem extends StatelessWidget {
     return Container(
       width: goalBoxSize,
       height: goalBoxSize,
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 20.0),
       color: AppColors.goalBg,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(20.0),
       ),
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+      margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
       child: Column(
         children: [
           Text(
@@ -329,12 +329,12 @@ class EnterGoal extends StatelessWidget {
     return Container(
       width: goalBoxSize,
       height: goalBoxSize,
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 20.0),
       color: AppColors.goalBg,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(20.0),
       ),
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+      margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
       child: Column(
         children: [
           Text(
@@ -358,13 +358,13 @@ class CompletedStatus extends StatelessWidget {
   Widget build(BuildContext context) {
     if (isCompleted) {
       return Container(
-        height: 40,
+        height: 40.0,
         alignment: Alignment.center,
         child: Column(children: const [
           Icon(
             Icons.check_circle,
             color: AppColors.goalHint,
-            size: 20,
+            size: 20.0,
           ),
           Text(
             'The goal is completed!',
@@ -374,7 +374,7 @@ class CompletedStatus extends StatelessWidget {
       );
     } else {
       return Container(
-        height: 40,
+        height: 40.0,
         alignment: Alignment.center,
         child: const Text(
           'Swipe down to complete!',
@@ -390,7 +390,7 @@ class CompleteGoalBG extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 75,
+      height: 75.0,
       alignment: Alignment.center,
       child: Image.asset('assets/goodjob.png'),
     );
@@ -411,7 +411,7 @@ class QuoteWidget extends StatelessWidget {
           '"A journey of a thousand miles begins with a single step"',
           style: AppFonts.goal,
         ),
-        SizedBox(height: 20),
+        SizedBox(height: 20.0),
         Align(
           alignment: Alignment.bottomRight,
           child: Text(

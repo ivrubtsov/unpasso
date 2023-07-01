@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:goal_app/core/consts/app_colors.dart';
 import 'package:goal_app/core/consts/app_fonts.dart';
-
-import 'package:goal_app/feachers/profile/domain/entities/profile.dart';
 
 import 'package:goal_app/feachers/profile/presentation/profile_screen/cubit/profile_screen_cubit.dart';
 
@@ -56,12 +53,12 @@ class PersonalData extends StatelessWidget {
     final name = model.getName();
     final username = model.getUsername();
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
       child: Row(
         children: [
           Icon(
             Icons.person,
-            size: 56,
+            size: 56.0,
           ),
           Column(
             children: [
@@ -91,29 +88,32 @@ class AchievementsView extends StatelessWidget {
         if (state.status == ProfileScreenStateStatus.loading) {
           return Container(
             alignment: Alignment.center,
-            height: 256,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            height: 256.0,
+            padding:
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
             child: const CircularProgressIndicator(),
           );
         } else {
           return Container(
             // width: max,
             // height: 256,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
             color: AppColors.profileAchBg,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(20.0),
             ),
-            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+            margin:
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
             child: Column(
               children: [
                 Text(
                   'Achievements',
-                  style: AppFonts.goalHeader,
+                  style: AppFonts.achHeader,
                 ),
                 Text(
                   state.profile.achievements.length.toString(),
-                  style: AppFonts.goal,
+                  style: AppFonts.achText,
                 ),
                 AchievementsList(),
               ],
