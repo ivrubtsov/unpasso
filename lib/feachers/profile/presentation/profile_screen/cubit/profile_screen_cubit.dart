@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,6 +38,36 @@ class ProfileScreenCubit extends Cubit<ProfileScreenState> {
     } on ServerException {
       emit(state.copyWith(status: ProfileScreenStateStatus.error));
     }
+  }
+
+// ВЫВОДИМ АЧИВКИ НА СТРАНИЦЕ ПРОФИЛЯ
+  List<Widget> showAchieves() {
+    final List<Widget> achs = [];
+    for (var i = 0; i < Achievements.length; i++) {
+      achs.add(Container(
+        alignment: Alignment.center,
+        width: 256,
+        height: 256,
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        child: Column(
+          children: [
+            Achievements.getIcon(
+              i,
+              state.profile.achievements.contains(i), // isActive
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Text(
+              Achievements.texts[i],
+              style: AppFonts.achText,
+            ),
+          ],
+        ),
+      ));
+    }
+
+    return achs;
   }
 
 // ДОБАВЛЯЕМ НОВУЮ АЧИВКУ (СОХРАНЯЕМ ОБНОВЛЕННЫЙ СПИСОК)

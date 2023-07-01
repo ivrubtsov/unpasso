@@ -4,6 +4,8 @@ import 'package:goal_app/core/consts/app_colors.dart';
 class Achievements {
   Achievements._();
 
+  static const length = 2;
+
   static List<String> texts = [
     // 0
     'Do you feel it? You have just become a better version of yourself',
@@ -37,7 +39,7 @@ class Achievements {
     return Icon(
       Achievements.icons[ach],
       color: AppColors.achIconActive,
-      size: 32,
+      size: 64,
     );
   }
 
@@ -45,7 +47,15 @@ class Achievements {
     return Icon(
       Achievements.icons[ach],
       color: AppColors.achIconNonActive,
-      size: 32,
+      size: 64,
     );
+  }
+
+  static Widget getIcon(int ach, bool isActive) {
+    if (isActive) {
+      return getActiveIcon(ach);
+    } else {
+      return getNonActiveIcon(ach);
+    }
   }
 }

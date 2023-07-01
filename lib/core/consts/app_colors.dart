@@ -31,4 +31,6 @@ class AppColors {
   static const achText = Colors.white;
   static const achIconActive = Colors.amber;
   static const achIconNonActive = Colors.blueGrey;
+  static const profileBg = Color.fromRGBO(237, 242, 255, 1);
+  static const profileAchBg = Colors.white;
 }
