@@ -23,7 +23,7 @@ class RegisterScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 30),
+              const SizedBox(height: 30.0),
               // HEADER
               Center(
                 child: Column(children: const [
@@ -38,21 +38,21 @@ class RegisterScreen extends StatelessWidget {
                 ]),
               ),
               // FORM
-              const SizedBox(height: 30),
+              const SizedBox(height: 30.0),
               // TEXT FIELD NAME
               _TextField(
                 title: 'username',
                 hintText: 'Username',
                 onChanged: model.changeName,
               ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 15.0),
               // TEXT FIELD EMAIL
               _TextField(
                 title: 'e-mail',
                 hintText: 'E-mail',
                 onChanged: model.changeEmail,
               ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 15.0),
               // TEXT FIELD ПАРОЛЬ
               _TextField(
                 title: 'password',
@@ -60,9 +60,9 @@ class RegisterScreen extends StatelessWidget {
                 isPassword: true,
                 onChanged: model.changePassword,
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 5.0),
               const _PrivacyPolicyWidget(),
-              const SizedBox(height: 15),
+              const SizedBox(height: 15.0),
               // REGISTRATION BUTTON
               Align(
                 alignment: Alignment.center,
@@ -71,7 +71,7 @@ class RegisterScreen extends StatelessWidget {
                   title: 'Create account',
                 ),
               ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 15.0),
               // LOG IN BUTTON
               const Align(
                 alignment: Alignment.center,
@@ -116,7 +116,7 @@ class _TextField extends StatelessWidget {
           hintText: hintText,
           onChanged: onChanged,
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 20.0),
       ],
     );
   }

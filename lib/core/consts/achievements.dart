@@ -31,7 +31,7 @@ class Achievements {
     return Icon(
       Achievements.icons[ach],
       color: AppColors.achIconActive,
-      size: 128,
+      size: 128.0,
     );
   }
 
@@ -39,7 +39,7 @@ class Achievements {
     return Icon(
       Achievements.icons[ach],
       color: AppColors.achIconActive,
-      size: 64,
+      size: 64.0,
     );
   }
 
@@ -47,7 +47,7 @@ class Achievements {
     return Icon(
       Achievements.icons[ach],
       color: AppColors.achIconNonActive,
-      size: 64,
+      size: 64.0,
     );
   }
 

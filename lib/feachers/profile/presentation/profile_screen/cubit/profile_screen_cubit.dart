@@ -61,7 +61,7 @@ class ProfileScreenCubit extends Cubit<ProfileScreenState> {
         alignment: Alignment.center,
         width: 256,
         height: 256,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
         child: Column(
           children: [
             Achievements.getIcon(
@@ -69,7 +69,7 @@ class ProfileScreenCubit extends Cubit<ProfileScreenState> {
               state.profile.achievements.contains(i), // isActive
             ),
             const SizedBox(
-              height: 20,
+              height: 20.0,
             ),
             Text(
               Achievements.texts[i],
@@ -109,10 +109,10 @@ class ProfileScreenCubit extends Cubit<ProfileScreenState> {
       builder: (BuildContext context) {
         return Container(
           height: 300,
-          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
           color: AppColors.achBg,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(20.0),
           ),
           child: Center(
             child: Column(

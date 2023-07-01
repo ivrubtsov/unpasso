@@ -17,11 +17,11 @@ class AuthScreen extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 30),
+              const SizedBox(height: 30.0),
               // HEADER
               Center(
                 child: Column(children: const [
@@ -35,16 +35,16 @@ class AuthScreen extends StatelessWidget {
                   ),
                 ]),
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 30.0),
               // FORM
-              const SizedBox(height: 30),
+              const SizedBox(height: 30.0),
               // TEXT FIELD EMAIL
               _TextField(
                 title: 'username',
                 hintText: 'Username',
                 onChanged: model.changeEmail,
               ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 15.0),
               // TEXT FIELD ПАРОЛЬ
               _TextField(
                 title: 'password',
@@ -57,7 +57,7 @@ class AuthScreen extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 child: _ForgotPasswordButton(),
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 30.0),
               // LOGIN BUTTON
               Align(
                 alignment: Alignment.center,
@@ -66,7 +66,7 @@ class AuthScreen extends StatelessWidget {
                   title: 'Log in',
                 ),
               ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 15.0),
               // SIGN UP BUTTON
               const Align(
                 alignment: Alignment.center,
