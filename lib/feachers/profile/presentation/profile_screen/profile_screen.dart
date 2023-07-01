@@ -107,6 +107,10 @@ class AchievementsView extends StatelessWidget {
                   'Achievements',
                   style: AppFonts.goalHeader,
                 ),
+                Text(
+                  state.profile.achievements.length.toString(),
+                  style: AppFonts.goal,
+                ),
                 AchievementsList(),
               ],
             ),
