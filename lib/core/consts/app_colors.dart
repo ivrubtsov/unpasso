@@ -23,9 +23,11 @@ class AppColors {
   static const goalDate = Colors.black;
   static const goalText = Colors.black;
   static const goalHint = Color.fromRGBO(43, 39, 239, 1);
+  // Funny goals
+  static const funBg = Color.fromRGBO(248, 250, 251, 1);
+  static const funHeader = Colors.black;
+  static const funText = Colors.black;
 
-  static const ok = Colors.green;
-  static const checkbox = Color.fromRGBO(71, 77, 175, 1);
   // Profile and achievements
   static const achBg = Color.fromRGBO(0, 26, 52, 0.9);
   static const achText = Colors.white;

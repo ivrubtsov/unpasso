@@ -1,9 +1,11 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:goal_app/core/consts/funnytasks.dart';
 import 'package:goal_app/core/exceptions/exceptions.dart';
 import 'package:goal_app/core/navigation/app_router.dart';
 import 'package:goal_app/core/widgets/error_presentor.dart';
+import 'package:goal_app/core/widgets/fun.dart';
 import 'package:goal_app/feachers/auth/domain/repos/session_repo.dart';
 import 'package:goal_app/feachers/goals/domain/entities/goal.dart';
 import 'package:goal_app/feachers/goals/domain/repos/goals_repo.dart';
@@ -130,5 +132,23 @@ class GoalScreenCubit extends Cubit<GoalScreenState> {
 // КНОПКА ПРОФИЛЬ
   void onProfileTapped(BuildContext context) {
     Navigator.of(context).pushNamed(MainRoutes.profileScreen);
+  }
+
+// ВОЗВРАЩАЕМ СОСТОЯНИЕ ПОВОРОТА КАРТОЧКИ
+  bool getDisplayFunFront() {
+    return this.state.displayFunFront;
+  }
+
+// ПЕРЕВОРАЧИВАЕМ КАРТОЧКУ С ЗАДАНИЯМИ
+  void flipFunCard() {
+    emit(state.copyWith(displayFunFront: !this.state.displayFunFront));
+  }
+
+// ВОЗВРАЩАЕМ ВИДЖЕТ (ЛИЦЕВАЯ ИЛИ ЗАДНЯЯ СТОРОНА) В ЗАВИСИМОСТИ ОТ СОСТОЯНИЯ
+  Widget getFunGoalWidget() {
+    final String funGoalText = FunnyTasks.getRandomTask();
+    return this.state.displayFunFront
+        ? FunFront()
+        : FunBack(funText: funGoalText);
   }
 }

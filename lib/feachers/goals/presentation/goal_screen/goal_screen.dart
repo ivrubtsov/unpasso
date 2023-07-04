@@ -1,11 +1,12 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:goal_app/core/widgets/fun.dart';
 import 'package:intl/intl.dart';
 import 'package:goal_app/core/consts/app_colors.dart';
 import 'package:goal_app/core/consts/app_fonts.dart';
 
 import 'package:goal_app/feachers/goals/domain/entities/goal.dart';
-
 import 'package:goal_app/feachers/goals/presentation/goal_screen/cubit/goal_screen_cubit.dart';
 
 ScrollController dateListScrollController = ScrollController();
@@ -87,6 +88,7 @@ class GoalScreenContent extends StatelessWidget {
           children: [
             DatesListView(goals: goals),
             GoalsMainContainer(goals: goals),
+            FunFlipAnimation(),
             /* Expanded(
               child: Align(
                 alignment: Alignment.bottomLeft,
@@ -452,4 +454,51 @@ class GoalTextField extends StatelessWidget {
       },
     );
   }
+}
+
+class FunFlipAnimation extends StatelessWidget {
+  const FunFlipAnimation({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final model = context.read<GoalScreenCubit>();
+
+    return BlocBuilder<GoalScreenCubit, GoalScreenState>(
+        builder: (context, state) {
+      return GestureDetector(
+        onTap: () => model.flipFunCard(),
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 800),
+          transitionBuilder: __transitionBuilder,
+          layoutBuilder: (widget, list) =>
+              Stack(children: [widget ?? const FunFront(), ...list]),
+          switchInCurve: Curves.easeInBack,
+          switchOutCurve: Curves.easeInBack.flipped,
+          child: model.getFunGoalWidget(),
+        ),
+      );
+    });
+  }
+}
+
+Widget __transitionBuilder(Widget widget, Animation<double> animation) {
+  final rotateAnim = Tween(begin: pi, end: 0.0).animate(animation);
+  return AnimatedBuilder(
+    animation: rotateAnim,
+    child: widget,
+    builder: (context, widget) {
+      final model = context.read<GoalScreenCubit>();
+      final isUnder = (ValueKey(model.getDisplayFunFront()) != widget?.key);
+      var tilt = ((animation.value - 0.5).abs() - 0.5) * 0.003;
+      tilt *= isUnder ? -1.0 : 1.0;
+      final value = isUnder ? min(rotateAnim.value, pi / 2) : rotateAnim.value;
+      return Transform(
+        transform: Matrix4.rotationY(value)..setEntry(3, 0, tilt),
+        alignment: Alignment.center,
+        child: widget,
+      );
+    },
+  );
 }

@@ -74,6 +74,20 @@ class AppFonts {
     color: AppColors.goalText,
   );
 
+  static const funHeader = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w500,
+    fontSize: 24.0,
+    color: AppColors.funHeader,
+  );
+
+  static const funText = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 14.0,
+    color: AppColors.funText,
+  );
+
   static const goalHint = TextStyle(
     fontFamily: 'Fredoka',
     fontWeight: FontWeight.w400,

@@ -14,6 +14,7 @@ class GoalScreenState extends Equatable {
   final Goal goal;
   final List<Goal> goals;
   final GoalScreenStateStatus status;
+  final bool displayFunFront;
 
   bool get isCheckboxActive =>
       goal.text.isNotEmpty || (goal.isCompleted && goal.text.isNotEmpty);
@@ -23,6 +24,7 @@ class GoalScreenState extends Equatable {
     required this.goal,
     required this.goals,
     required this.status,
+    required this.displayFunFront,
   });
 
   factory GoalScreenState.initial() => GoalScreenState(
@@ -30,6 +32,7 @@ class GoalScreenState extends Equatable {
         goal: Goal(text: '', createdAt: DateTime(0), authorId: 0),
         goals: [],
         status: GoalScreenStateStatus.noGoalSet,
+        displayFunFront: true,
       );
 
   GoalScreenState copyWith({
@@ -37,15 +40,17 @@ class GoalScreenState extends Equatable {
     Goal? goal,
     List<Goal>? goals,
     GoalScreenStateStatus? status,
+    bool displayFunFront = true,
   }) {
     return GoalScreenState(
       date: date ?? this.date,
       goal: goal ?? this.goal,
       goals: goals ?? this.goals,
       status: status ?? this.status,
+      displayFunFront: displayFunFront,
     );
   }
 
   @override
-  List<Object> get props => [date, goal, goals, status];
+  List<Object> get props => [date, goal, goals, status, displayFunFront];
 }
