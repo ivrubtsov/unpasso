@@ -13,6 +13,7 @@ class GoalScreenState extends Equatable {
   final DateTime date;
   final Goal goal;
   final List<Goal> goals;
+  final List<int> achievements;
   final GoalScreenStateStatus status;
   final bool displayFunFront;
 
@@ -23,6 +24,7 @@ class GoalScreenState extends Equatable {
     required this.date,
     required this.goal,
     required this.goals,
+    required this.achievements,
     required this.status,
     required this.displayFunFront,
   });
@@ -31,6 +33,7 @@ class GoalScreenState extends Equatable {
         date: DateTime.now(),
         goal: Goal(text: '', createdAt: DateTime(0), authorId: 0),
         goals: [],
+        achievements: [],
         status: GoalScreenStateStatus.noGoalSet,
         displayFunFront: true,
       );
@@ -39,6 +42,7 @@ class GoalScreenState extends Equatable {
     DateTime? date,
     Goal? goal,
     List<Goal>? goals,
+    List<int>? achievements,
     GoalScreenStateStatus? status,
     bool displayFunFront = true,
   }) {
@@ -46,11 +50,13 @@ class GoalScreenState extends Equatable {
       date: date ?? this.date,
       goal: goal ?? this.goal,
       goals: goals ?? this.goals,
+      achievements: achievements ?? this.achievements,
       status: status ?? this.status,
       displayFunFront: displayFunFront,
     );
   }
 
   @override
-  List<Object> get props => [date, goal, goals, status, displayFunFront];
+  List<Object> get props =>
+      [date, goal, goals, achievements, status, displayFunFront];
 }

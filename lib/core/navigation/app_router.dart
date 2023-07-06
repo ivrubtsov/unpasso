@@ -75,6 +75,7 @@ class AppRouter {
               value: GoalScreenCubit(
                 goalsRepo: sl(),
                 sessionRepo: sl(),
+                profileRepo: sl(),
               )..initGoalsScreen(),
               child: const GoalScreen(),
             ));
@@ -86,7 +87,7 @@ class AppRouter {
               value: ProfileScreenCubit(
                 profileRepo: sl(),
                 sessionRepo: sl(),
-              )..getAchieves(),
+              )..initProfileScreen(),
               child: const ProfileScreen(),
             ));
   }

@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:goal_app/core/widgets/fun.dart';
+import 'package:goal_app/feachers/goals/data/models/goal_model/goal_model.dart';
 import 'package:intl/intl.dart';
 import 'package:goal_app/core/consts/app_colors.dart';
 import 'package:goal_app/core/consts/app_fonts.dart';
@@ -10,6 +11,7 @@ import 'package:goal_app/feachers/goals/domain/entities/goal.dart';
 import 'package:goal_app/feachers/goals/presentation/goal_screen/cubit/goal_screen_cubit.dart';
 
 ScrollController dateListScrollController = ScrollController();
+ScrollController goalsListScrollController = ScrollController();
 
 class GoalScreen extends StatelessWidget {
   const GoalScreen({Key? key}) : super(key: key);
@@ -37,36 +39,6 @@ class GoalScreen extends StatelessWidget {
       ),
       backgroundColor: AppColors.bg,
       body: const GoalScreenContent(),
-      /* body: Padding(
-        padding: const EdgeInsets.only(
-          left: 30,
-          right: 30,
-          bottom: 50,
-        ),
-        child: Stack(
-          children: [
-            BlocBuilder<SetGoalScreenCubit, SetGoalScreenState>(
-              builder: (context, state) {
-                if (state.status == SetGoalScreenStateStatus.goalCompleted) {
-                  return const _GoalCompletedWidget();
-                }
-                return Container();
-              },
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Center(child: _GoalWidget()),
-              ],
-            ),
-            const Align(
-              alignment: Alignment.bottomLeft,
-              child: QuoteWidget(),
-            )
-          ],
-        ),
-      ), */
     );
   }
 }
@@ -112,12 +84,17 @@ class DatesListView extends StatelessWidget {
         final goals = state.goals;
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            controller: dateListScrollController,
-            itemCount: goals.length,
-            itemBuilder: (BuildContext context, int index) =>
-                DateListViewItem(goal: goals[index]),
+          child: SizedBox(
+            height: 62.0,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              reverse: true,
+              controller: dateListScrollController,
+              itemCount: goals.length,
+              itemBuilder: (BuildContext context, int index) {
+                return DateListViewItem(goal: goals[index]);
+              },
+            ),
           ),
         );
       },
@@ -131,10 +108,9 @@ class DateListViewItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 24.0,
-      height: 38.0,
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
       child: Column(children: [
+        /*
         Container(
           width: 24.0,
           height: 24.0,
@@ -147,6 +123,9 @@ class DateListViewItem extends StatelessWidget {
           alignment: Alignment.center,
           child: DateStatus(goal: goal),
         ),
+        */
+        DateButton(goal: goal),
+        DateStatus(goal: goal),
       ]),
     );
   }
@@ -164,7 +143,7 @@ class DateButton extends StatelessWidget {
         if (selectedDate.year == goal.createdAt.year &&
             selectedDate.month == goal.createdAt.month &&
             selectedDate.day == goal.createdAt.day) {
-          return FloatingActionButton(
+          return FloatingActionButton.small(
             onPressed: () {},
             backgroundColor: AppColors.selectedDateBg,
             child: Text(
@@ -173,9 +152,10 @@ class DateButton extends StatelessWidget {
             ),
           );
         } else {
-          return FloatingActionButton(
+          final double winWidth = MediaQuery.of(context).size.width;
+          return FloatingActionButton.small(
             onPressed: () {
-              model.setSelectedDate(goal.createdAt);
+              model.setSelectedDate(goal.createdAt, winWidth);
             },
             backgroundColor: AppColors.dateBg,
             child: Text(
@@ -203,12 +183,16 @@ class DateStatus extends StatelessWidget {
     }
     if (goal.isExist) {
       return const Icon(
-        Icons.circle,
+        Icons.close,
         color: AppColors.dateIcon,
-        size: 4.0,
+        size: 14.0,
       );
     }
-    return const Text('');
+    return const Icon(
+      Icons.fiber_new,
+      color: AppColors.dateBg,
+      size: 14.0,
+    );
   }
 }
 
@@ -219,103 +203,242 @@ class GoalsMainContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<GoalScreenCubit, GoalScreenState>(
       builder: (context, state) {
-        DateTime today = DateTime.now();
-        if (goals.isEmpty ||
-            !(goals[goals.length - 1].createdAt.year == today.year &&
-                goals[goals.length - 1].createdAt.month == today.month &&
-                goals[goals.length - 1].createdAt.day == today.day)) {
-          final model = context.read<GoalScreenCubit>();
-          final authorId = model.getUserId();
-          goals.add(Goal(
-            createdAt: DateTime.now(),
-            text: '%%!!-!!%%',
-            authorId: authorId,
-            isCompleted: false,
-          ));
-        }
-        return ListView.builder(
-          itemCount: goals.length,
-          itemBuilder: (BuildContext context, int index) => GoalListViewItem(
-            goal: goals[index],
-            // index: ValueKey<int>(goals[index]),
-            index: ValueKey<int>(index),
-          ),
-        );
+        final double goalBoxSize = MediaQuery.of(context).size.width - 40;
+        return SizedBox(
+            height: goalBoxSize,
+            child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                controller: goalsListScrollController,
+                reverse: true,
+                itemCount: goals.length,
+                itemBuilder: (BuildContext context, int index) {
+                  /*WidgetsBinding.instance.addPostFrameCallback((_) => {
+                        goalsListScrollController.jumpTo(
+                            goalsListScrollController.position.maxScrollExtent)
+                      });*/
+                  final model = context.read<GoalScreenCubit>();
+                  final DateTime today = DateTime.now();
+                  // WIDGET FOR ENTERING A NEW GOAL
+                  if (goals[index].text == '%%!!-!!%%') {
+                    return Container(
+                      key: ValueKey<Goal>(goals[index]),
+                      width: goalBoxSize,
+                      height: goalBoxSize,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20.0, vertical: 20.0),
+                      decoration: BoxDecoration(
+                        color: AppColors.goalBg,
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 20.0, vertical: 0.0),
+                      child: Column(
+                        children: [
+                          // CARD HEADER WITH A BUTTON
+                          Row(
+                            children: [
+                              const Expanded(
+                                child: SizedBox(
+                                  child: Text(
+                                    'Today',
+                                    style: AppFonts.goalHeader,
+                                    textAlign: TextAlign.left,
+                                  ),
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: OutlinedButton(
+                                  onPressed: () {
+                                    model.submitGoal(context);
+                                    // final id = state.goal.id;
+                                    // final g = state.goal;
+                                    goals.removeAt(index);
+                                    goals.insert(
+                                        0,
+                                        GoalModel(
+                                          createdAt: today,
+                                          text: state.goal.text,
+                                          authorId: state.goal.authorId,
+                                          isCompleted: false,
+                                          isExist: true,
+                                        ));
+                                  },
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                        AppColors.enabled),
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            side: const BorderSide(
+                                                color: AppColors.enabled))),
+                                  ),
+                                  child: Container(
+                                    height: 30.0,
+                                    width: 40.0,
+                                    alignment: Alignment.center,
+                                    child: const Text(
+                                      'Done',
+                                      style: AppFonts.button,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          // GOAL TEXT INPUT FIELD
+                          GoalTextField(),
+                        ],
+                      ),
+                    );
+
+                    // return EnterGoal();
+                  }
+                  // The goal for today is set but it isn't completed yet, we should create
+                  // a dismissive widget so a user can swipe the goal to complete it
+                  final bool isToday;
+                  if (today.year == goals[index].createdAt.year &&
+                      today.month == goals[index].createdAt.month &&
+                      today.day == goals[index].createdAt.day) {
+                    isToday = true;
+                  } else {
+                    isToday = false;
+                  }
+                  // WIDGET FOR SHOWING THE TODAY'S GOAL WITH A FUNCTION TO COMPLETE IT WITH SWIPE
+                  if (!goals[index].isCompleted && isToday) {
+                    return Dismissible(
+                      key: ValueKey<Goal>(goals[index]),
+                      direction: DismissDirection.down,
+                      onDismissed: (DismissDirection direction) {
+                        model.completeGoal(context);
+                        goals.removeAt(index);
+                        goals.insert(
+                            0,
+                            GoalModel(
+                              createdAt: today,
+                              text: state.goal.text,
+                              authorId: state.goal.authorId,
+                              isCompleted: true,
+                              isExist: true,
+                            ));
+                      },
+                      background: const CompleteGoalBG(),
+                      child: GoalItem(
+                        goal: goals[index],
+                        isToday: isToday,
+                      ),
+                    );
+                  }
+                  // GENERAL WIDGET FOR ALL THE PAST GOALS
+                  return Container(
+                      key: ValueKey<Goal>(goals[index]),
+                      child: GoalItem(
+                        goal: goals[index],
+                        isToday: isToday,
+                      ));
+                }));
       },
     );
   }
 }
 
+/*
 class GoalListViewItem extends StatelessWidget {
   const GoalListViewItem({Key? key, required this.goal, required this.index})
       : super(key: key);
   final Goal goal;
-  final ValueKey<int> index;
+  final ValueKey<Goal> index;
   @override
   Widget build(BuildContext context) {
-    String goalDate;
+    final String goalDate;
+    final bool isToday;
     // The goal for today isn't set, we should make a placeholder for it
     if (goal.text == '%%!!-!!%%') {
       return EnterGoal();
     }
     // The goal for today is set but it isn't completed yet, we should create
     // a dismissive widget so a user can swipe the goal to complete it
-    DateTime today = DateTime.now();
+    final DateTime today = DateTime.now();
     if (today.year == goal.createdAt.year &&
         today.month == goal.createdAt.month &&
         today.day == goal.createdAt.day) {
       goalDate = 'Today';
+      isToday = true;
     } else {
-      goalDate = DateFormat.yMEd().format(goal.createdAt);
+      goalDate = DateFormat.yMd().format(goal.createdAt);
+      isToday = false;
     }
+    /*
     final model = context.read<GoalScreenCubit>();
     if (!goal.isCompleted &&
         today.year == goal.createdAt.year &&
         today.month == goal.createdAt.month &&
         today.day == goal.createdAt.day) {
       return Dismissible(
-        direction: DismissDirection.up,
+        key: index,
+        direction: DismissDirection.down,
         onDismissed: (_) => model.completeGoal(context),
         background: const CompleteGoalBG(),
-        key: index,
-        child: GoalItem(goal: goal, goalDate: goalDate),
+        child: GoalItem(goal: goal, goalDate: goalDate, isToday: isToday),
       );
     }
-    return GoalItem(goal: goal, goalDate: goalDate);
+    */
+    return GoalItem(
+      goal: goal,
+      isToday: isToday,
+    );
   }
 }
+*/
 
+// WIDGET TO SHOW EXISTING GOAL
 class GoalItem extends StatelessWidget {
-  const GoalItem({Key? key, required this.goal, required this.goalDate})
-      : super(key: key);
+  const GoalItem({
+    Key? key,
+    required this.goal,
+    required this.isToday,
+  }) : super(key: key);
   final Goal goal;
-  final String goalDate;
+  final bool isToday;
   @override
   Widget build(BuildContext context) {
-    double goalBoxSize = const BoxConstraints().maxWidth - 40;
+    final String goalDate;
+    if (isToday) {
+      goalDate = 'Today';
+    } else {
+      goalDate = DateFormat.yMMMd().format(goal.createdAt);
+    }
+    final double goalBoxSize = MediaQuery.of(context).size.width - 40;
     return Container(
       width: goalBoxSize,
       height: goalBoxSize,
-      padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 20.0),
-      color: AppColors.goalBg,
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
       decoration: BoxDecoration(
+        color: AppColors.goalBg,
         borderRadius: BorderRadius.circular(20.0),
       ),
-      margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
+      margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 0.0),
       child: Column(
         children: [
           Text(
             goalDate,
             style: AppFonts.goalHeader,
+            textAlign: TextAlign.left,
           ),
           Expanded(
             child: Text(
               goal.text,
               style: AppFonts.goal,
+              textAlign: TextAlign.left,
             ),
           ),
           Center(
-            child: CompletedStatus(isCompleted: goal.isCompleted),
+            child: CompletedStatus(
+              isCompleted: goal.isCompleted,
+              isToday: isToday,
+            ),
           ),
         ],
       ),
@@ -323,39 +446,78 @@ class GoalItem extends StatelessWidget {
   }
 }
 
+// WIDGET FOR ENTERING A NEW GOAL FOR TODAY
+/*
 class EnterGoal extends StatelessWidget {
   const EnterGoal({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    double goalBoxSize = const BoxConstraints().maxWidth - 40;
+    final model = context.read<GoalScreenCubit>();
+    final double goalBoxSize = MediaQuery.of(context).size.width - 40;
     return Container(
       width: goalBoxSize,
       height: goalBoxSize,
-      padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 20.0),
-      color: AppColors.goalBg,
+      //height: 340.0,
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20.0),
+        color: AppColors.goalBg,
+        borderRadius: BorderRadius.circular(30.0),
       ),
-      margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
+      margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
       child: Column(
         children: [
-          Text(
-            'Today',
-            style: AppFonts.goalHeader,
+          // CARD HEADER WITH A BUTTON
+          Row(
+            children: [
+              const Expanded(
+                child: SizedBox(
+                  child: Text(
+                    'Today',
+                    style: AppFonts.goalHeader,
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.topRight,
+                child: OutlinedButton(
+                  onPressed: () => model.submitGoal(context),
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all(AppColors.enabled),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            side: const BorderSide(color: AppColors.enabled))),
+                  ),
+                  child: Container(
+                    height: 30.0,
+                    width: 40.0,
+                    alignment: Alignment.center,
+                    child: const Text(
+                      'Done',
+                      style: AppFonts.button,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-          Expanded(
-            child: GoalTextField(),
-          ),
+          // GOAL TEXT INPUT FIELD
+          GoalTextField(),
         ],
       ),
     );
   }
 }
+*/
 
 class CompletedStatus extends StatelessWidget {
-  const CompletedStatus({Key? key, required this.isCompleted})
+  const CompletedStatus(
+      {Key? key, required this.isCompleted, required this.isToday})
       : super(key: key);
   final bool isCompleted;
+  final bool isToday;
   @override
   Widget build(BuildContext context) {
     if (isCompleted) {
@@ -365,24 +527,49 @@ class CompletedStatus extends StatelessWidget {
         child: Column(children: const [
           Icon(
             Icons.check_circle,
-            color: AppColors.goalHint,
+            color: AppColors.goalCompleted,
             size: 20.0,
           ),
           Text(
             'The goal is completed!',
-            style: AppFonts.goalHint,
+            style: AppFonts.goalCompleted,
           ),
         ]),
       );
     } else {
-      return Container(
-        height: 40.0,
-        alignment: Alignment.center,
-        child: const Text(
-          'Swipe down to complete!',
-          style: AppFonts.goalHint,
-        ),
-      );
+      if (isToday) {
+        return Container(
+          height: 40.0,
+          alignment: Alignment.center,
+          child: Column(children: const [
+            Icon(
+              Icons.arrow_circle_down,
+              color: AppColors.goalHint,
+              size: 20.0,
+            ),
+            Text(
+              'Swipe down to complete!',
+              style: AppFonts.goalHint,
+            ),
+          ]),
+        );
+      } else {
+        return Container(
+          height: 40.0,
+          alignment: Alignment.center,
+          child: Column(children: const [
+            Icon(
+              Icons.unpublished,
+              color: AppColors.goalInCompleted,
+              size: 20.0,
+            ),
+            Text(
+              'The goal is not completed :(',
+              style: AppFonts.goalInCompleted,
+            ),
+          ]),
+        );
+      }
     }
   }
 }
@@ -399,6 +586,7 @@ class CompleteGoalBG extends StatelessWidget {
   }
 }
 
+/*
 class QuoteWidget extends StatelessWidget {
   const QuoteWidget({
     Key? key,
@@ -425,7 +613,7 @@ class QuoteWidget extends StatelessWidget {
     );
   }
 }
-
+*/
 class GoalTextField extends StatelessWidget {
   const GoalTextField({
     Key? key,
@@ -434,24 +622,15 @@ class GoalTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = context.read<GoalScreenCubit>();
-
-    return BlocBuilder<GoalScreenCubit, GoalScreenState>(
-      builder: (context, state) {
-        return TextFormField(
-          initialValue: '',
-          readOnly:
-              state.status == GoalScreenStateStatus.noGoalSet ? false : true,
-          onChanged: model.changeGoal,
-          onFieldSubmitted: (value) =>
-              model.onSubmittedComplete(value, context),
-          style: AppFonts.goal,
-          decoration: const InputDecoration(
-            hintText: 'Set a goal',
-            hintStyle: AppFonts.goal,
-            border: InputBorder.none,
-          ),
-        );
-      },
+    return TextFormField(
+      initialValue: '',
+      onChanged: model.changeGoal,
+      style: AppFonts.goal,
+      decoration: const InputDecoration(
+        hintText: 'Enter your goal here',
+        hintStyle: AppFonts.goal,
+        border: InputBorder.none,
+      ),
     );
   }
 }

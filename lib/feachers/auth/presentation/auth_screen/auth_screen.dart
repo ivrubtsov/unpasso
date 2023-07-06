@@ -37,7 +37,6 @@ class AuthScreen extends StatelessWidget {
               ),
               const SizedBox(height: 30.0),
               // FORM
-              const SizedBox(height: 30.0),
               // TEXT FIELD EMAIL
               _TextField(
                 title: 'username',
@@ -57,7 +56,7 @@ class AuthScreen extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 child: _ForgotPasswordButton(),
               ),
-              const SizedBox(height: 30.0),
+              // const SizedBox(height: 20.0),
               // LOGIN BUTTON
               Align(
                 alignment: Alignment.center,
@@ -66,10 +65,8 @@ class AuthScreen extends StatelessWidget {
                   title: 'Log in',
                 ),
               ),
-              const SizedBox(height: 15.0),
               // SIGN UP BUTTON
-              const Align(
-                alignment: Alignment.center,
+              const Center(
                 child: _SignUpButton(),
               ),
               Expanded(child: Container()),
@@ -103,7 +100,7 @@ class _TextField extends StatelessWidget {
         /*
         Text(
           title,
-          style: AppFonts.header2,
+          style: AppFonts.inputText,
         ),
         */
         MainTextField(

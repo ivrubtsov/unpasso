@@ -108,7 +108,7 @@ class _TextField extends StatelessWidget {
         /*
         Text(
           title,
-          style: AppFonts.header2,
+          style: AppFonts.inputText,
         ),
         */
         MainTextField(
@@ -116,7 +116,7 @@ class _TextField extends StatelessWidget {
           hintText: hintText,
           onChanged: onChanged,
         ),
-        const SizedBox(height: 20.0),
+        const SizedBox(height: 5.0),
       ],
     );
   }

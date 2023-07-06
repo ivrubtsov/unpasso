@@ -63,7 +63,7 @@ class AppFonts {
   static const goalHeader = TextStyle(
     fontFamily: 'Fredoka',
     fontWeight: FontWeight.w500,
-    fontSize: 48.0,
+    fontSize: 40.0,
     color: AppColors.goalDate,
   );
 
@@ -93,6 +93,20 @@ class AppFonts {
     fontWeight: FontWeight.w400,
     fontSize: 12.0,
     color: AppColors.goalHint,
+  );
+
+  static const goalCompleted = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 12.0,
+    color: AppColors.goalCompleted,
+  );
+
+  static const goalInCompleted = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 12.0,
+    color: AppColors.goalInCompleted,
   );
 
   static const profileName = TextStyle(

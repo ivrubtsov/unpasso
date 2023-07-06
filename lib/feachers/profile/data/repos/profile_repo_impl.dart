@@ -5,7 +5,6 @@ import 'package:goal_app/core/consts/api_consts.dart';
 import 'package:goal_app/core/exceptions/exceptions.dart';
 import 'package:goal_app/feachers/auth/domain/repos/session_repo.dart';
 import 'package:goal_app/feachers/profile/data/models/profile_model/profile_model.dart';
-import 'package:goal_app/feachers/profile/domain/entities/profile.dart';
 import 'package:goal_app/feachers/profile/domain/repos/profile_repo.dart';
 
 class ProfileRepoImpl implements ProfileRepo {
@@ -15,7 +14,10 @@ class ProfileRepoImpl implements ProfileRepo {
   Dio _dio() {
     final username = _sessionRepo.sessionData?.username;
     final password = _sessionRepo.sessionData?.password;
-    if (password == null && username == null) return Dio();
+    if (password == null && username == null) {
+      throw ServerException();
+      // return Dio();
+    }
     return Dio(BaseOptions(
       headers: {
         'authorization':
@@ -38,23 +40,25 @@ class ProfileRepoImpl implements ProfileRepo {
   }
 
   @override
-  Future<Profile> getAchievements() async {
+  Future<List<int>> getAchievements() async {
     if (_sessionRepo.sessionData == null) throw ServerException();
     try {
-      final response =
-          await _dio().get<List<dynamic>>(ApiConsts.getAchievements(
+      final url = ApiConsts.getAchievements(
         _sessionRepo.sessionData!.id,
-      ));
-
+      );
+      final response = await _dio().get(url);
       if (response.data == null || response.data!.isEmpty) {
-        return Profile(id: _sessionRepo.sessionData!.id);
+        return [];
       }
 
-      final profile = ProfileModel.fromJson(response.data!.first);
-
-      return profile;
+      final json = response.data;
+      final Map description = await jsonDecode(json['description']);
+      final achievements = description['achievements'];
+      //final achs = description["achievements"].cast<int>();
+      List<int> achs = new List<int>.from(achievements);
+      return achs;
     } on DioError {
-      return Profile(id: _sessionRepo.sessionData!.id);
+      throw ServerException();
     }
   }
 }

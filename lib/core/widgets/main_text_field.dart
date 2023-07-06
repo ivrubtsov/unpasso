@@ -26,6 +26,8 @@ class _MainTextFieldState extends State<MainTextField> {
       obscureText: widget.isPassword && isHidden,
       onChanged: widget.onChanged,
       decoration: InputDecoration(
+        filled: true,
+        fillColor: AppColors.inputBg,
         suffixIcon: widget.isPassword
             ? Material(
                 color: Colors.transparent,
