@@ -12,8 +12,8 @@ class FunFront extends StatelessWidget {
     return Container(
       key: const ValueKey(true),
       alignment: Alignment.center,
-      height: 200.0,
-      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+      height: 144.0,
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.0),
         color: AppColors.funBg,
@@ -22,12 +22,14 @@ class FunFront extends StatelessWidget {
       child: Column(
         children: [
           Image.asset('assets/fun.png'),
+          /*
           const Text(
             'Fun task',
             style: AppFonts.funHeader,
           ),
+          */
           const Text(
-            'Flip to view',
+            'Flip to view a funny task',
             style: AppFonts.funText,
           ),
         ],
@@ -49,8 +51,8 @@ class FunBack extends StatelessWidget {
     return Container(
       key: const ValueKey(false),
       alignment: Alignment.center,
-      height: 200.0,
-      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+      height: 144.0,
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.0),
         color: AppColors.funBg,

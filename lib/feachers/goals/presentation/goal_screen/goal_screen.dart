@@ -6,7 +6,6 @@ import 'package:goal_app/feachers/goals/data/models/goal_model/goal_model.dart';
 import 'package:intl/intl.dart';
 import 'package:goal_app/core/consts/app_colors.dart';
 import 'package:goal_app/core/consts/app_fonts.dart';
-
 import 'package:goal_app/feachers/goals/domain/entities/goal.dart';
 import 'package:goal_app/feachers/goals/presentation/goal_screen/cubit/goal_screen_cubit.dart';
 
@@ -83,7 +82,7 @@ class DatesListView extends StatelessWidget {
       builder: (context, state) {
         final goals = state.goals;
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
           child: SizedBox(
             height: 62.0,
             child: ListView.builder(
@@ -445,72 +444,6 @@ class GoalItem extends StatelessWidget {
     );
   }
 }
-
-// WIDGET FOR ENTERING A NEW GOAL FOR TODAY
-/*
-class EnterGoal extends StatelessWidget {
-  const EnterGoal({Key? key}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    final model = context.read<GoalScreenCubit>();
-    final double goalBoxSize = MediaQuery.of(context).size.width - 40;
-    return Container(
-      width: goalBoxSize,
-      height: goalBoxSize,
-      //height: 340.0,
-      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-      decoration: BoxDecoration(
-        color: AppColors.goalBg,
-        borderRadius: BorderRadius.circular(30.0),
-      ),
-      margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
-      child: Column(
-        children: [
-          // CARD HEADER WITH A BUTTON
-          Row(
-            children: [
-              const Expanded(
-                child: SizedBox(
-                  child: Text(
-                    'Today',
-                    style: AppFonts.goalHeader,
-                    textAlign: TextAlign.left,
-                  ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.topRight,
-                child: OutlinedButton(
-                  onPressed: () => model.submitGoal(context),
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all(AppColors.enabled),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            side: const BorderSide(color: AppColors.enabled))),
-                  ),
-                  child: Container(
-                    height: 30.0,
-                    width: 40.0,
-                    alignment: Alignment.center,
-                    child: const Text(
-                      'Done',
-                      style: AppFonts.button,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          // GOAL TEXT INPUT FIELD
-          GoalTextField(),
-        ],
-      ),
-    );
-  }
-}
-*/
 
 class CompletedStatus extends StatelessWidget {
   const CompletedStatus(
