@@ -10,7 +10,7 @@ class FunFront extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      key: ValueKey(true),
+      key: const ValueKey(true),
       alignment: Alignment.center,
       height: 200.0,
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
@@ -47,7 +47,7 @@ class FunBack extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      key: ValueKey(false),
+      key: const ValueKey(false),
       alignment: Alignment.center,
       height: 200.0,
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
@@ -60,6 +60,7 @@ class FunBack extends StatelessWidget {
         child: Text(
           funText,
           style: AppFonts.funText,
+          textAlign: TextAlign.center,
         ),
       ),
     );

@@ -84,7 +84,7 @@ class AppFonts {
   static const funText = TextStyle(
     fontFamily: 'Fredoka',
     fontWeight: FontWeight.w400,
-    fontSize: 14.0,
+    fontSize: 16.0,
     color: AppColors.funText,
   );
 
@@ -135,5 +135,19 @@ class AppFonts {
     fontWeight: FontWeight.w400,
     fontSize: 16.0,
     color: AppColors.achText,
+  );
+
+  static const achModalHeader = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w500,
+    fontSize: 32.0,
+    color: AppColors.achModal,
+  );
+
+  static const achModalText = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 16.0,
+    color: AppColors.achModal,
   );
 }

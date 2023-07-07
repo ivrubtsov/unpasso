@@ -61,7 +61,7 @@ class PersonalData extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
       child: Row(
         children: [
-          Icon(
+          const Icon(
             Icons.person,
             size: 56.0,
           ),

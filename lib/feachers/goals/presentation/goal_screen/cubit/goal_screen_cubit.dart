@@ -78,7 +78,7 @@ class GoalScreenCubit extends Cubit<GoalScreenState> {
       ErrorPresentor.showError(context, 'Enter a goal');
       return;
     }
-    emit(state.copyWith(status: GoalScreenStateStatus.loading));
+    // emit(state.copyWith(status: GoalScreenStateStatus.loading));
     final authorId = _sessionRepo.sessionData!.id;
     try {
       // Save the new goal
@@ -88,7 +88,7 @@ class GoalScreenCubit extends Cubit<GoalScreenState> {
           authorId: authorId,
           isCompleted: false));
 
-      emit(state.copyWith(status: GoalScreenStateStatus.goalSet, goal: goal));
+      emit(state.copyWith(goal: goal));
 
       // Check and add achievements
       // 0 'The first goal is set',
@@ -118,9 +118,7 @@ class GoalScreenCubit extends Cubit<GoalScreenState> {
       emit(state.copyWith(
         goal: state.goal.copyWith(isCompleted: true),
       ));
-
       await _goalsRepo.completeGoal(state.goal);
-
       // Check and add achievements
       // 1 'The first step to success: the first goal is completed',
       newAchieve(1, context);
@@ -262,6 +260,12 @@ class GoalScreenCubit extends Cubit<GoalScreenState> {
               isExist: false,
             ));
       }
+      // Load the today goal to the state
+      if (goals[0].createdAt.year == today.year &&
+          goals[0].createdAt.month == today.month &&
+          goals[0].createdAt.day == today.day) {
+        emit(state.copyWith(goal: goals[0]));
+      }
       emit(state.copyWith(goals: goals, status: GoalScreenStateStatus.loaded));
     } on ServerException {
       emit(state.copyWith(status: GoalScreenStateStatus.error));
@@ -363,36 +367,44 @@ class GoalScreenCubit extends Cubit<GoalScreenState> {
       builder: (BuildContext context) {
         return Container(
           height: 300,
-          margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
-          color: AppColors.achBg,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+          decoration: const BoxDecoration(
+            color: AppColors.achBg,
+            // borderRadius: BorderRadius.circular(30.0),
           ),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.close),
-                      color: AppColors.headerIcon),
-                ),
-                const Text(
-                  'Congratulations! New achievement!!!',
-                  style: AppFonts.achHeader,
-                ),
-                Text(
-                  Achievements.congrats[ach],
-                  style: AppFonts.achText,
-                ),
-                Center(
+          child: Column(
+            // mainAxisAlignment: MainAxisAlignment.center,
+            // mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  const Expanded(
+                    child: Text(
+                      'Congratulations!!!',
+                      style: AppFonts.achModalHeader,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: const Icon(Icons.close),
+                        color: AppColors.achCloseIcon),
+                  ),
+                ],
+              ),
+              Expanded(
+                child: Center(
                   child: Achievements.getNewAchievement(ach),
-                )
-              ],
-            ),
+                ),
+              ),
+              Text(
+                Achievements.congrats[ach],
+                style: AppFonts.achModalText,
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
         );
       },

@@ -34,8 +34,10 @@ class AppColors {
   // Profile and achievements
   static const achBg = Color.fromRGBO(0, 26, 52, 0.9);
   static const achText = Colors.black;
+  static const achModal = Colors.white;
   static const achIconActive = Colors.amber;
   static const achIconNonActive = Color.fromRGBO(0, 26, 52, 0.2);
+  static const achCloseIcon = Colors.white;
   static const profileBg = Color.fromRGBO(237, 242, 255, 1);
   static const profileAchBg = Colors.white;
   static const profileName = Colors.black;
