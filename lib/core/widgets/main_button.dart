@@ -17,19 +17,15 @@ class MainButton extends StatelessWidget {
     return OutlinedButton(
       onPressed: onPressed,
       style: ButtonStyle(
-        padding: MaterialStateProperty.all(const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 14,
-        )),
         backgroundColor: MaterialStateProperty.all(AppColors.enabled),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30),
                 side: const BorderSide(color: AppColors.enabled))),
       ),
-      child: SizedBox(
+      child: Container(
         height: 52,
-        width: double.infinity, // match_parent
+        alignment: Alignment.center,
         child: Text(
           title,
           style: AppFonts.button,

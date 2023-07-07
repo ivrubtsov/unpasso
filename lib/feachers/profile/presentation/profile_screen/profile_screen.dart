@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:goal_app/core/consts/achievements.dart';
 import 'package:goal_app/core/consts/app_colors.dart';
 import 'package:goal_app/core/consts/app_fonts.dart';
 
@@ -10,8 +11,6 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<ProfileScreenCubit>();
-    model.getAchieves();
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -25,18 +24,24 @@ class ProfileScreen extends StatelessWidget {
           actions: [
             IconButton(
               onPressed: () =>
-                  context.read<ProfileScreenCubit>().onProfileTapped(context),
-              icon: const Icon(Icons.person),
+                  context.read<ProfileScreenCubit>().onLogOutTapped(context),
+              icon: const Icon(Icons.logout),
               color: AppColors.headerIcon,
             )
           ],
+          leading: IconButton(
+            onPressed: () =>
+                context.read<ProfileScreenCubit>().onBackTapped(context),
+            icon: const Icon(Icons.arrow_back_ios),
+            color: AppColors.headerIcon,
+          ),
         ),
         backgroundColor: AppColors.profileBg,
         body: Column(
           children: [
             PersonalData(),
             AchievementsView(),
-            Settings(),
+            // Settings(),
           ],
         ));
   }
@@ -56,7 +61,7 @@ class PersonalData extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
       child: Row(
         children: [
-          Icon(
+          const Icon(
             Icons.person,
             size: 56.0,
           ),
@@ -88,37 +93,43 @@ class AchievementsView extends StatelessWidget {
         if (state.status == ProfileScreenStateStatus.loading) {
           return Container(
             alignment: Alignment.center,
-            height: 256.0,
+            height: 340.0,
             padding:
                 const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
             child: const CircularProgressIndicator(),
           );
         } else {
-          return Container(
-            // width: max,
-            // height: 256,
-            padding:
-                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
-            color: AppColors.profileAchBg,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-            margin:
-                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
-            child: Column(
-              children: [
-                Text(
-                  'Achievements',
-                  style: AppFonts.achHeader,
+          const achTotal = Achievements.length;
+          final achCollected = state.profile.achievements.length;
+          final achShare = (achCollected / achTotal * 100).round().toString();
+          return Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+              child: Container(
+                height: 340.0,
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 20.0, vertical: 20.0),
+                decoration: BoxDecoration(
+                  color: AppColors.profileAchBg,
+                  borderRadius: BorderRadius.circular(20.0),
                 ),
-                Text(
-                  state.profile.achievements.length.toString(),
-                  style: AppFonts.achText,
+                child: Column(
+                  children: [
+                    Text(
+                      'Achievements: $achShare%',
+                      style: AppFonts.achHeader,
+                    ),
+                    Text(
+                      '$achCollected of $achTotal collected',
+                      style: AppFonts.achText,
+                    ),
+                    SizedBox(
+                      height: 240,
+                      child: AchievementsList(),
+                    ),
+                  ],
                 ),
-                AchievementsList(),
-              ],
-            ),
-          );
+              ));
         }
       },
     );
@@ -133,25 +144,12 @@ class AchievementsList extends StatelessWidget {
     return BlocBuilder<ProfileScreenCubit, ProfileScreenState>(
       builder: (context, state) {
         final achs = model.showAchieves();
-        return ListView.builder(
-          itemCount: achs.length,
-          itemBuilder: (BuildContext context, int index) =>
-              AchievementListViewItem(
-            ach: achs[index],
-          ),
+        return ListView(
+          scrollDirection: Axis.horizontal,
+          children: achs,
         );
       },
     );
-  }
-}
-
-class AchievementListViewItem extends StatelessWidget {
-  const AchievementListViewItem({Key? key, required this.ach})
-      : super(key: key);
-  final Widget ach;
-  @override
-  Widget build(BuildContext context) {
-    return ach;
   }
 }
 
@@ -162,6 +160,6 @@ class Settings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Text('');
+    return const Placeholder();
   }
 }

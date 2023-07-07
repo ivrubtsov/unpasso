@@ -29,7 +29,7 @@ class RegisterScreenCubit extends Cubit<RegisterScreenState> {
     try {
       emit(state.copyWith(status: RegisterScreenStateStatus.loading));
       if (!state.isFieldsFilled) {
-        ErrorPresentor.showError(context, 'Please complete all fields');
+        ErrorPresentor.showError(context, 'please fill in all the fields');
         return;
       }
 

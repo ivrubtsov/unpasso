@@ -20,7 +20,9 @@ class Profile extends Equatable {
   }
 
   Profile addAchievement(int newAch) {
-    this.achievements.add(newAch);
+    if (!achievements.contains(newAch)) {
+      achievements.add(newAch);
+    }
     return this;
   }
 

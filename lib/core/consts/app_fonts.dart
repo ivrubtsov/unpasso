@@ -63,7 +63,7 @@ class AppFonts {
   static const goalHeader = TextStyle(
     fontFamily: 'Fredoka',
     fontWeight: FontWeight.w500,
-    fontSize: 48.0,
+    fontSize: 40.0,
     color: AppColors.goalDate,
   );
 
@@ -74,11 +74,39 @@ class AppFonts {
     color: AppColors.goalText,
   );
 
+  static const funHeader = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w500,
+    fontSize: 24.0,
+    color: AppColors.funHeader,
+  );
+
+  static const funText = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 16.0,
+    color: AppColors.funText,
+  );
+
   static const goalHint = TextStyle(
     fontFamily: 'Fredoka',
     fontWeight: FontWeight.w400,
     fontSize: 12.0,
     color: AppColors.goalHint,
+  );
+
+  static const goalCompleted = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 12.0,
+    color: AppColors.goalCompleted,
+  );
+
+  static const goalInCompleted = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 12.0,
+    color: AppColors.goalInCompleted,
   );
 
   static const profileName = TextStyle(
@@ -107,5 +135,19 @@ class AppFonts {
     fontWeight: FontWeight.w400,
     fontSize: 16.0,
     color: AppColors.achText,
+  );
+
+  static const achModalHeader = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w500,
+    fontSize: 32.0,
+    color: AppColors.achModal,
+  );
+
+  static const achModalText = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 16.0,
+    color: AppColors.achModal,
   );
 }

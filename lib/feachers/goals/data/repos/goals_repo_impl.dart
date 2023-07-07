@@ -8,12 +8,17 @@ import 'package:goal_app/feachers/auth/domain/repos/session_repo.dart';
 import 'package:goal_app/feachers/goals/data/models/goal_model/goal_model.dart';
 import 'package:goal_app/feachers/goals/domain/entities/goal.dart';
 import 'package:goal_app/feachers/goals/domain/repos/goals_repo.dart';
+import 'package:goal_app/feachers/profile/domain/repos/profile_repo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class GoalsRepoImpl implements GoalsRepo {
-  GoalsRepoImpl({required SessionRepo sessionRepo})
-      : _sessionRepo = sessionRepo;
+  GoalsRepoImpl({
+    required SessionRepo sessionRepo,
+    required ProfileRepo profileRepo,
+  })  : _sessionRepo = sessionRepo,
+        _profileRepo = profileRepo;
   final SessionRepo _sessionRepo;
+  final ProfileRepo _profileRepo;
   Dio _dio() {
     final username = _sessionRepo.sessionData?.username;
     final password = _sessionRepo.sessionData?.password;
@@ -98,7 +103,8 @@ class GoalsRepoImpl implements GoalsRepo {
     try {
       final id = goal.id;
       if (id == null) throw ServerException();
-      await _dio().post(ApiConsts.completeGoal(id));
+      final String url = ApiConsts.completeGoal(id);
+      final response = await _dio().post(url);
       // final updatedGoal = GoalModel.fromJson(response.data);
       // await _saveGoalToLocal(updatedGoal);
     } on DioError {
