@@ -52,8 +52,14 @@ class ProfileRepoImpl implements ProfileRepo {
       }
 
       final json = response.data;
+      if (json['description'] == null || json['description'] == '') {
+        return [];
+      }
       final Map description = await jsonDecode(json['description']);
       final achievements = description['achievements'];
+      if (achievements == null || achievements == '' || achievements == []) {
+        return [];
+      }
       //final achs = description["achievements"].cast<int>();
       List<int> achs = new List<int>.from(achievements);
       return achs;
