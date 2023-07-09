@@ -74,11 +74,14 @@ class GoalScreenCubit extends Cubit<GoalScreenState> {
 // СОХРАНЯЕМ НОВУЮ ЦЕЛЬ
   void submitGoal(BuildContext context) async {
     final String value = state.goal.text;
-    if (value.isEmpty) {
+    if (value.isEmpty || value == '%%!!-!!%%') {
       ErrorPresentor.showError(context, 'Enter a goal');
       return;
     }
-    // emit(state.copyWith(status: GoalScreenStateStatus.loading));
+    if (state.status == GoalScreenStateStatus.goalIsSubmitting) {
+      return;
+    }
+    emit(state.copyWith(status: GoalScreenStateStatus.goalIsSubmitting));
     final authorId = _sessionRepo.sessionData!.id;
     try {
       // Save the new goal
@@ -106,6 +109,7 @@ class GoalScreenCubit extends Cubit<GoalScreenState> {
           newAchieve(12, context);
         }
       }
+      emit(state.copyWith(status: GoalScreenStateStatus.ready));
     } on ServerException {
       ErrorPresentor.showError(
           context, 'Unable to create goal. Check internet connection');
@@ -115,6 +119,12 @@ class GoalScreenCubit extends Cubit<GoalScreenState> {
 // ЗАВЕРШАЕМ ЦЕЛЬ
   void completeGoal(BuildContext context) async {
     try {
+      if (state.status == GoalScreenStateStatus.goalIsCompleting ||
+          state.status == GoalScreenStateStatus.goalIsSubmitting) {
+        return;
+      }
+      emit(state.copyWith(status: GoalScreenStateStatus.goalIsCompleting));
+
       emit(state.copyWith(
         goal: state.goal.copyWith(isCompleted: true),
       ));
@@ -231,6 +241,7 @@ class GoalScreenCubit extends Cubit<GoalScreenState> {
           newAchieve(13, context);
         }
       }
+      emit(state.copyWith(status: GoalScreenStateStatus.ready));
     } on ServerException {
       ErrorPresentor.showError(
           context, 'Unable to complete goal. Check internet connection');
@@ -266,7 +277,7 @@ class GoalScreenCubit extends Cubit<GoalScreenState> {
           goals[0].createdAt.day == today.day) {
         emit(state.copyWith(goal: goals[0]));
       }
-      emit(state.copyWith(goals: goals, status: GoalScreenStateStatus.loaded));
+      emit(state.copyWith(goals: goals, status: GoalScreenStateStatus.ready));
     } on ServerException {
       emit(state.copyWith(status: GoalScreenStateStatus.error));
     }

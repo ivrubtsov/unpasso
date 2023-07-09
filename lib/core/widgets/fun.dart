@@ -29,7 +29,7 @@ class FunFront extends StatelessWidget {
           ),
           */
           const Text(
-            'Flip to view a funny task',
+            'Tap to view a funny task',
             style: AppFonts.funText,
           ),
         ],

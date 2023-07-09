@@ -7,6 +7,9 @@ enum GoalScreenStateStatus {
   goalSet,
   error,
   goalCompleted,
+  goalIsSubmitting,
+  goalIsCompleting,
+  ready,
 }
 
 class GoalScreenState extends Equatable {

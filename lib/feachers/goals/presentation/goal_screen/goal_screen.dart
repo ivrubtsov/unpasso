@@ -306,7 +306,9 @@ class GoalsMainContainer extends StatelessWidget {
                     isToday = false;
                   }
                   // WIDGET FOR SHOWING THE TODAY'S GOAL WITH A FUNCTION TO COMPLETE IT WITH SWIPE
-                  if (!goals[index].isCompleted && isToday) {
+                  if (!goals[index].isCompleted &&
+                      isToday &&
+                      state.status == GoalScreenStateStatus.ready) {
                     return Dismissible(
                       key: ValueKey<Goal>(goals[index]),
                       direction: DismissDirection.down,
@@ -453,57 +455,77 @@ class CompletedStatus extends StatelessWidget {
   final bool isToday;
   @override
   Widget build(BuildContext context) {
-    if (isCompleted) {
-      return Container(
-        height: 40.0,
-        alignment: Alignment.center,
-        child: Column(children: const [
-          Icon(
-            Icons.check_circle,
-            color: AppColors.goalCompleted,
-            size: 20.0,
-          ),
-          Text(
-            'The goal is completed!',
-            style: AppFonts.goalCompleted,
-          ),
-        ]),
-      );
-    } else {
-      if (isToday) {
+    return BlocBuilder<GoalScreenCubit, GoalScreenState>(
+        builder: (context, state) {
+      if (state.status != GoalScreenStateStatus.ready) {
         return Container(
           height: 40.0,
           alignment: Alignment.center,
           child: Column(children: const [
             Icon(
-              Icons.arrow_circle_down,
+              Icons.update,
               color: AppColors.goalHint,
               size: 20.0,
             ),
             Text(
-              'Swipe down to complete!',
+              'The goal is being updated...',
               style: AppFonts.goalHint,
             ),
           ]),
         );
-      } else {
+      }
+      if (isCompleted) {
         return Container(
           height: 40.0,
           alignment: Alignment.center,
           child: Column(children: const [
             Icon(
-              Icons.unpublished,
-              color: AppColors.goalInCompleted,
+              Icons.check_circle,
+              color: AppColors.goalCompleted,
               size: 20.0,
             ),
             Text(
-              'The goal is not completed :(',
-              style: AppFonts.goalInCompleted,
+              'The goal is completed!',
+              style: AppFonts.goalCompleted,
             ),
           ]),
         );
+      } else {
+        if (isToday) {
+          return Container(
+            height: 40.0,
+            alignment: Alignment.center,
+            child: Column(children: const [
+              Icon(
+                Icons.arrow_circle_down,
+                color: AppColors.goalHint,
+                size: 20.0,
+              ),
+              Text(
+                'Swipe down to complete!',
+                style: AppFonts.goalHint,
+              ),
+            ]),
+          );
+        } else {
+          return Container(
+            height: 40.0,
+            alignment: Alignment.center,
+            child: Column(children: const [
+              Icon(
+                Icons.unpublished,
+                color: AppColors.goalInCompleted,
+                size: 20.0,
+              ),
+              Text(
+                'The goal is not completed :(',
+                style: AppFonts.goalInCompleted,
+              ),
+            ]),
+          );
+        }
       }
-    }
+    });
   }
 }
 
