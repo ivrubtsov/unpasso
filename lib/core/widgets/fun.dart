@@ -30,7 +30,7 @@ class FunFront extends StatelessWidget {
           */
           const Text(
             'Tap to view a funny task',
-            style: AppFonts.funHint,
+            style: AppFonts.funText,
           ),
         ],
       ),
@@ -58,21 +58,13 @@ class FunBack extends StatelessWidget {
         color: AppColors.funBg,
       ),
       margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
-      child: Column(children: [
-        Container(
-          height: 105.0,
-          alignment: Alignment.center,
-          child: Text(
-            funText,
-            style: AppFonts.funText,
-            textAlign: TextAlign.center,
-          ),
+      child: Center(
+        child: Text(
+          funText,
+          style: AppFonts.funText,
+          textAlign: TextAlign.center,
         ),
-        const Text(
-          'Tap to view the next funny task',
-          style: AppFonts.funHint,
-        ),
-      ]),
+      ),
     );
   }
 }

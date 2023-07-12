@@ -58,7 +58,8 @@ void init() {
 
   sl.registerLazySingleton<SessionRepo>(() => SessionRepoImpl());
 
-  sl.registerLazySingleton<GoalsRepo>(() => GoalsRepoImpl(sessionRepo: sl()));
+  sl.registerLazySingleton<GoalsRepo>(
+      () => GoalsRepoImpl(sessionRepo: sl(), profileRepo: sl()));
 
   sl.registerLazySingleton<ProfileRepo>(
       () => ProfileRepoImpl(sessionRepo: sl()));

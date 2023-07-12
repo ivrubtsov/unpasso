@@ -3,6 +3,8 @@ part of 'goal_screen_cubit.dart';
 enum GoalScreenStateStatus {
   loading,
   loaded,
+  noGoalSet,
+  goalSet,
   error,
   goalCompleted,
   goalIsSubmitting,
@@ -11,8 +13,7 @@ enum GoalScreenStateStatus {
 }
 
 class GoalScreenState extends Equatable {
-  final DateTime selectedDate;
-  final DateTime currentDate;
+  final DateTime date;
   final Goal goal;
   final List<Goal> goals;
   final List<int> achievements;
@@ -23,8 +24,7 @@ class GoalScreenState extends Equatable {
       goal.text.isNotEmpty || (goal.isCompleted && goal.text.isNotEmpty);
 
   const GoalScreenState({
-    required this.selectedDate,
-    required this.currentDate,
+    required this.date,
     required this.goal,
     required this.goals,
     required this.achievements,
@@ -33,18 +33,16 @@ class GoalScreenState extends Equatable {
   });
 
   factory GoalScreenState.initial() => GoalScreenState(
-        selectedDate: DateTime.now(),
-        currentDate: DateTime.now(),
+        date: DateTime.now(),
         goal: Goal(text: '', createdAt: DateTime(0), authorId: 0),
         goals: [],
         achievements: [],
-        status: GoalScreenStateStatus.ready,
+        status: GoalScreenStateStatus.noGoalSet,
         displayFunFront: true,
       );
 
   GoalScreenState copyWith({
-    DateTime? selectedDate,
-    DateTime? currentDate,
+    DateTime? date,
     Goal? goal,
     List<Goal>? goals,
     List<int>? achievements,
@@ -52,8 +50,7 @@ class GoalScreenState extends Equatable {
     bool displayFunFront = true,
   }) {
     return GoalScreenState(
-      selectedDate: selectedDate ?? this.selectedDate,
-      currentDate: currentDate ?? this.currentDate,
+      date: date ?? this.date,
       goal: goal ?? this.goal,
       goals: goals ?? this.goals,
       achievements: achievements ?? this.achievements,
@@ -63,13 +60,6 @@ class GoalScreenState extends Equatable {
   }
 
   @override
-  List<Object> get props => [
-        selectedDate,
-        currentDate,
-        goal,
-        goals,
-        achievements,
-        status,
-        displayFunFront
-      ];
+  List<Object> get props =>
+      [date, goal, goals, achievements, status, displayFunFront];
 }

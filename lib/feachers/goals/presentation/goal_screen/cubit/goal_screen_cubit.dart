@@ -277,10 +277,7 @@ class GoalScreenCubit extends Cubit<GoalScreenState> {
           goals[0].createdAt.day == today.day) {
         emit(state.copyWith(goal: goals[0]));
       }
-      emit(state.copyWith(
-          goals: goals,
-          currentDate: DateTime.now(),
-          status: GoalScreenStateStatus.ready));
+      emit(state.copyWith(goals: goals, status: GoalScreenStateStatus.ready));
     } on ServerException {
       emit(state.copyWith(status: GoalScreenStateStatus.error));
     }
@@ -296,7 +293,7 @@ class GoalScreenCubit extends Cubit<GoalScreenState> {
 
 // МЕНЯЕМ ВЫБРАННУЮ ДАТУ В STATE
   void setSelectedDate(DateTime value, double winWidth) {
-    emit(state.copyWith(selectedDate: value));
+    emit(state.copyWith(date: value));
     if (goalsListScrollController.hasClients) {
       final int index =
           state.goals.indexWhere((item) => item.createdAt == value);

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:goal_app/core/widgets/fun.dart';
 import 'package:goal_app/feachers/goals/data/models/goal_model/goal_model.dart';
-import 'package:goal_app/feachers/goals/domain/repos/goals_repo.dart';
 import 'package:intl/intl.dart';
 import 'package:goal_app/core/consts/app_colors.dart';
 import 'package:goal_app/core/consts/app_fonts.dart';
@@ -12,12 +11,6 @@ import 'package:goal_app/feachers/goals/presentation/goal_screen/cubit/goal_scre
 
 ScrollController dateListScrollController = ScrollController();
 ScrollController goalsListScrollController = ScrollController();
-
-enum GoalScreenStatus {
-  loading,
-  error,
-  ready,
-}
 
 class GoalScreen extends StatelessWidget {
   const GoalScreen({Key? key}) : super(key: key);
@@ -49,79 +42,19 @@ class GoalScreen extends StatelessWidget {
   }
 }
 
-class GoalScreenContent extends StatefulWidget {
+class GoalScreenContent extends StatelessWidget {
   const GoalScreenContent({Key? key}) : super(key: key);
-
-  @override
-  State<GoalScreenContent> createState() => GoalScreenContentState();
-}
-
-class GoalScreenContentState extends State<GoalScreenContent>
-    with WidgetsBindingObserver {
-  List<Goal> goals = [];
-  GoalScreenStatus status = GoalScreenStatus.ready;
-  final _goalsRepo = new GoalsRepo();
-
-  @override
-  void initState() async {
-    setState(() {
-      status = GoalScreenStatus.loading;
-    });
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    final getGoals = await GoalsRepo.getProcessedListGoals();
-    setState(() {
-      goals = getGoals;
-    });
-    setState(() {
-      status = GoalScreenStatus.ready;
-    });
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async {
-    switch (state) {
-      case AppLifecycleState.resumed:
-        setState(() {
-          status = GoalScreenStatus.loading;
-        });
-        final getGoals = await _goalsRepo.getProcessedListGoals();
-        setState(() {
-          goals = getGoals;
-        });
-        setState(() {
-          status = GoalScreenStatus.ready;
-        });
-        break;
-      case AppLifecycleState.inactive:
-        break;
-      case AppLifecycleState.paused:
-        break;
-      case AppLifecycleState.detached:
-        break;
-    }
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<GoalScreenCubit, GoalScreenState>(
       builder: (context, state) {
-        final today = DateTime.now();
-        if (today.day != state.currentDate.day) {
-          final model = context.read<GoalScreenCubit>();
-          model.getAllGoals();
-        }
-        if (status == GoalScreenStateStatus.loading) {
+        if (state.status == GoalScreenStateStatus.loading) {
           return const Center(
             child: CircularProgressIndicator(),
           );
         }
+        final goals = state.goals;
         return Column(
           children: [
             DatesListView(goals: goals),
@@ -147,6 +80,7 @@ class DatesListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<GoalScreenCubit, GoalScreenState>(
       builder: (context, state) {
+        final goals = state.goals;
         return Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
           child: SizedBox(
@@ -204,7 +138,7 @@ class DateButton extends StatelessWidget {
     final model = context.read<GoalScreenCubit>();
     return BlocBuilder<GoalScreenCubit, GoalScreenState>(
       builder: (context, state) {
-        final selectedDate = state.selectedDate;
+        final selectedDate = state.date;
         if (selectedDate.year == goal.createdAt.year &&
             selectedDate.month == goal.createdAt.month &&
             selectedDate.day == goal.createdAt.day) {
@@ -345,7 +279,7 @@ class GoalsMainContainer extends StatelessWidget {
                                     width: 40.0,
                                     alignment: Alignment.center,
                                     child: const Text(
-                                      'Save',
+                                      'Done',
                                       style: AppFonts.button,
                                     ),
                                   ),
@@ -411,6 +345,55 @@ class GoalsMainContainer extends StatelessWidget {
   }
 }
 
+/*
+class GoalListViewItem extends StatelessWidget {
+  const GoalListViewItem({Key? key, required this.goal, required this.index})
+      : super(key: key);
+  final Goal goal;
+  final ValueKey<Goal> index;
+  @override
+  Widget build(BuildContext context) {
+    final String goalDate;
+    final bool isToday;
+    // The goal for today isn't set, we should make a placeholder for it
+    if (goal.text == '%%!!-!!%%') {
+      return EnterGoal();
+    }
+    // The goal for today is set but it isn't completed yet, we should create
+    // a dismissive widget so a user can swipe the goal to complete it
+    final DateTime today = DateTime.now();
+    if (today.year == goal.createdAt.year &&
+        today.month == goal.createdAt.month &&
+        today.day == goal.createdAt.day) {
+      goalDate = 'Today';
+      isToday = true;
+    } else {
+      goalDate = DateFormat.yMd().format(goal.createdAt);
+      isToday = false;
+    }
+    /*
+    final model = context.read<GoalScreenCubit>();
+    if (!goal.isCompleted &&
+        today.year == goal.createdAt.year &&
+        today.month == goal.createdAt.month &&
+        today.day == goal.createdAt.day) {
+      return Dismissible(
+        key: index,
+        direction: DismissDirection.down,
+        onDismissed: (_) => model.completeGoal(context),
+        background: const CompleteGoalBG(),
+        child: GoalItem(goal: goal, goalDate: goalDate, isToday: isToday),
+      );
+    }
+    */
+    return GoalItem(
+      goal: goal,
+      isToday: isToday,
+    );
+  }
+}
+*/
+
 // WIDGET TO SHOW EXISTING GOAL
 class GoalItem extends StatelessWidget {
   const GoalItem({
@@ -443,13 +426,13 @@ class GoalItem extends StatelessWidget {
           Text(
             goalDate,
             style: AppFonts.goalHeader,
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.left,
           ),
           Expanded(
             child: Text(
               goal.text,
               style: AppFonts.goal,
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.left,
             ),
           ),
           Center(
