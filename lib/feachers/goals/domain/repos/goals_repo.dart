@@ -15,5 +15,7 @@ abstract class GoalsRepo {
 
   Future<List<Goal>> getGoals(GetGoalsQueryType queryType);
 
+  Future<List<Goal>> getProcessedListGoals();
+
   Future<void> completeGoal(Goal goal);
 }

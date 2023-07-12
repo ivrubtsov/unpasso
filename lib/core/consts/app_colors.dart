@@ -30,6 +30,7 @@ class AppColors {
   static const funBg = Color.fromRGBO(248, 250, 251, 1);
   static const funHeader = Colors.black;
   static const funText = Colors.black;
+  static const funHint = Color.fromRGBO(43, 39, 239, 1);
 
   // Profile and achievements
   static const achBg = Color.fromRGBO(0, 26, 52, 0.9);

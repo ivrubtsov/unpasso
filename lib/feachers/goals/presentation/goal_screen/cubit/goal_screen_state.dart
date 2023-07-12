@@ -3,8 +3,6 @@ part of 'goal_screen_cubit.dart';
 enum GoalScreenStateStatus {
   loading,
   loaded,
-  noGoalSet,
-  goalSet,
   error,
   goalCompleted,
   goalIsSubmitting,
@@ -13,7 +11,8 @@ enum GoalScreenStateStatus {
 }
 
 class GoalScreenState extends Equatable {
-  final DateTime date;
+  final DateTime selectedDate;
+  final DateTime currentDate;
   final Goal goal;
   final List<Goal> goals;
   final List<int> achievements;
@@ -24,7 +23,8 @@ class GoalScreenState extends Equatable {
       goal.text.isNotEmpty || (goal.isCompleted && goal.text.isNotEmpty);
 
   const GoalScreenState({
-    required this.date,
+    required this.selectedDate,
+    required this.currentDate,
     required this.goal,
     required this.goals,
     required this.achievements,
@@ -33,16 +33,18 @@ class GoalScreenState extends Equatable {
   });
 
   factory GoalScreenState.initial() => GoalScreenState(
-        date: DateTime.now(),
+        selectedDate: DateTime.now(),
+        currentDate: DateTime.now(),
         goal: Goal(text: '', createdAt: DateTime(0), authorId: 0),
         goals: [],
         achievements: [],
-        status: GoalScreenStateStatus.noGoalSet,
+        status: GoalScreenStateStatus.ready,
         displayFunFront: true,
       );
 
   GoalScreenState copyWith({
-    DateTime? date,
+    DateTime? selectedDate,
+    DateTime? currentDate,
     Goal? goal,
     List<Goal>? goals,
     List<int>? achievements,
@@ -50,7 +52,8 @@ class GoalScreenState extends Equatable {
     bool displayFunFront = true,
   }) {
     return GoalScreenState(
-      date: date ?? this.date,
+      selectedDate: selectedDate ?? this.selectedDate,
+      currentDate: currentDate ?? this.currentDate,
       goal: goal ?? this.goal,
       goals: goals ?? this.goals,
       achievements: achievements ?? this.achievements,
@@ -60,6 +63,13 @@ class GoalScreenState extends Equatable {
   }
 
   @override
-  List<Object> get props =>
-      [date, goal, goals, achievements, status, displayFunFront];
+  List<Object> get props => [
+        selectedDate,
+        currentDate,
+        goal,
+        goals,
+        achievements,
+        status,
+        displayFunFront
+      ];
 }
