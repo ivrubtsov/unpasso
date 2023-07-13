@@ -125,10 +125,12 @@ class GoalScreenCubit extends Cubit<GoalScreenState> {
       }
       emit(state.copyWith(status: GoalScreenStateStatus.goalIsCompleting));
 
+      await _goalsRepo.completeGoal(state.goal);
+
       emit(state.copyWith(
         goal: state.goal.copyWith(isCompleted: true),
       ));
-      await _goalsRepo.completeGoal(state.goal);
+
       // Check and add achievements
       // 1 'The first step to success: the first goal is completed',
       newAchieve(1, context);
@@ -304,6 +306,11 @@ class GoalScreenCubit extends Cubit<GoalScreenState> {
       goalsListScrollController.animateTo(position,
           duration: const Duration(seconds: 1), curve: Curves.easeInOutCubic);
     }
+  }
+
+// МЕНЯЕМ ВЫБРАННУЮ ДАТУ В STATE НА СЕГОДНЯ
+  void setSelectedDateToday() {
+    emit(state.copyWith(selectedDate: DateTime.now()));
   }
 
 // КНОПКА ПРОФИЛЬ
