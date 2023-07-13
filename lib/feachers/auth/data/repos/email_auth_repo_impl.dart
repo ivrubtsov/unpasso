@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:goal_app/core/consts/api_consts.dart';
+import 'package:goal_app/core/consts/api_key.dart';
 import 'package:goal_app/core/entities/user/user.dart';
 import 'package:goal_app/feachers/auth/domain/entities/session_data.dart';
 import 'package:goal_app/feachers/auth/domain/repos/auth_repo.dart';
@@ -40,8 +41,8 @@ class EmailAuthRepoImpl implements AuthRepo {
   SessionRepo sessionRepo;
 
   static Dio _dio({String? username, String? password}) {
-    final n = username ?? 'user2';
-    final p = password ?? 'UOEPqllWEHAy4coyEYp*wYcB';
+    final n = username ?? ApiKey.key1;
+    final p = password ?? ApiKey.key2;
 
     final basicAuth = 'Basic ${base64.encode(utf8.encode('$n:$p'))}';
     return Dio(BaseOptions(
