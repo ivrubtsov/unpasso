@@ -8,17 +8,13 @@ import 'package:goal_app/feachers/auth/domain/repos/session_repo.dart';
 import 'package:goal_app/feachers/goals/data/models/goal_model/goal_model.dart';
 import 'package:goal_app/feachers/goals/domain/entities/goal.dart';
 import 'package:goal_app/feachers/goals/domain/repos/goals_repo.dart';
-import 'package:goal_app/feachers/profile/domain/repos/profile_repo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class GoalsRepoImpl implements GoalsRepo {
   GoalsRepoImpl({
     required SessionRepo sessionRepo,
-    required ProfileRepo profileRepo,
-  })  : _sessionRepo = sessionRepo,
-        _profileRepo = profileRepo;
+  }) : _sessionRepo = sessionRepo;
   final SessionRepo _sessionRepo;
-  final ProfileRepo _profileRepo;
   Dio _dio() {
     final username = _sessionRepo.sessionData?.username;
     final password = _sessionRepo.sessionData?.password;
@@ -59,6 +55,33 @@ class GoalsRepoImpl implements GoalsRepo {
       if (response.data == null) throw ServerException();
       final goals = response.data!.map((e) => GoalModel.fromJson(e)).toList();
 
+      return goals;
+    } on DioError {
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<List<Goal>> getProcessedListGoals() async {
+    try {
+      final goals = await getGoals(GetGoalsQueryType.userHistory);
+      goals.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
+      final DateTime today = DateTime.now();
+      if (goals.isEmpty ||
+          !(goals[0].createdAt.year == today.year &&
+              goals[0].createdAt.month == today.month &&
+              goals[0].createdAt.day == today.day)) {
+        goals.insert(
+            0,
+            GoalModel(
+              createdAt: today,
+              text: '%%!!-!!%%',
+              authorId: 0,
+              isCompleted: false,
+              isExist: false,
+            ));
+      }
       return goals;
     } on DioError {
       throw ServerException();
