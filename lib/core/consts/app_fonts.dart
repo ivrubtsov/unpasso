@@ -74,27 +74,6 @@ class AppFonts {
     color: AppColors.goalText,
   );
 
-  static const funHeader = TextStyle(
-    fontFamily: 'Fredoka',
-    fontWeight: FontWeight.w500,
-    fontSize: 24.0,
-    color: AppColors.funHeader,
-  );
-
-  static const funText = TextStyle(
-    fontFamily: 'Fredoka',
-    fontWeight: FontWeight.w400,
-    fontSize: 16.0,
-    color: AppColors.funText,
-  );
-
-  static const funHint = TextStyle(
-    fontFamily: 'Fredoka',
-    fontWeight: FontWeight.w400,
-    fontSize: 12.0,
-    color: AppColors.funHint,
-  );
-
   static const goalHint = TextStyle(
     fontFamily: 'Fredoka',
     fontWeight: FontWeight.w400,
@@ -114,6 +93,27 @@ class AppFonts {
     fontWeight: FontWeight.w400,
     fontSize: 12.0,
     color: AppColors.goalInCompleted,
+  );
+
+  static const funHeader = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w500,
+    fontSize: 24.0,
+    color: AppColors.funHeader,
+  );
+
+  static const funText = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 16.0,
+    color: AppColors.funText,
+  );
+
+  static const funHint = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 12.0,
+    color: AppColors.funHint,
   );
 
   static const profileName = TextStyle(
@@ -156,5 +156,33 @@ class AppFonts {
     fontWeight: FontWeight.w400,
     fontSize: 16.0,
     color: AppColors.achModal,
+  );
+
+  static const modalHeader = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w500,
+    fontSize: 24.0,
+    color: AppColors.modalHeader,
+  );
+
+  static const modalContent = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 14.0,
+    color: AppColors.modalContent,
+  );
+
+  static const modalButtonOk = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w700,
+    fontSize: 16.0,
+    color: AppColors.modalButtonOkText,
+  );
+
+  static const modalButtonCancel = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w700,
+    fontSize: 16.0,
+    color: AppColors.modalButtonCancelText,
   );
 }

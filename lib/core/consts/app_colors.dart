@@ -43,4 +43,14 @@ class AppColors {
   static const profileAchBg = Colors.white;
   static const profileName = Colors.black;
   static const profileUsername = Color.fromRGBO(80, 85, 92, 1);
+  static const profileButtonDeleteAccount = Color.fromRGBO(241, 94, 142, 1);
+
+  // Modal windows
+  static const modalBg = Color.fromRGBO(220, 231, 255, 1);
+  static const modalHeader = Colors.black;
+  static const modalContent = Colors.black;
+  static const modalButtonOk = Color.fromRGBO(43, 39, 239, 1);
+  static const modalButtonOkText = Colors.white;
+  static const modalButtonCancel = Color.fromRGBO(220, 231, 255, 1);
+  static const modalButtonCancelText = Color.fromRGBO(43, 39, 239, 1);
 }
