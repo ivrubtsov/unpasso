@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:goal_app/core/consts/achievements.dart';
 import 'package:goal_app/core/consts/app_colors.dart';
 import 'package:goal_app/core/consts/app_fonts.dart';
+import 'package:goal_app/core/widgets/modal.dart';
 
 import 'package:goal_app/feachers/profile/presentation/profile_screen/cubit/profile_screen_cubit.dart';
 
@@ -42,6 +43,24 @@ class ProfileScreen extends StatelessWidget {
             PersonalData(),
             AchievementsView(),
             // Settings(),
+            Container(
+              height: 90.0,
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+              alignment: Alignment.center,
+              child: Modal(
+                buttonText: 'Delete account',
+                title: 'Delete account',
+                content:
+                    'Are you sure you want to erase your account and all the data associated with it?',
+                buttonOkText: 'Yes, delete',
+                buttonCancelText: 'Cancel',
+                onPressedOk: () => context
+                    .read<ProfileScreenCubit>()
+                    .onDeleteAccountTapped(context),
+                onPressedCancel: () => Navigator.pop(context),
+              ),
+            ),
           ],
         ));
   }

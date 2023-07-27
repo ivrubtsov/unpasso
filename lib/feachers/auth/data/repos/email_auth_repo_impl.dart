@@ -113,8 +113,22 @@ class EmailAuthRepoImpl implements AuthRepo {
   }
 
   @override
-  Future<void> logOut() {
+  void logOut() {
+    sessionRepo.removeSessionData();
     // TODO: implement logOut
-    throw UnimplementedError();
+    // throw UnimplementedError();
+  }
+
+  @override
+  Future<void> deleteUser() async {
+    //try {
+    final url = ApiConsts.deleteUser(sessionRepo.sessionData!.id);
+    await _dio(
+      username: ApiKey.key1,
+      password: ApiKey.key2,
+    ).delete(url);
+    //} on DioError {
+    //  throw AuthException.type(AuthExceptionType.unknown);
+    //}
   }
 }

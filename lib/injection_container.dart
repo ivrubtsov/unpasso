@@ -42,6 +42,7 @@ void init() {
   sl.registerFactory<ProfileScreenCubit>(
     () => ProfileScreenCubit(
       sessionRepo: sl(),
+      authRepo: sl(),
       profileRepo: sl(),
     ),
   );

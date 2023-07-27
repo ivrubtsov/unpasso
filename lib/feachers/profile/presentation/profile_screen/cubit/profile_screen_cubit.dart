@@ -5,6 +5,7 @@ import 'package:goal_app/core/consts/achievements.dart';
 import 'package:goal_app/core/consts/app_fonts.dart';
 import 'package:goal_app/core/exceptions/exceptions.dart';
 import 'package:goal_app/core/navigation/app_router.dart';
+import 'package:goal_app/feachers/auth/domain/repos/auth_repo.dart';
 import 'package:goal_app/feachers/auth/domain/repos/session_repo.dart';
 import 'package:goal_app/feachers/profile/domain/entities/profile.dart';
 import 'package:goal_app/feachers/profile/domain/repos/profile_repo.dart';
@@ -14,12 +15,15 @@ part 'profile_screen_state.dart';
 class ProfileScreenCubit extends Cubit<ProfileScreenState> {
   ProfileScreenCubit({
     required ProfileRepo profileRepo,
+    required AuthRepo authRepo,
     required SessionRepo sessionRepo,
   })  : _profileRepo = profileRepo,
+        _authRepo = authRepo,
         _sessionRepo = sessionRepo,
         super(ProfileScreenState.initial());
 
   final ProfileRepo _profileRepo;
+  final AuthRepo _authRepo;
   final SessionRepo _sessionRepo;
 
 // ПОЛУЧАЕМ ДАННЫЕ ПОЛЬЗОВАТЕЛЯ
@@ -99,6 +103,16 @@ class ProfileScreenCubit extends Cubit<ProfileScreenState> {
 
 // КНОПКА ВЫХОДА НА ЭКРАН АУТЕНТИФИКАЦИИ
   void onLogOutTapped(BuildContext context) {
+    _authRepo.logOut();
+    Navigator.of(context).pushNamed(AuthRoutes.authScreen);
+  }
+
+// ACCOUNT DELETION BUTTON
+  void onDeleteAccountTapped(BuildContext context) {
+    // erase account
+    _authRepo.deleteUser();
+    _authRepo.logOut();
+    // go to the login page
     Navigator.of(context).pushNamed(AuthRoutes.authScreen);
   }
 }
