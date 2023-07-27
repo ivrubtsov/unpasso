@@ -18,13 +18,13 @@ class AuthException extends DetailedException {
 
   factory AuthException.fromServerMessage(String? message) {
     switch (message) {
-      case 'Username Does not exist.':
+      case 'User does not exist.':
         return AuthException.type(AuthExceptionType.userNotExist);
       case 'Incorrect password.':
         return AuthException.type(AuthExceptionType.incorrectPassword);
-      case 'Sorry, that username already exists!':
+      case 'Sorry, this username is already taken!':
         return AuthException.type(AuthExceptionType.usernameExists);
-      case 'Sorry, that email address is already used!':
+      case 'Sorry, this email address is already used!':
         return AuthException.type(AuthExceptionType.emailExists);
       case 'Invalid parameter(s): email':
         return AuthException.type(AuthExceptionType.invalidEmail);
@@ -47,10 +47,10 @@ class AuthException extends DetailedException {
         typeMessage = 'Unknown error. Please, try again later';
         break;
       case AuthExceptionType.emailExists:
-        typeMessage = 'Sorry, that email address is already used!';
+        typeMessage = 'Sorry, this email address is already used!';
         break;
       case AuthExceptionType.usernameExists:
-        typeMessage = 'Sorry, that username already exists!';
+        typeMessage = 'Sorry, this username already exists!';
         break;
       case AuthExceptionType.invalidEmail:
         typeMessage = 'Invalid email';

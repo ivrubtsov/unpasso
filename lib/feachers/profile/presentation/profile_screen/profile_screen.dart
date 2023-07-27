@@ -44,7 +44,7 @@ class ProfileScreen extends StatelessWidget {
             AchievementsView(),
             // Settings(),
             Container(
-              height: 30.0,
+              height: 90.0,
               padding:
                   const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
               alignment: Alignment.center,
