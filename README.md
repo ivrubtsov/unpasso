@@ -16,6 +16,24 @@ The app is build with the Flutter framework and is published in the AppStore
 
 2.0.3
 
+## Versions notes
+
+2.0.3
+Hi there! Some people use this app every day. But the problem was that the screen with goals didn't refresh when the app was resumed from the background. It was impossible to add a new goal for today then. It required to completely be closed or moved to the profile screen and backward to refresh. Now the screen is refreshed when the app is resumed, and the date is changed.
+Also the regulatory requirement was implemented: a user can delete their account on the profile page.
+
+2.0.2
+I didn't expect some people to try to mark a goal accomplished before deciding what needed to be done :)
+So this small update fixes the problem of empty and duplicate goals.
+Still, it has the same functions of setting a primary target for the day and a lot of small and funny activities to play with friends and family.
+
+2.0.1
+The whole app is redesigned, we have designed the new way to manage everyday goals and see your progress on the same screen (you can swipe left and right the current and the past gols). Also we have added achievements to motivate you make a progress.
+And, finally, we have some fun tasks for your games with friends.
+
+1.0
+Initial version
+
 ## Website
 
 https://unpasso.org

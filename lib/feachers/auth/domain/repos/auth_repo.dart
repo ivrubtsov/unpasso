@@ -19,7 +19,9 @@ abstract class AuthRepo {
 
   Future<void> autorizeUser(AuthCredentials credentials);
 
-  Future<void> logOut();
+  void logOut();
 
   Future<void> confirmRegistration(ConformationCredentials credentials);
+
+  Future<void> deleteUser();
 }

@@ -10,6 +10,9 @@ class ApiConsts {
   ) =>
       '$_baseUrl/users?username=$name&email=$email&password=$password';
 
+  static String deleteUser(int id) =>
+      '$_baseUrl/users/$id?force=True&reassign=111';
+
   static String getAchievements(int id) => '$_baseUrl/users/$id';
 
   static String setAchievements(String description, int id) =>
