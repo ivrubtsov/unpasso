@@ -37,7 +37,7 @@ class GoalsRepoImpl implements GoalsRepo {
       );
       final response = await _dio().post(url);
       final createdGoal = GoalModel.fromJson(response.data);
-      await _saveGoalToLocal(createdGoal);
+      // await _saveGoalToLocal(createdGoal);
       return createdGoal;
     } on DioError {
       throw ServerException();
@@ -61,6 +61,7 @@ class GoalsRepoImpl implements GoalsRepo {
     }
   }
 
+/*
   @override
   Future<List<Goal>> getProcessedListGoals() async {
     try {
@@ -120,6 +121,7 @@ class GoalsRepoImpl implements GoalsRepo {
       print(e);
     }
   }
+*/
 
   @override
   Future<void> completeGoal(Goal goal) async {

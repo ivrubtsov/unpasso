@@ -9,13 +9,13 @@ enum GetGoalsQueryType { userHistory }
 abstract class GoalsRepo {
   Future<Goal> createGoal(Goal goal);
 
-  Future<Goal?> getTodaysGoal();
+  // Future<Goal?> getTodaysGoal();
 
   Future<void> removeTodaysGoal();
 
   Future<List<Goal>> getGoals(GetGoalsQueryType queryType);
 
-  Future<List<Goal>> getProcessedListGoals();
+  // Future<List<Goal>> getProcessedListGoals();
 
   Future<void> completeGoal(Goal goal);
 }

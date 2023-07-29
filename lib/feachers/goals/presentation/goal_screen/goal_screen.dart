@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:goal_app/core/widgets/fun.dart';
 import 'package:goal_app/feachers/goals/data/models/goal_model/goal_model.dart';
-import 'package:goal_app/feachers/goals/domain/repos/goals_repo.dart';
 import 'package:intl/intl.dart';
 import 'package:goal_app/core/consts/app_colors.dart';
 import 'package:goal_app/core/consts/app_fonts.dart';
@@ -58,39 +57,22 @@ class GoalScreenContent extends StatefulWidget {
 
 class GoalScreenContentState extends State<GoalScreenContent>
     with WidgetsBindingObserver {
-  List<Goal> goals = [];
-  GoalScreenStatus status = GoalScreenStatus.ready;
-  final _goalsRepo = new GoalsRepo();
-
+  DateTime currentDate = DateTime.now();
   @override
-  void initState() async {
-    setState(() {
-      status = GoalScreenStatus.loading;
-    });
+  void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    final getGoals = await GoalsRepo.getProcessedListGoals();
     setState(() {
-      goals = getGoals;
-    });
-    setState(() {
-      status = GoalScreenStatus.ready;
+      currentDate = DateTime.now();
     });
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async {
+  void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
       case AppLifecycleState.resumed:
         setState(() {
-          status = GoalScreenStatus.loading;
-        });
-        final getGoals = await _goalsRepo.getProcessedListGoals();
-        setState(() {
-          goals = getGoals;
-        });
-        setState(() {
-          status = GoalScreenStatus.ready;
+          currentDate = DateTime.now();
         });
         break;
       case AppLifecycleState.inactive:
@@ -112,20 +94,20 @@ class GoalScreenContentState extends State<GoalScreenContent>
   Widget build(BuildContext context) {
     return BlocBuilder<GoalScreenCubit, GoalScreenState>(
       builder: (context, state) {
-        final today = DateTime.now();
-        if (today.day != state.currentDate.day) {
+        if (state.currentDate.day != currentDate.day) {
           final model = context.read<GoalScreenCubit>();
           model.getAllGoals();
+          model.setSelectedDateToday();
         }
-        if (status == GoalScreenStateStatus.loading) {
+        if (state.status == GoalScreenStateStatus.loading) {
           return const Center(
             child: CircularProgressIndicator(),
           );
         }
         return Column(
           children: [
-            DatesListView(goals: goals),
-            GoalsMainContainer(goals: goals),
+            DatesListView(goals: state.goals),
+            GoalsMainContainer(goals: state.goals),
             FunFlipAnimation(),
             /* Expanded(
               child: Align(
@@ -322,7 +304,7 @@ class GoalsMainContainer extends StatelessWidget {
                                     goals.insert(
                                         0,
                                         GoalModel(
-                                          createdAt: today,
+                                          createdAt: DateTime.now(),
                                           text: state.goal.text,
                                           authorId: state.goal.authorId,
                                           isCompleted: false,
@@ -384,7 +366,7 @@ class GoalsMainContainer extends StatelessWidget {
                         goals.insert(
                             0,
                             GoalModel(
-                              createdAt: today,
+                              createdAt: state.goal.createdAt,
                               text: state.goal.text,
                               authorId: state.goal.authorId,
                               isCompleted: true,
