@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:goal_app/core/consts/api_consts.dart';
 import 'package:goal_app/core/consts/api_key.dart';
+import 'package:goal_app/core/consts/app_avatars.dart';
 import 'package:goal_app/core/entities/user/user.dart';
 import 'package:goal_app/feachers/auth/domain/entities/session_data.dart';
 import 'package:goal_app/feachers/auth/domain/repos/auth_repo.dart';
@@ -84,10 +85,14 @@ class EmailAuthRepoImpl implements AuthRepo {
   Future<void> registerUser(AuthCredentials credentials) async {
     try {
       credentials as RegisterCreds;
+      final int avatar = AppAvatars.chooseAvatar();
+      final String description =
+          '{"avatar":$avatar,"achievements":[],"friends":[],"friendsRequests":[]}';
       final url = ApiConsts.registerUser(
         credentials.email,
         credentials.password,
         credentials.user.name,
+        description,
       );
       final response = await _dio().post(url);
 

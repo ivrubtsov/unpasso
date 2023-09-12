@@ -1,38 +1,91 @@
 import 'dart:convert';
 import 'package:goal_app/core/consts/api_consts.dart';
+import 'package:goal_app/core/consts/app_avatars.dart';
 import 'package:goal_app/feachers/profile/domain/entities/profile.dart';
 
 class ProfileModel extends Profile {
   ProfileModel({
     required int id,
+    required int avatar,
     List<int> achievements = const [],
+    List<int> friends = const [],
+    List<int> friendsRequests = const [],
   }) : super(
           id: id,
+          avatar: avatar,
           achievements: achievements,
+          friends: friends,
+          friendsRequests: friendsRequests,
         );
   factory ProfileModel.fromProfile(Profile profile) => ProfileModel(
         id: profile.id,
+        avatar: profile.avatar,
         achievements: profile.achievements,
+        friends: profile.friends,
+        friendsRequests: profile.friendsRequests,
       );
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
-    final description = jsonDecode(json['description']);
-    final achievements = description['achievements'] as List<int>;
+    int avatar;
+    List<int> achievements;
+    List<int> friends;
+    List<int> friendsRequests;
+    avatar = 0;
+    achievements = [];
+    friends = [];
+    friendsRequests = [];
+
+    final Map description = jsonDecode(json['description']);
+    if (!(json['description'] == null || json['description'] == '')) {
+      if (!(description['avatar'] == null ||
+          description['avatar'] == '' ||
+          description['avatar'] == 0)) {
+        avatar = description['avatar'] as int;
+      }
+      if (!(description['achievements'] == null ||
+          description['achievements'] == '' ||
+          description['achievements'] == [])) {
+      } else {
+        achievements = List<int>.from(description['achievements']);
+      }
+      if (!(description['friends'] == null ||
+          description['friends'] == '' ||
+          description['friends'] == [])) {
+        friends = List<int>.from(description['friends']);
+      }
+      if (!(description['friendsRequests'] == null ||
+          description['friendsRequests'] == '' ||
+          description['friendsRequests'] == [])) {
+        friendsRequests = List<int>.from(description['friendsRequests']);
+      }
+    }
+    if (avatar == 0) {
+      avatar = AppAvatars.chooseAvatar();
+    }
     return ProfileModel(
-      id: json['id'],
+      id: json['id'] as int,
+      avatar: avatar,
       achievements: achievements,
+      friends: friends,
+      friendsRequests: friendsRequests,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'avatar': avatar,
       'achievements': achievements,
+      'friends': friends,
+      'friendsRequests': friendsRequests,
     };
   }
 
   String submitUrlString() {
-    final desc = achievements.join(',');
-    return ApiConsts.setAchievements('{"achievements":[$desc]}', id);
+    final achievementsString = achievements.join(',');
+    final friendsString = friends.join(',');
+    final friendsRequestsString = friendsRequests.join(',');
+    return ApiConsts.updateUser(id,
+        '{"avatar":$avatar,"achievements":[$achievementsString],"friends":[$friendsString],"friendsRequests":[$friendsRequestsString]}');
   }
 }

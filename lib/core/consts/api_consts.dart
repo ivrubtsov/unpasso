@@ -7,15 +7,24 @@ class ApiConsts {
     String email,
     String password,
     String name,
+    String description,
   ) =>
-      '$_baseUrl/users?username=$name&email=$email&password=$password';
+      '$_baseUrl/users?username=$name&email=$email&password=$password&description=$description';
 
   static String deleteUser(int id) =>
       '$_baseUrl/users/$id?force=True&reassign=111';
 
-  static String getAchievements(int id) => '$_baseUrl/users/$id';
+  static String getUser(int id) => '$_baseUrl/users/$id';
 
-  static String setAchievements(String description, int id) =>
+  static String updateUser(int id, String description) =>
+      '$_baseUrl/users/$id?description=$description';
+
+  static String getFriends(int id) => '$_baseUrl/users/$id';
+
+  static String setFriends(int id, String description) =>
+      '$_baseUrl/users/$id?description=$description';
+
+  static String inviteFriends(int id, String description) =>
       '$_baseUrl/users/$id?description=$description';
 
   static String createGoal(String title, int authorId, String date) =>
@@ -25,6 +34,9 @@ class ApiConsts {
       '$_baseUrl/posts?per_page=100&status=publish,future&author=$authorId';
 
   static String completeGoal(int postId) => '$_baseUrl/posts/$postId?tags=8';
+
+  static String likeGoal(int postId, String content) =>
+      '$_baseUrl/posts/$postId?content=$content';
 
   static const policyPrivacy = 'https://unpasso.org/privacy/';
 

@@ -41,18 +41,14 @@ class ProfileScreenCubit extends Cubit<ProfileScreenState> {
 
 // ИНИЦИАЛИЗАЦИЯ СТРАНИЦЫ ПРОФИЛЯ
   void initProfileScreen() async {
-    getAchieves();
+    getProfile();
   }
 
-// ПОЛУЧАЕМ АЧИВКИ
-  void getAchieves() async {
+// ПОЛУЧАЕМ АВАТАР, АЧИВКИ, ДРУЗЕЙ И ЗАПРОСЫ НА ДРУЖБУ
+  void getProfile() async {
     emit(state.copyWith(status: ProfileScreenStateStatus.loading));
     try {
-      final achs = await _profileRepo.getAchievements();
-      final profile = Profile(
-        id: _sessionRepo.sessionData!.id,
-        achievements: achs,
-      );
+      final profile = await _profileRepo.getUserData();
 
       emit(state.copyWith(
         status: ProfileScreenStateStatus.loaded,

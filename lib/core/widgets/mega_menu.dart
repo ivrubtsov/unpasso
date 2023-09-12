@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:goal_app/core/consts/app_colors.dart';
+import 'package:goal_app/core/navigation/app_router.dart';
 
 class MegaMenu extends StatelessWidget {
   const MegaMenu({
@@ -16,7 +17,7 @@ class MegaMenu extends StatelessWidget {
       height: 64,
       child: Row(
         children: [
-          new Expanded(
+          Expanded(
             flex: 2,
             child: Center(
               child: MegaButtonHome(
@@ -24,7 +25,7 @@ class MegaMenu extends StatelessWidget {
               ),
             ),
           ),
-          new Expanded(
+          Expanded(
             flex: 2,
             child: Center(
               child: MegaButtonFriends(
@@ -32,7 +33,7 @@ class MegaMenu extends StatelessWidget {
               ),
             ),
           ),
-          new Expanded(
+          Expanded(
             flex: 2,
             child: Center(
               child: MegaButtonMy(
@@ -40,7 +41,7 @@ class MegaMenu extends StatelessWidget {
               ),
             ),
           ),
-          new Expanded(
+          Expanded(
             flex: 2,
             child: Center(
               child: MegaButtonGames(
@@ -48,7 +49,7 @@ class MegaMenu extends StatelessWidget {
               ),
             ),
           ),
-          new Expanded(
+          Expanded(
             flex: 2,
             child: Center(
               child: MegaButtonProfile(
@@ -79,7 +80,9 @@ class MegaButtonHome extends StatelessWidget {
       );
     } else {}
     return IconButton(
-      onPressed: () {},
+      onPressed: () {
+        Navigator.of(context).pushNamed(MainRoutes.homeScreen);
+      },
       icon: const Icon(
         Icons.home_outlined,
         color: AppColors.megaMenuIconsHome,
@@ -106,7 +109,9 @@ class MegaButtonFriends extends StatelessWidget {
       );
     } else {}
     return IconButton(
-      onPressed: () {},
+      onPressed: () {
+        Navigator.of(context).pushNamed(MainRoutes.friendsScreen);
+      },
       icon: const Icon(
         Icons.people_alt_outlined,
         color: AppColors.megaMenuIconsFriends,
@@ -133,7 +138,9 @@ class MegaButtonMy extends StatelessWidget {
       );
     } else {}
     return IconButton(
-      onPressed: () {},
+      onPressed: () {
+        Navigator.of(context).pushNamed(MainRoutes.goalScreen);
+      },
       icon: const Icon(
         Icons.task_outlined,
         color: AppColors.megaMenuIconsMy,
@@ -160,7 +167,9 @@ class MegaButtonGames extends StatelessWidget {
       );
     } else {}
     return IconButton(
-      onPressed: () {},
+      onPressed: () {
+        Navigator.of(context).pushNamed(MainRoutes.gamesScreen);
+      },
       icon: const Icon(
         Icons.games_outlined,
         color: AppColors.megaMenuIconsGames,
@@ -187,7 +196,9 @@ class MegaButtonProfile extends StatelessWidget {
       );
     } else {
       return IconButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).pushNamed(MainRoutes.profileScreen);
+        },
         icon: const Icon(
           Icons.person_outlined,
           color: AppColors.megaMenuIconsProfile,

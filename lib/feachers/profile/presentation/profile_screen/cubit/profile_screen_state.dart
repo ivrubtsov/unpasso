@@ -16,8 +16,13 @@ class ProfileScreenState extends Equatable {
   });
 
   factory ProfileScreenState.initial() => ProfileScreenState(
-        profile: Profile(id: 0, achievements: []),
-        status: ProfileScreenStateStatus.loaded,
+        profile: Profile(
+            id: 0,
+            avatar: 0,
+            achievements: [],
+            friends: [],
+            friendsRequests: []),
+        status: ProfileScreenStateStatus.loading,
       );
 
   ProfileScreenState copyWith({
