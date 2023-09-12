@@ -9,9 +9,6 @@ import 'package:goal_app/core/consts/app_fonts.dart';
 import 'package:goal_app/feachers/friends/domain/entities/friends.dart';
 import 'package:goal_app/feachers/friends/presentation/friends_screen/cubit/friends_screen_cubit.dart';
 
-ScrollController dateListScrollController = ScrollController();
-ScrollController goalsListScrollController = ScrollController();
-
 enum FriendsScreenStatus {
   loading,
   error,
@@ -30,32 +27,32 @@ class FriendsScreen extends StatelessWidget {
         backgroundColor: AppColors.bg,
         elevation: 0,
         title: const Text(
-          'My goals',
+          'Friends',
           style: AppFonts.header,
         ),
         actions: [
           IconButton(
             onPressed: () =>
-                context.read<GoalScreenCubit>().onProfileTapped(context),
+                context.read<FriendsScreenCubit>().onProfileTapped(context),
             icon: const Icon(Icons.person),
             color: AppColors.headerIcon,
           )
         ],
       ),
       backgroundColor: AppColors.bg,
-      body: const GoalScreenContent(),
+      body: const FriendsScreenContent(),
     );
   }
 }
 
-class GoalScreenContent extends StatefulWidget {
-  const GoalScreenContent({Key? key}) : super(key: key);
+class FriendsScreenContent extends StatefulWidget {
+  const FriendsScreenContent({Key? key}) : super(key: key);
 
   @override
-  State<GoalScreenContent> createState() => GoalScreenContentState();
+  State<FriendsScreenContent> createState() => FriendsScreenContentState();
 }
 
-class GoalScreenContentState extends State<GoalScreenContent>
+class FriendsScreenContentState extends State<FriendsScreenContent>
     with WidgetsBindingObserver {
   DateTime currentDate = DateTime.now();
   @override
@@ -92,14 +89,14 @@ class GoalScreenContentState extends State<GoalScreenContent>
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GoalScreenCubit, GoalScreenState>(
+    return BlocBuilder<FriendsScreenCubit, FriendsScreenState>(
       builder: (context, state) {
         if (state.currentDate.day != currentDate.day) {
-          final model = context.read<GoalScreenCubit>();
+          final model = context.read<FriendsScreenCubit>();
           model.getAllGoals();
           model.setSelectedDateToday();
         }
-        if (state.status == GoalScreenStateStatus.loading) {
+        if (state.status == FriendsScreenStateStatus.loading) {
           return const Center(
             child: CircularProgressIndicator(),
           );
