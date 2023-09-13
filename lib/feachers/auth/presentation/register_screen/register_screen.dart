@@ -41,9 +41,16 @@ class RegisterScreen extends StatelessWidget {
               const SizedBox(height: 30.0),
               // TEXT FIELD NAME
               _TextField(
-                title: 'username',
-                hintText: 'Username',
+                title: 'name',
+                hintText: 'Your name',
                 onChanged: model.changeName,
+              ),
+              const SizedBox(height: 15.0),
+              // TEXT FIELD USERNAME
+              _TextField(
+                title: 'username',
+                hintText: '@username - how others can find you',
+                onChanged: model.changeUserName,
               ),
               const SizedBox(height: 15.0),
               // TEXT FIELD EMAIL

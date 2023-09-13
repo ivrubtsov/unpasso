@@ -6,10 +6,11 @@ class ApiConsts {
   static String registerUser(
     String email,
     String password,
+    String username,
     String name,
     String description,
   ) =>
-      '$_baseUrl/users?username=$name&email=$email&password=$password&description=$description';
+      '$_baseUrl/users?username=$username&name=$name&email=$email&password=$password&description=$description';
 
   static String deleteUser(int id) =>
       '$_baseUrl/users/$id?force=True&reassign=111';
@@ -27,8 +28,9 @@ class ApiConsts {
   static String inviteFriends(int id, String description) =>
       '$_baseUrl/users/$id?description=$description';
 
-  static String createGoal(String title, int authorId, String date) =>
-      '$_baseUrl/posts?status=publish&title=$title&author=$authorId&categories=6&date_gmt=$date';
+/*  static String createGoal(String title, int authorId, String date) =>
+      '$_baseUrl/posts?status=publish&title=$title&author=$authorId&categories=6&date_gmt=$date';*/
+  static String createGoal() => '$_baseUrl/posts';
 
   static String getUserGoals(int authorId) =>
       '$_baseUrl/posts?per_page=100&status=publish,future&author=$authorId';

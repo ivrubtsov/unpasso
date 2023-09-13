@@ -254,7 +254,8 @@ class GoalScreenCubit extends Cubit<GoalScreenState> {
   void getAllGoals() async {
     emit(state.copyWith(status: GoalScreenStateStatus.loading));
     try {
-      final goals = await _goalsRepo.getGoals(GetGoalsQueryType.userHistory);
+      final goals =
+          await _goalsRepo.getUserGoals(GetGoalsQueryType.userHistory);
       goals.sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
       final DateTime today = DateTime.now();

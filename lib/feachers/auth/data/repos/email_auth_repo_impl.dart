@@ -68,10 +68,12 @@ class EmailAuthRepoImpl implements AuthRepo {
         throw AuthException.type(AuthExceptionType.unknown);
       }
       final id = response.data['id'];
+      final name = response.data['name'];
       await sessionRepo.saveSessionData(SessionData(
         id: id,
         password: credentials.password,
         username: credentials.username,
+        name: name,
       ));
     } on DioError catch (e) {
       throw AuthException(
@@ -91,6 +93,7 @@ class EmailAuthRepoImpl implements AuthRepo {
       final url = ApiConsts.registerUser(
         credentials.email,
         credentials.password,
+        credentials.user.username,
         credentials.user.name,
         description,
       );
@@ -101,10 +104,12 @@ class EmailAuthRepoImpl implements AuthRepo {
       }
 
       final id = response.data['id'];
+      final name = response.data['name'];
       await sessionRepo.saveSessionData(SessionData(
         id: id,
         password: credentials.password,
         username: credentials.user.name,
+        name: name,
       ));
     } on DioError catch (e) {
       throw AuthException.fromServerMessage(e.response?.data['message']);

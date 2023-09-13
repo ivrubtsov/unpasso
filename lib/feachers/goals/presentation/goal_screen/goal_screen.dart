@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:goal_app/core/widgets/fun.dart';
+import 'package:goal_app/core/widgets/mega_menu.dart';
 import 'package:goal_app/feachers/goals/data/models/goal_model/goal_model.dart';
 import 'package:intl/intl.dart';
 import 'package:goal_app/core/consts/app_colors.dart';
@@ -108,13 +109,17 @@ class GoalScreenContentState extends State<GoalScreenContent>
           children: [
             DatesListView(goals: state.goals),
             GoalsMainContainer(goals: state.goals),
-            FunFlipAnimation(),
-            /* Expanded(
+            /*FunFlipAnimation(),
+            Expanded(
               child: Align(
                 alignment: Alignment.bottomLeft,
                 child: QuoteWidget(),
               ),
             ),*/
+            const Expanded(
+              child: Placeholder(),
+            ),
+            const MegaMenu(active: 3),
           ],
         );
       },

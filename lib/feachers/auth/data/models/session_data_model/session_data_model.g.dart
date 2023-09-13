@@ -11,11 +11,13 @@ SessionDataModel _$SessionDataModelFromJson(Map<String, dynamic> json) =>
       id: json['id'] as int,
       password: json['password'] as String,
       username: json['username'] as String,
+      name: json['name'] as String,
     );
 
 Map<String, dynamic> _$SessionDataModelToJson(SessionDataModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'username': instance.username,
+      'name': instance.name,
       'password': instance.password,
     };

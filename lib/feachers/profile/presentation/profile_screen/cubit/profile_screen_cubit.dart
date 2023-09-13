@@ -32,11 +32,11 @@ class ProfileScreenCubit extends Cubit<ProfileScreenState> {
   }
 
   String getName() {
-    return _sessionRepo.sessionData!.username;
+    return _sessionRepo.sessionData!.name;
   }
 
   String getUsername() {
-    return '';
+    return _sessionRepo.sessionData!.username;
   }
 
 // ИНИЦИАЛИЗАЦИЯ СТРАНИЦЫ ПРОФИЛЯ

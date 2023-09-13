@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:goal_app/core/consts/achievements.dart';
+import 'package:goal_app/core/consts/app_avatars.dart';
 import 'package:goal_app/core/consts/app_colors.dart';
 import 'package:goal_app/core/consts/app_fonts.dart';
+import 'package:goal_app/core/widgets/mega_menu.dart';
 import 'package:goal_app/core/widgets/modal.dart';
 
 import 'package:goal_app/feachers/profile/presentation/profile_screen/cubit/profile_screen_cubit.dart';
@@ -61,6 +63,10 @@ class ProfileScreen extends StatelessWidget {
                 onPressedCancel: () => Navigator.pop(context),
               ),
             ),
+            const Expanded(
+              child: Placeholder(),
+            ),
+            const MegaMenu(active: 5),
           ],
         ));
   }
@@ -76,29 +82,35 @@ class PersonalData extends StatelessWidget {
     final model = context.read<ProfileScreenCubit>();
     final name = model.getName();
     final username = model.getUsername();
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
-      child: Row(
-        children: [
-          const Icon(
-            Icons.person,
-            size: 56.0,
-          ),
-          Column(
-            children: [
-              Text(
-                name,
-                style: AppFonts.profileName,
-              ),
-              Text(
-                username,
-                style: AppFonts.profileUsername,
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
+    return BlocBuilder<ProfileScreenCubit, ProfileScreenState>(
+        builder: (context, state) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+        child: Row(
+          children: [
+            AppAvatars.getAvatarImage(state.profile.avatar),
+            /*
+            const Icon(
+              Icons.person,
+              size: 56.0,
+            ),
+            */
+            Column(
+              children: [
+                Text(
+                  name,
+                  style: AppFonts.profileName,
+                ),
+                Text(
+                  username,
+                  style: AppFonts.profileUsername,
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    });
   }
 }
 

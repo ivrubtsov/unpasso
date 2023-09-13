@@ -2,60 +2,127 @@ import '../../../domain/entities/goal.dart';
 
 class GoalModel extends Goal {
   GoalModel({
+    int? id,
     required String text,
     required DateTime createdAt,
     required int authorId,
+    final String? authorName,
+    final String? authorUserName,
     required bool isCompleted,
     required bool isExist,
-    int? id,
+    final bool? isPublic,
+    final bool? isFriends,
+    final bool? isPrivate,
+    final List<int>? likeUsers,
+    final int? likes,
   }) : super(
+          id: id,
           text: text,
           createdAt: createdAt,
           authorId: authorId,
+          authorName: authorName ?? '',
+          authorUserName: authorUserName ?? '',
           isCompleted: isCompleted,
           isExist: isExist,
-          id: id,
+          isPublic: isPublic ?? false,
+          isFriends: isFriends ?? false,
+          isPrivate: isPrivate ?? true,
+          likeUsers: likeUsers ?? [],
+          likes: likes ?? 0,
         );
   factory GoalModel.fromGoal(Goal goal) => GoalModel(
+        id: goal.id,
         text: goal.text,
         createdAt: goal.createdAt,
         authorId: goal.authorId,
-        id: goal.id,
+        authorName: goal.authorName,
+        authorUserName: goal.authorUserName,
         isCompleted: goal.isCompleted,
         isExist: goal.isExist,
+        isPublic: goal.isPublic,
+        isFriends: goal.isFriends,
+        isPrivate: goal.isPrivate,
+        likeUsers: goal.likeUsers,
+        likes: goal.likes,
       );
 
   factory GoalModel.fromJson(Map<String, dynamic> json) {
-    bool isCompleted;
+    final jsonDate = json['date'] + 'Z';
+    final createdDate = DateTime.parse(jsonDate).toLocal();
+    bool checkIsCompleted;
+    bool checkIsPublic;
+    bool checkIsFriends;
+    bool checkIsPrivate;
+    String authorName;
+    String authorUserName;
+    List<int> likeUsers;
     final tags = json['tags'] as List<dynamic>?;
     // Если тэг == 8, то цель выполнена
     // С другой стороны если массив с тэгами пустой, тогда она не выполнена
-    // Если нет, то выполнена
-    // Поэтому не делаю проверку, есть ли 8 в массиве или нет
-    tags == null || tags.isEmpty ? isCompleted = false : isCompleted = true;
-    final jsonDate = json['date'] + 'Z';
-    final createdDate = DateTime.parse(jsonDate).toLocal();
+    if (tags == null || tags.isEmpty) {
+      checkIsCompleted = false;
+      checkIsPublic = false;
+      checkIsFriends = false;
+      checkIsPrivate = true;
+    } else {
+      checkIsCompleted = tags.contains(8) ? true : false;
+      if (!tags.contains(26) && !tags.contains(27) && !tags.contains(28)) {
+        checkIsPublic = false;
+        checkIsFriends = false;
+        checkIsPrivate = true;
+      } else {
+        checkIsPublic = tags.contains(26) ? true : false;
+        checkIsFriends = tags.contains(27) ? true : false;
+        checkIsPrivate = tags.contains(28) ? true : false;
+      }
+    }
+    final description = json['content']['rendered'] as Map<String, dynamic>?;
+    if (description == null || description == {}) {
+      authorName = '';
+      authorUserName = '';
+      likeUsers = [];
+    } else {
+      authorName = description['authorName'];
+      authorUserName = description['authorUserName'];
+      likeUsers = description['likeUsers'];
+    }
     return GoalModel(
+      id: json['id'],
       text: json['title']['rendered'],
       createdAt: createdDate,
       authorId: json['author'],
-      isCompleted: isCompleted,
+      authorName: authorName,
+      authorUserName: authorUserName,
+      isCompleted: checkIsCompleted,
       isExist: true,
-      id: json['id'],
+      isPublic: checkIsPublic,
+      isFriends: checkIsFriends,
+      isPrivate: checkIsPrivate,
+      likeUsers: likeUsers,
+      likes: likeUsers.length + 1,
     );
   }
 
   Map<String, dynamic> toJson() {
-    final tag = isCompleted ? [8] : null;
+    final List<int> tags = isCompleted ? [8] : [];
+    if (isPublic) tags.add(26);
+    if (isFriends) tags.add(27);
+    if (isPrivate) tags.add(28);
     final createdDate = createdAt.toUtc();
+    final Map<String, dynamic> description = {
+      'authorName': authorName,
+      'authorUserName': authorUserName,
+      'likeUsers': likeUsers,
+      'likes': likeUsers.length + 1,
+    };
     return {
-      'title': {
-        'rendered': text,
-      },
-      'date': createdDate.toIso8601String(),
+      'title': text,
+      'date_gmt': createdDate.toIso8601String(),
       'author': authorId,
-      'tags': tag,
-      'id': id,
+      'tags': tags,
+      'content': description,
+      'status': 'publish',
+      'categories': 6,
     };
   }
 }
