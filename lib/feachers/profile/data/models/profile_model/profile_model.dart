@@ -32,6 +32,7 @@ class ProfileModel extends Profile {
       );
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
+    String name;
     int avatar;
     List<int> achievements;
     List<int> friends;
@@ -65,13 +66,18 @@ class ProfileModel extends Profile {
         friendsRequests = List<int>.from(description['friendsRequests']);
       }
     }
+    if (json['name'] == null || json['name'] == '') {
+      name = 'Unknown';
+    } else {
+      name = json['name'];
+    }
     if (avatar == 0) {
       avatar = AppAvatars.chooseAvatar();
     }
     return ProfileModel(
       id: json['id'] as int,
-      name: json['name'] as String,
-      userName: json['username'] as String,
+      name: name,
+      userName: json['username'] ?? '',
       avatar: avatar,
       achievements: achievements,
       friends: friends,
@@ -97,7 +103,7 @@ class ProfileModel extends Profile {
     final friendsRequestsString = friendsRequests.join(',');
     return ApiConsts.updateUser(
       id,
-      name ?? '',
+      name ?? 'Unknown',
       userName ?? '',
       '{"avatar":$avatar,"achievements":[$achievementsString],"friends":[$friendsString],"friendsRequests":[$friendsRequestsString]}',
     );
