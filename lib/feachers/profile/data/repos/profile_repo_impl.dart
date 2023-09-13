@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:goal_app/core/consts/api_consts.dart';
-import 'package:goal_app/core/consts/app_avatars.dart';
 import 'package:goal_app/core/exceptions/exceptions.dart';
 import 'package:goal_app/feachers/auth/domain/repos/session_repo.dart';
 import 'package:goal_app/feachers/profile/data/models/profile_model/profile_model.dart';

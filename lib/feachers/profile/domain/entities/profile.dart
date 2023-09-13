@@ -1,13 +1,17 @@
 class Profile {
   int id;
-  int avatar;
+  String? name;
+  String? userName;
+  int? avatar;
   List<int> achievements;
   List<int> friends;
   List<int> friendsRequests;
 
   Profile({
     required this.id,
-    required this.avatar,
+    this.name,
+    this.userName,
+    this.avatar,
     this.achievements = const [],
     this.friends = const [],
     this.friendsRequests = const [],
@@ -15,6 +19,8 @@ class Profile {
 
   Profile copyWith({
     int? id,
+    String? name,
+    String? userName,
     int? avatar,
     List<int>? achievements,
     List<int>? friends,
@@ -22,6 +28,8 @@ class Profile {
   }) {
     return Profile(
       id: id ?? this.id,
+      name: name ?? this.name,
+      userName: userName ?? this.userName,
       avatar: avatar ?? this.avatar,
       achievements: achievements ?? this.achievements,
       friends: friends ?? this.friends,
@@ -38,6 +46,8 @@ class Profile {
 
   List<Object?> get props => [
         id,
+        name,
+        userName,
         avatar,
         achievements,
         friends,

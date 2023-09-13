@@ -6,12 +6,16 @@ import 'package:goal_app/feachers/profile/domain/entities/profile.dart';
 class ProfileModel extends Profile {
   ProfileModel({
     required int id,
-    required int avatar,
+    String? name,
+    String? userName,
+    int? avatar,
     List<int> achievements = const [],
     List<int> friends = const [],
     List<int> friendsRequests = const [],
   }) : super(
           id: id,
+          name: name,
+          userName: userName,
           avatar: avatar,
           achievements: achievements,
           friends: friends,
@@ -19,6 +23,8 @@ class ProfileModel extends Profile {
         );
   factory ProfileModel.fromProfile(Profile profile) => ProfileModel(
         id: profile.id,
+        name: profile.name,
+        userName: profile.userName,
         avatar: profile.avatar,
         achievements: profile.achievements,
         friends: profile.friends,
@@ -64,6 +70,8 @@ class ProfileModel extends Profile {
     }
     return ProfileModel(
       id: json['id'] as int,
+      name: json['name'] as String,
+      userName: json['username'] as String,
       avatar: avatar,
       achievements: achievements,
       friends: friends,
@@ -74,6 +82,8 @@ class ProfileModel extends Profile {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'name': name,
+      'username': userName,
       'avatar': avatar,
       'achievements': achievements,
       'friends': friends,
@@ -85,7 +95,11 @@ class ProfileModel extends Profile {
     final achievementsString = achievements.join(',');
     final friendsString = friends.join(',');
     final friendsRequestsString = friendsRequests.join(',');
-    return ApiConsts.updateUser(id,
-        '{"avatar":$avatar,"achievements":[$achievementsString],"friends":[$friendsString],"friendsRequests":[$friendsRequestsString]}');
+    return ApiConsts.updateUser(
+      id,
+      name ?? '',
+      userName ?? '',
+      '{"avatar":$avatar,"achievements":[$achievementsString],"friends":[$friendsString],"friendsRequests":[$friendsRequestsString]}',
+    );
   }
 }

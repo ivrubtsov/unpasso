@@ -8,6 +8,7 @@ class GoalModel extends Goal {
     required int authorId,
     final String? authorName,
     final String? authorUserName,
+    final int? authorAvatar,
     required bool isCompleted,
     required bool isExist,
     final bool? isPublic,
@@ -22,6 +23,7 @@ class GoalModel extends Goal {
           authorId: authorId,
           authorName: authorName ?? '',
           authorUserName: authorUserName ?? '',
+          authorAvatar: authorAvatar ?? 0,
           isCompleted: isCompleted,
           isExist: isExist,
           isPublic: isPublic ?? false,
@@ -37,6 +39,7 @@ class GoalModel extends Goal {
         authorId: goal.authorId,
         authorName: goal.authorName,
         authorUserName: goal.authorUserName,
+        authorAvatar: goal.authorAvatar,
         isCompleted: goal.isCompleted,
         isExist: goal.isExist,
         isPublic: goal.isPublic,
@@ -55,6 +58,7 @@ class GoalModel extends Goal {
     bool checkIsPrivate;
     String authorName;
     String authorUserName;
+    int authorAvatar;
     List<int> likeUsers;
     final tags = json['tags'] as List<dynamic>?;
     // Если тэг == 8, то цель выполнена
@@ -78,12 +82,15 @@ class GoalModel extends Goal {
     }
     final description = json['content']['rendered'] as Map<String, dynamic>?;
     if (description == null || description == {}) {
+      // TODO: Update author's name and username
       authorName = '';
       authorUserName = '';
+      authorAvatar = 0;
       likeUsers = [];
     } else {
       authorName = description['authorName'];
       authorUserName = description['authorUserName'];
+      authorAvatar = description['authorAvatar'];
       likeUsers = description['likeUsers'];
     }
     return GoalModel(
@@ -93,6 +100,7 @@ class GoalModel extends Goal {
       authorId: json['author'],
       authorName: authorName,
       authorUserName: authorUserName,
+      authorAvatar: authorAvatar,
       isCompleted: checkIsCompleted,
       isExist: true,
       isPublic: checkIsPublic,
@@ -112,6 +120,7 @@ class GoalModel extends Goal {
     final Map<String, dynamic> description = {
       'authorName': authorName,
       'authorUserName': authorUserName,
+      'authorAvatar': authorAvatar,
       'likeUsers': likeUsers,
       'likes': likeUsers.length + 1,
     };

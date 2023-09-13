@@ -11,7 +11,8 @@ class AppAvatars {
     return random.nextInt(length) + 1;
   }
 
-  static Image getAvatarImage(int id) {
+  static Image getAvatarImage(int? id) {
+    id = id ?? 0;
     return Image(
       image: AssetImage('assets/avatars/$id.png'),
     );

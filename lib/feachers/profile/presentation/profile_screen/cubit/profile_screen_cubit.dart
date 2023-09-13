@@ -32,7 +32,7 @@ class ProfileScreenCubit extends Cubit<ProfileScreenState> {
   }
 
   String getName() {
-    return _sessionRepo.sessionData!.name;
+    return state.profile.name ?? 'Unknown';
   }
 
   String getUsername() {

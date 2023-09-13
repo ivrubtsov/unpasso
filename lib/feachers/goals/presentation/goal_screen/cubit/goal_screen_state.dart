@@ -15,7 +15,7 @@ class GoalScreenState extends Equatable {
   final DateTime currentDate;
   final Goal goal;
   final List<Goal> goals;
-  final List<int> achievements;
+  final Profile profile;
   final GoalScreenStateStatus status;
   final bool displayFunFront;
 
@@ -27,7 +27,7 @@ class GoalScreenState extends Equatable {
     required this.currentDate,
     required this.goal,
     required this.goals,
-    required this.achievements,
+    required this.profile,
     required this.status,
     required this.displayFunFront,
   });
@@ -36,8 +36,8 @@ class GoalScreenState extends Equatable {
         selectedDate: DateTime.now(),
         currentDate: DateTime.now(),
         goal: Goal(text: '', createdAt: DateTime(0), authorId: 0),
-        goals: [],
-        achievements: [],
+        goals: const [],
+        profile: Profile(id: 0),
         status: GoalScreenStateStatus.ready,
         displayFunFront: true,
       );
@@ -47,7 +47,7 @@ class GoalScreenState extends Equatable {
     DateTime? currentDate,
     Goal? goal,
     List<Goal>? goals,
-    List<int>? achievements,
+    Profile? profile,
     GoalScreenStateStatus? status,
     bool displayFunFront = true,
   }) {
@@ -56,7 +56,7 @@ class GoalScreenState extends Equatable {
       currentDate: currentDate ?? this.currentDate,
       goal: goal ?? this.goal,
       goals: goals ?? this.goals,
-      achievements: achievements ?? this.achievements,
+      profile: profile ?? this.profile,
       status: status ?? this.status,
       displayFunFront: displayFunFront,
     );
@@ -68,7 +68,7 @@ class GoalScreenState extends Equatable {
         currentDate,
         goal,
         goals,
-        achievements,
+        profile,
         status,
         displayFunFront
       ];

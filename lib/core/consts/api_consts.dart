@@ -17,8 +17,9 @@ class ApiConsts {
 
   static String getUser(int id) => '$_baseUrl/users/$id';
 
-  static String updateUser(int id, String description) =>
-      '$_baseUrl/users/$id?description=$description';
+  static String updateUser(
+          int id, String name, String userName, String description) =>
+      '$_baseUrl/users/$id?name=$name&username=$userName&description=$description';
 
   static String getFriends(int id) => '$_baseUrl/users/$id';
 

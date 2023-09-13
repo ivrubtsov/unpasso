@@ -7,6 +7,7 @@ class Goal extends Equatable {
   final int authorId;
   final String authorName;
   final String authorUserName;
+  final int authorAvatar;
   final bool isCompleted;
   final bool isExist;
   final bool isPublic;
@@ -22,6 +23,7 @@ class Goal extends Equatable {
     required this.authorId,
     this.authorName = '',
     this.authorUserName = '',
+    this.authorAvatar = 0,
     this.isCompleted = false,
     this.isExist = true,
     this.isPublic = false,
@@ -38,6 +40,7 @@ class Goal extends Equatable {
     int? authorId,
     String? authorName,
     String? authorUserName,
+    int? authorAvatar,
     bool? isCompleted,
     bool? isExist,
     bool? isPublic,
@@ -53,6 +56,7 @@ class Goal extends Equatable {
       authorId: authorId ?? this.authorId,
       authorName: authorName ?? this.authorName,
       authorUserName: authorUserName ?? this.authorUserName,
+      authorAvatar: authorAvatar ?? this.authorAvatar,
       isCompleted: isCompleted ?? this.isCompleted,
       isExist: isExist ?? this.isExist,
       isPublic: isPublic ?? this.isPublic,
@@ -71,6 +75,7 @@ class Goal extends Equatable {
         authorId,
         authorName,
         authorUserName,
+        authorAvatar,
         isCompleted,
         isExist,
         isPublic,

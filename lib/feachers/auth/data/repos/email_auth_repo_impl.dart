@@ -73,7 +73,6 @@ class EmailAuthRepoImpl implements AuthRepo {
         id: id,
         password: credentials.password,
         username: credentials.username,
-        name: name,
       ));
     } on DioError catch (e) {
       throw AuthException(
@@ -108,8 +107,7 @@ class EmailAuthRepoImpl implements AuthRepo {
       await sessionRepo.saveSessionData(SessionData(
         id: id,
         password: credentials.password,
-        username: credentials.user.name,
-        name: name,
+        username: credentials.user.username,
       ));
     } on DioError catch (e) {
       throw AuthException.fromServerMessage(e.response?.data['message']);

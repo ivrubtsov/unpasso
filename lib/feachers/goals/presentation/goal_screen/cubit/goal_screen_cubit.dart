@@ -14,6 +14,7 @@ import 'package:goal_app/feachers/goals/data/models/goal_model/goal_model.dart';
 import 'package:goal_app/feachers/goals/domain/entities/goal.dart';
 import 'package:goal_app/feachers/goals/domain/repos/goals_repo.dart';
 import 'package:goal_app/feachers/goals/presentation/goal_screen/goal_screen.dart';
+import 'package:goal_app/feachers/profile/domain/entities/profile.dart';
 import 'package:goal_app/feachers/profile/domain/repos/profile_repo.dart';
 
 part 'goal_screen_state.dart';
@@ -86,10 +87,19 @@ class GoalScreenCubit extends Cubit<GoalScreenState> {
     try {
       // Save the new goal
       final goal = await _goalsRepo.createGoal(Goal(
-          createdAt: DateTime.now(),
-          text: value,
-          authorId: authorId,
-          isCompleted: false));
+        createdAt: DateTime.now(),
+        text: value,
+        authorId: authorId,
+        authorName: state.profile.name ?? '',
+        authorUserName: state.profile.userName ?? '',
+        authorAvatar: state.profile.avatar ?? 0,
+        isCompleted: false,
+        isPublic: false,
+        isFriends: false,
+        isPrivate: true,
+        likeUsers: const [],
+        likes: 0,
+      ));
 
       emit(state.copyWith(goal: goal));
 
@@ -98,7 +108,7 @@ class GoalScreenCubit extends Cubit<GoalScreenState> {
       newAchieve(0, context);
 
       // 12 'A weekend without a backward thought',
-      if (!state.achievements.contains(12)) {
+      if (!state.profile.achievements.contains(12)) {
         final DateTime today = DateTime.now();
         final DateTime friday = today.subtract(const Duration(days: 3));
         if (today.weekday == DateTime.monday &&
@@ -135,7 +145,7 @@ class GoalScreenCubit extends Cubit<GoalScreenState> {
       // 1 'The first step to success: the first goal is completed',
       newAchieve(1, context);
       // 2 'Two steps ahead: two goals are completed in a row',
-      if (!state.achievements.contains(2)) {
+      if (!state.profile.achievements.contains(2)) {
         final DateTime today = DateTime.now();
         final DateTime dayMinus1 = today.subtract(const Duration(days: 1));
         if (state.goals.length > 1 &&
@@ -148,61 +158,61 @@ class GoalScreenCubit extends Cubit<GoalScreenState> {
       }
 
       // 3 'Three goals in one week',
-      if (!state.achievements.contains(3)) {
+      if (!state.profile.achievements.contains(3)) {
         if (countCompletedGoals(7) >= 3) {
           newAchieve(3, context);
         }
       }
       // 4 'Four goals in one week',
-      if (!state.achievements.contains(4)) {
+      if (!state.profile.achievements.contains(4)) {
         if (countCompletedGoals(7) >= 4) {
           newAchieve(4, context);
         }
       }
       // 5 'Business week: five goals are completed in one week',
-      if (!state.achievements.contains(5)) {
+      if (!state.profile.achievements.contains(5)) {
         if (countCompletedGoals(7) >= 5) {
           newAchieve(5, context);
         }
       }
       // 6 'Indian week: six goals are completed in one week',
-      if (!state.achievements.contains(6)) {
+      if (!state.profile.achievements.contains(6)) {
         if (countCompletedGoals(7) >= 6) {
           newAchieve(6, context);
         }
       }
       // 7 'Full week: you did it! Seven days in a row!',
-      if (!state.achievements.contains(7)) {
+      if (!state.profile.achievements.contains(7)) {
         if (countCompletedGoals(7) >= 7) {
           newAchieve(7, context);
         }
       }
       // 8 'Crescent: 15 goals in a month',
-      if (!state.achievements.contains(8)) {
+      if (!state.profile.achievements.contains(8)) {
         if (countCompletedGoals(30) >= 15) {
           newAchieve(8, context);
         }
       }
       // 9 'Full moon: 30 days in a row',
-      if (!state.achievements.contains(9)) {
+      if (!state.profile.achievements.contains(9)) {
         if (countCompletedGoals(30) >= 30) {
           newAchieve(9, context);
         }
       }
       // 10 'Demigod: 100 completed goals',
-      if (!state.achievements.contains(10)) {
+      if (!state.profile.achievements.contains(10)) {
         if (countCompletedGoals(0) >= 100) {
           newAchieve(10, context);
         }
       }
       // 11 'Champion: 365 completed goals',
-      if (!state.achievements.contains(11)) {
+      if (!state.profile.achievements.contains(11)) {
         if (countCompletedGoals(0) >= 365) {
           newAchieve(11, context);
         }
       }
       // 13 'A special achievement from Dasha',
-      if (!state.achievements.contains(13)) {
+      if (!state.profile.achievements.contains(13)) {
         final DateTime today = DateTime.now();
         final DateTime dayMinus1 = today.subtract(const Duration(days: 1));
         final DateTime dayMinus2 = today.subtract(const Duration(days: 2));
@@ -292,8 +302,8 @@ class GoalScreenCubit extends Cubit<GoalScreenState> {
 // ИНИЦИАЛИЗАЦИЯ СТРАНИЦЫ С ЦЕЛЯМИ: ЗАГРУЗКА ВСЕХ ЦЕЛЕЙ И АЧИВОК
   void initGoalsScreen() async {
     getAllGoals();
-    final achs = await _profileRepo.getAchievements();
-    emit(state.copyWith(achievements: achs));
+    final profile = await _profileRepo.getUserData();
+    emit(state.copyWith(profile: profile));
     // getTodaysGoal();
   }
 
@@ -340,14 +350,16 @@ class GoalScreenCubit extends Cubit<GoalScreenState> {
 // ДОБАВЛЯЕМ НОВУЮ АЧИВКУ (СОХРАНЯЕМ ОБНОВЛЕННЫЙ СПИСОК)
   void newAchieve(int newAch, BuildContext context) async {
     try {
-      final achs = state.achievements;
+      final achs = state.profile.achievements;
       if (achs.contains(newAch)) {
         return;
       }
       achs.add(newAch);
       await _profileRepo.setAchievements(achs);
+      Profile newProfile = state.profile;
+      newProfile.achievements = achs;
       emit(state.copyWith(
-        achievements: achs,
+        profile: newProfile,
       ));
       showAchieveModal(newAch, context);
     } on ServerException {
