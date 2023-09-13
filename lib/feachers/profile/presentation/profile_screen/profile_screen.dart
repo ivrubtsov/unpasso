@@ -102,7 +102,7 @@ class PersonalData extends StatelessWidget {
                   style: AppFonts.profileName,
                 ),
                 Text(
-                  username,
+                  '@$username',
                   style: AppFonts.profileUsername,
                 ),
               ],

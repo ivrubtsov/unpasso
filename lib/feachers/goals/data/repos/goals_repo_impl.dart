@@ -49,7 +49,7 @@ class GoalsRepoImpl implements GoalsRepo {
   }
 
   @override
-  Future<List<Goal>> getUserGoals(GetGoalsQueryType queryType) async {
+  Future<List<Goal>> getCurrentUserGoals(GetGoalsQueryType queryType) async {
     if (_sessionRepo.sessionData == null) throw ServerException();
     try {
       final response = await _dio().get<List<dynamic>>(ApiConsts.getUserGoals(

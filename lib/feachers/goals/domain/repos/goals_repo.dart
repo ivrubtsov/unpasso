@@ -13,7 +13,7 @@ abstract class GoalsRepo {
 
   Future<void> removeTodaysGoal();
 
-  Future<List<Goal>> getUserGoals(GetGoalsQueryType queryType);
+  Future<List<Goal>> getCurrentUserGoals(GetGoalsQueryType queryType);
 
   // Future<List<Goal>> getProcessedListGoals();
 
