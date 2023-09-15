@@ -1,7 +1,7 @@
-import '../../../domain/entities/home.dart';
+import '../../../domain/entities/friend.dart';
 
-class HomeModel extends Home {
-  HomeModel({
+class FriendModel extends Friend {
+  FriendModel({
     required String text,
     required DateTime createdAt,
     required int authorId,
@@ -16,16 +16,16 @@ class HomeModel extends Home {
           isExist: isExist,
           id: id,
         );
-  factory HomeModel.fromHome(Home Home) => HomeModel(
-        text: Home.text,
-        createdAt: Home.createdAt,
-        authorId: Home.authorId,
-        id: Home.id,
-        isCompleted: Home.isCompleted,
-        isExist: Home.isExist,
+  factory FriendModel.fromFriend(Friend Friend) => FriendModel(
+        text: Friend.text,
+        createdAt: Friend.createdAt,
+        authorId: Friend.authorId,
+        id: Friend.id,
+        isCompleted: Friend.isCompleted,
+        isExist: Friend.isExist,
       );
 
-  factory HomeModel.fromJson(Map<String, dynamic> json) {
+  factory FriendModel.fromJson(Map<String, dynamic> json) {
     bool isCompleted;
     final tags = json['tags'] as List<dynamic>?;
     // Если тэг == 8, то цель выполнена
@@ -35,7 +35,7 @@ class HomeModel extends Home {
     tags == null || tags.isEmpty ? isCompleted = false : isCompleted = true;
     final jsonDate = json['date'] + 'Z';
     final createdDate = DateTime.parse(jsonDate).toLocal();
-    return HomeModel(
+    return FriendModel(
       text: json['title']['rendered'],
       createdAt: createdDate,
       authorId: json['author'],

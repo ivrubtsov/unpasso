@@ -1,6 +1,6 @@
 part of 'friends_screen_cubit.dart';
 
-enum FriendscreenStateStatus {
+enum FriendsScreenStateStatus {
   loading,
   loaded,
   error,
@@ -10,29 +10,25 @@ enum FriendscreenStateStatus {
   ready,
 }
 
-class FriendscreenState extends Equatable {
+class FriendsScreenState extends Equatable {
   final DateTime selectedDate;
   final DateTime currentDate;
-  final Friends friends;
-  final List<Friends> friends;
+  final List<Friend> friends;
   final List<int> achievements;
   final FriendsScreenStateStatus status;
   final bool displayFunFront;
 
-  bool get isCheckboxActive =>
-      goal.text.isNotEmpty || (goal.isCompleted && goal.text.isNotEmpty);
-
   const FriendsScreenState({
     required this.selectedDate,
     required this.currentDate,
-    required this.goal,
-    required this.goals,
+    required this.friend,
+    required this.friends,
     required this.achievements,
     required this.status,
     required this.displayFunFront,
   });
 
-  factory GoalScreenState.initial() => GoalScreenState(
+  factory FriendsScreenState.initial() => GoalScreenState(
         selectedDate: DateTime.now(),
         currentDate: DateTime.now(),
         goal: Goal(text: '', createdAt: DateTime(0), authorId: 0),

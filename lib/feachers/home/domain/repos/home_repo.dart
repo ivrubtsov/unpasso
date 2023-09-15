@@ -1,21 +1,9 @@
-import 'package:goal_app/feachers/home/domain/entities/home.dart';
+import 'package:goal_app/feachers/goals/domain/entities/goal.dart';
 
-enum GetHomeQueryType { userHistory }
-
-/// completeHome - завершает цель
-/// createHome - получаем цель на сегодня
-/// createHome - создаем цель
-/// getHome - получаем историю целей пользователя
 abstract class HomeRepo {
-  Future<Home> createHome(Home Home);
+  Future<List<Goal>> getPublicGoals();
+  Future<List<Goal>> getFriendsGoals(int userId);
 
-  // Future<Home?> getTodaysHome();
-
-  Future<void> removeTodaysHome();
-
-  Future<List<Home>> getHome(GetHomeQueryType queryType);
-
-  // Future<List<Home>> getProcessedListHome();
-
-  Future<void> completeHome(Home Home);
+  Future<Goal> likeGoal(Goal goal, int userId);
+  Future<Goal> unLikeGoal(Goal goal, int userId);
 }

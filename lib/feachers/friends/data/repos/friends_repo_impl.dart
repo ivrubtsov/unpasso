@@ -5,8 +5,8 @@ import 'package:goal_app/core/consts/api_consts.dart';
 import 'package:goal_app/core/consts/keys.dart';
 import 'package:goal_app/core/exceptions/exceptions.dart';
 import 'package:goal_app/feachers/auth/domain/repos/session_repo.dart';
-import 'package:goal_app/feachers/friends/data/models/friends_model/friends_model.dart';
-import 'package:goal_app/feachers/friends/domain/entities/friends.dart';
+import 'package:goal_app/feachers/friends/data/models/friends_model/friend_model.dart';
+import 'package:goal_app/feachers/friends/domain/entities/friend.dart';
 import 'package:goal_app/feachers/friends/domain/repos/friends_repo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

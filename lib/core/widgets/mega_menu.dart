@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:goal_app/core/consts/app_colors.dart';
+import 'package:goal_app/core/consts/app_fonts.dart';
+import 'package:goal_app/core/consts/app_texts.dart';
 import 'package:goal_app/core/navigation/app_router.dart';
 
 class MegaMenu extends StatelessWidget {
@@ -73,21 +75,20 @@ class MegaButtonHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Map<String, String> language =
+        AppTexts.texts['en'] ?? {'buttonHome': 'Home'};
+    final String label = language['buttonHome'] ?? 'Home';
+    IconData buttonIcon;
     if (active) {
-      return const Icon(
-        Icons.home,
-        color: AppColors.megaMenuIconsHomeActive,
-      );
-    } else {}
-    return IconButton(
-      onPressed: () {
-        Navigator.of(context).pushNamed(MainRoutes.homeScreen);
-      },
-      icon: const Icon(
-        Icons.home_outlined,
-        color: AppColors.megaMenuIconsHome,
-      ),
-      iconSize: 32.0,
+      buttonIcon = Icons.home;
+    } else {
+      buttonIcon = Icons.home_outlined;
+    }
+    return MegaButton(
+      active: active,
+      label: label,
+      buttonIcon: buttonIcon,
+      link: MainRoutes.homeScreen,
     );
   }
 }
@@ -102,21 +103,20 @@ class MegaButtonFriends extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Map<String, String> language =
+        AppTexts.texts['en'] ?? {'buttonFriends': 'Friends'};
+    final String label = language['buttonFriends'] ?? 'Friends';
+    IconData buttonIcon;
     if (active) {
-      return const Icon(
-        Icons.people_alt,
-        color: AppColors.megaMenuIconsFriendsActive,
-      );
-    } else {}
-    return IconButton(
-      onPressed: () {
-        Navigator.of(context).pushNamed(MainRoutes.friendsScreen);
-      },
-      icon: const Icon(
-        Icons.people_alt_outlined,
-        color: AppColors.megaMenuIconsFriends,
-      ),
-      iconSize: 32.0,
+      buttonIcon = Icons.people_alt;
+    } else {
+      buttonIcon = Icons.people_alt_outlined;
+    }
+    return MegaButton(
+      active: active,
+      label: label,
+      buttonIcon: buttonIcon,
+      link: MainRoutes.friendsScreen,
     );
   }
 }
@@ -131,21 +131,20 @@ class MegaButtonMy extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Map<String, String> language =
+        AppTexts.texts['en'] ?? {'buttonMy': 'My goals'};
+    final String label = language['buttonMy'] ?? 'My goals';
+    IconData buttonIcon;
     if (active) {
-      return const Icon(
-        Icons.task,
-        color: AppColors.megaMenuIconsMyActive,
-      );
-    } else {}
-    return IconButton(
-      onPressed: () {
-        Navigator.of(context).pushNamed(MainRoutes.goalScreen);
-      },
-      icon: const Icon(
-        Icons.task_outlined,
-        color: AppColors.megaMenuIconsMy,
-      ),
-      iconSize: 32.0,
+      buttonIcon = Icons.task;
+    } else {
+      buttonIcon = Icons.task_outlined;
+    }
+    return MegaButton(
+      active: active,
+      label: label,
+      buttonIcon: buttonIcon,
+      link: MainRoutes.goalScreen,
     );
   }
 }
@@ -160,21 +159,20 @@ class MegaButtonGames extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Map<String, String> language =
+        AppTexts.texts['en'] ?? {'buttonGames': 'Games'};
+    final String label = language['buttonGames'] ?? 'Games';
+    IconData buttonIcon;
     if (active) {
-      return const Icon(
-        Icons.games,
-        color: AppColors.megaMenuIconsGamesActive,
-      );
-    } else {}
-    return IconButton(
-      onPressed: () {
-        Navigator.of(context).pushNamed(MainRoutes.gamesScreen);
-      },
-      icon: const Icon(
-        Icons.games_outlined,
-        color: AppColors.megaMenuIconsGames,
-      ),
-      iconSize: 32.0,
+      buttonIcon = Icons.games;
+    } else {
+      buttonIcon = Icons.games_outlined;
+    }
+    return MegaButton(
+      active: active,
+      label: label,
+      buttonIcon: buttonIcon,
+      link: MainRoutes.gamesScreen,
     );
   }
 }
@@ -189,21 +187,71 @@ class MegaButtonProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Map<String, String> language =
+        AppTexts.texts['en'] ?? {'buttonProfile': 'Profile'};
+    final String label = language['buttonProfile'] ?? 'Profile';
+    IconData buttonIcon;
     if (active) {
-      return const Icon(
-        Icons.person,
-        color: AppColors.megaMenuIconsProfileActive,
+      buttonIcon = Icons.person;
+    } else {
+      buttonIcon = Icons.person_outlined;
+    }
+    return MegaButton(
+      active: active,
+      label: label,
+      buttonIcon: buttonIcon,
+      link: MainRoutes.profileScreen,
+    );
+  }
+}
+
+class MegaButton extends StatelessWidget {
+  const MegaButton({
+    Key? key,
+    required this.active,
+    required this.label,
+    required this.buttonIcon,
+    required this.link,
+  }) : super(key: key);
+
+  final bool active;
+  final String label;
+  final IconData buttonIcon;
+  final link;
+
+  @override
+  Widget build(BuildContext context) {
+    if (active) {
+      return Column(
+        children: [
+          Icon(
+            buttonIcon,
+            color: AppColors.megaMenuActive,
+          ),
+          Text(
+            label,
+            style: AppFonts.megaMenuActive,
+          ),
+        ],
       );
     } else {
-      return IconButton(
-        onPressed: () {
-          Navigator.of(context).pushNamed(MainRoutes.profileScreen);
-        },
-        icon: const Icon(
-          Icons.person_outlined,
-          color: AppColors.megaMenuIconsProfile,
-        ),
-        iconSize: 32.0,
+      return Column(
+        children: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(link);
+            },
+            icon: Icon(
+              buttonIcon,
+              color: AppColors.megaMenu,
+            ),
+            iconSize: 32.0,
+          ),
+          Text(
+            label,
+            style: AppFonts.megaMenu,
+          ),
+        ],
       );
     }
   }

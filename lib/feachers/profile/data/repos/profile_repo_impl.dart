@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:goal_app/core/consts/api_consts.dart';
+import 'package:goal_app/core/consts/app_avatars.dart';
 import 'package:goal_app/core/exceptions/exceptions.dart';
 import 'package:goal_app/feachers/auth/domain/repos/session_repo.dart';
 import 'package:goal_app/feachers/profile/data/models/profile_model/profile_model.dart';
@@ -89,7 +90,36 @@ class ProfileRepoImpl implements ProfileRepo {
 
       final json = response.data;
       final Profile profile = ProfileModel.fromJson(json);
+      if (profile.avatar == 0) {
+        profile.avatar = AppAvatars.chooseAvatar();
+      }
       return profile;
+    } on DioError {
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<void> updateUserData(Profile profile) async {
+    if (_sessionRepo.sessionData == null) throw ServerException();
+    try {
+      /*
+      final url = ApiConsts.getUser(
+        _sessionRepo.sessionData!.id,
+      );
+      final response = await _dio().get(url);
+      if (response.data == null || response.data!.isEmpty) {
+        throw ServerException();
+      }
+
+      final json = response.data;
+      final Profile profile = ProfileModel.fromJson(json);
+      if (profile.avatar == 0) {
+      profile.avatar = AppAvatars.chooseAvatar();
+
+      }
+      return profile;
+      */
     } on DioError {
       throw ServerException();
     }

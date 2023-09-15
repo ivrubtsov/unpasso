@@ -2,11 +2,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:goal_app/core/widgets/fun.dart';
-import 'package:goal_app/feachers/friends/data/models/friends_model/friends_model.dart';
+import 'package:goal_app/feachers/friends/data/models/friends_model/friend_model.dart';
 import 'package:intl/intl.dart';
 import 'package:goal_app/core/consts/app_colors.dart';
 import 'package:goal_app/core/consts/app_fonts.dart';
-import 'package:goal_app/feachers/friends/domain/entities/friends.dart';
+import 'package:goal_app/feachers/friends/domain/entities/friend.dart';
 import 'package:goal_app/feachers/friends/presentation/friends_screen/cubit/friends_screen_cubit.dart';
 
 enum FriendsScreenStatus {

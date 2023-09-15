@@ -10,10 +10,11 @@ import 'package:goal_app/core/navigation/app_router.dart';
 import 'package:goal_app/core/widgets/error_presentor.dart';
 import 'package:goal_app/core/widgets/fun.dart';
 import 'package:goal_app/feachers/auth/domain/repos/session_repo.dart';
-import 'package:goal_app/feachers/friends/data/models/friends_model/friends_model.dart';
-import 'package:goal_app/feachers/friends/domain/entities/friends.dart';
+import 'package:goal_app/feachers/friends/data/models/friends_model/friend_model.dart';
+import 'package:goal_app/feachers/friends/domain/entities/friend.dart';
 import 'package:goal_app/feachers/friends/domain/repos/friends_repo.dart';
 import 'package:goal_app/feachers/friends/presentation/friends_screen/friends_screen.dart';
+import 'package:goal_app/feachers/goals/domain/repos/goals_repo.dart';
 import 'package:goal_app/feachers/profile/domain/repos/profile_repo.dart';
 
 part 'friends_screen_state.dart';
@@ -22,12 +23,18 @@ class FriendsScreenCubit extends Cubit<FriendsScreenState> {
   FriendsScreenCubit({
     required FriendsRepo friendsRepo,
     required SessionRepo sessionRepo,
+    required ProfileRepo profileRepo,
+    required GoalsRepo goalsRepo,
   })  : _friendsRepo = friendsRepo,
         _sessionRepo = sessionRepo,
-        super(GoalScreenState.initial());
+        _profileRepo = profileRepo,
+        _goalsRepo = goalsRepo,
+        super(FriendsScreenState.initial());
 
   final FriendsRepo _friendsRepo;
   final SessionRepo _sessionRepo;
+  final ProfileRepo _profileRepo;
+  final GoalsRepo _goalsRepo;
 
 // ПОЛУЧАЕМ СЕГОДНЯШНЮЮ ЦЕЛЬ
 /*

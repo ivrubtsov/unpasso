@@ -2,11 +2,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:goal_app/core/widgets/fun.dart';
-import 'package:goal_app/feachers/home/data/models/home_model/home_model.dart';
 import 'package:intl/intl.dart';
 import 'package:goal_app/core/consts/app_colors.dart';
 import 'package:goal_app/core/consts/app_fonts.dart';
-import 'package:goal_app/feachers/home/domain/entities/home.dart';
 import 'package:goal_app/feachers/home/presentation/home_screen/cubit/home_screen_cubit.dart';
 
 ScrollController dateListScrollController = ScrollController();

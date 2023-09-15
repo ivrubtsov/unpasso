@@ -1,6 +1,4 @@
-import 'package:equatable/equatable.dart';
-
-class Goal extends Equatable {
+class Goal {
   final int? id;
   final String text;
   final DateTime createdAt;
@@ -8,15 +6,17 @@ class Goal extends Equatable {
   final String authorName;
   final String authorUserName;
   final int authorAvatar;
-  final bool isCompleted;
-  final bool isExist;
-  final bool isPublic;
-  final bool isFriends;
-  final bool isPrivate;
-  final List<int> likeUsers;
-  final int likes;
+  bool isCompleted;
+  bool isExist;
+  bool isPublic;
+  bool isFriends;
+  List<int> friendsUsers;
+  bool isPrivate;
+  bool like;
+  List<int> likeUsers;
+  int likes;
 
-  const Goal({
+  Goal({
     this.id,
     required this.text,
     required this.createdAt,
@@ -28,7 +28,9 @@ class Goal extends Equatable {
     this.isExist = true,
     this.isPublic = false,
     this.isFriends = false,
+    this.friendsUsers = const [],
     this.isPrivate = true,
+    this.like = false,
     this.likeUsers = const [],
     this.likes = 0,
   });
@@ -45,7 +47,9 @@ class Goal extends Equatable {
     bool? isExist,
     bool? isPublic,
     bool? isFriends,
+    List<int>? friendsUsers,
     bool? isPrivate,
+    bool? like,
     List<int>? likeUsers,
     int? likes,
   }) {
@@ -61,7 +65,9 @@ class Goal extends Equatable {
       isExist: isExist ?? this.isExist,
       isPublic: isPublic ?? this.isPublic,
       isFriends: isFriends ?? this.isFriends,
+      friendsUsers: friendsUsers ?? this.friendsUsers,
       isPrivate: isPrivate ?? this.isPrivate,
+      like: like ?? this.like,
       likeUsers: likeUsers ?? this.likeUsers,
       likes: likes ?? this.likes,
     );
@@ -80,7 +86,9 @@ class Goal extends Equatable {
         isExist,
         isPublic,
         isFriends,
+        friendsUsers,
         isPrivate,
+        like,
         likeUsers,
         likes,
       ];

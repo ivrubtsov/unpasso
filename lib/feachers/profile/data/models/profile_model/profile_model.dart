@@ -71,9 +71,6 @@ class ProfileModel extends Profile {
     } else {
       name = json['name'];
     }
-    if (avatar == 0) {
-      avatar = AppAvatars.chooseAvatar();
-    }
     return ProfileModel(
       id: json['id'] as int,
       name: name,

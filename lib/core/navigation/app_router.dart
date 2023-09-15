@@ -90,6 +90,8 @@ class AppRouter {
               value: HomeScreenCubit(
                 homeRepo: sl(),
                 sessionRepo: sl(),
+                profileRepo: sl(),
+                goalsRepo: sl(),
               )..initHomeScreen(),
               child: const HomeScreen(),
             ));
@@ -101,6 +103,8 @@ class AppRouter {
               value: FriendsScreenCubit(
                 friendsRepo: sl(),
                 sessionRepo: sl(),
+                profileRepo: sl(),
+                goalsRepo: sl(),
               )..initFriendsScreen(),
               child: const FriendsScreen(),
             ));

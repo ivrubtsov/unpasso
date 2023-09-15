@@ -13,7 +13,9 @@ class GoalModel extends Goal {
     required bool isExist,
     final bool? isPublic,
     final bool? isFriends,
+    final List<int>? friendsUsers,
     final bool? isPrivate,
+    final bool? like,
     final List<int>? likeUsers,
     final int? likes,
   }) : super(
@@ -28,7 +30,9 @@ class GoalModel extends Goal {
           isExist: isExist,
           isPublic: isPublic ?? false,
           isFriends: isFriends ?? false,
+          friendsUsers: friendsUsers ?? [],
           isPrivate: isPrivate ?? true,
+          like: like ?? false,
           likeUsers: likeUsers ?? [],
           likes: likes ?? 0,
         );
@@ -44,22 +48,26 @@ class GoalModel extends Goal {
         isExist: goal.isExist,
         isPublic: goal.isPublic,
         isFriends: goal.isFriends,
+        friendsUsers: goal.friendsUsers,
         isPrivate: goal.isPrivate,
+        like: goal.like,
         likeUsers: goal.likeUsers,
         likes: goal.likes,
       );
 
-  factory GoalModel.fromJson(Map<String, dynamic> json) {
+  factory GoalModel.fromJson(Map<String, dynamic> json, [int? id]) {
     final jsonDate = json['date'] + 'Z';
     final createdDate = DateTime.parse(jsonDate).toLocal();
     bool checkIsCompleted;
     bool checkIsPublic;
     bool checkIsFriends;
+    List<int> friendsUsers;
     bool checkIsPrivate;
     String authorName;
     String authorUserName;
     int authorAvatar;
     List<int> likeUsers;
+    bool like = false;
     final tags = json['tags'] as List<dynamic>?;
     // Если тэг == 8, то цель выполнена
     // С другой стороны если массив с тэгами пустой, тогда она не выполнена
@@ -86,12 +94,17 @@ class GoalModel extends Goal {
       authorName = '';
       authorUserName = '';
       authorAvatar = 0;
+      friendsUsers = [];
       likeUsers = [];
     } else {
       authorName = description['authorName'];
       authorUserName = description['authorUserName'];
       authorAvatar = description['authorAvatar'];
+      friendsUsers = description['friendsUsers'];
       likeUsers = description['likeUsers'];
+    }
+    if (id != null && likeUsers.contains(id)) {
+      like = true;
     }
     return GoalModel(
       id: json['id'],
@@ -105,7 +118,9 @@ class GoalModel extends Goal {
       isExist: true,
       isPublic: checkIsPublic,
       isFriends: checkIsFriends,
+      friendsUsers: friendsUsers,
       isPrivate: checkIsPrivate,
+      like: like,
       likeUsers: likeUsers,
       likes: likeUsers.length + 1,
     );
@@ -121,6 +136,7 @@ class GoalModel extends Goal {
       'authorName': authorName,
       'authorUserName': authorUserName,
       'authorAvatar': authorAvatar,
+      'friendsUsers': friendsUsers,
       'likeUsers': likeUsers,
       'likes': likeUsers.length + 1,
     };

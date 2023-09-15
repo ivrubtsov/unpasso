@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-class Home extends Equatable {
+class Friend extends Equatable {
   final String text;
   final int authorId;
   final bool isCompleted;
@@ -8,7 +8,7 @@ class Home extends Equatable {
   final DateTime createdAt;
   final int? id;
 
-  const Home({
+  const Friend({
     required this.text,
     required this.createdAt,
     required this.authorId,
@@ -17,7 +17,7 @@ class Home extends Equatable {
     this.isExist = true,
   });
 
-  Home copyWith({
+  Friend copyWith({
     String? text,
     int? authorId,
     bool? isCompleted,
@@ -25,7 +25,7 @@ class Home extends Equatable {
     DateTime? createdAt,
     int? id,
   }) {
-    return Home(
+    return Friend(
       text: text ?? this.text,
       authorId: authorId ?? this.authorId,
       isCompleted: isCompleted ?? this.isCompleted,

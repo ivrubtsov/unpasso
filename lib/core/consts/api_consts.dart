@@ -34,12 +34,19 @@ class ApiConsts {
   static String createGoal() => '$_baseUrl/posts';
 
   static String getUserGoals(int authorId) =>
-      '$_baseUrl/posts?per_page=100&status=publish,future&author=$authorId';
+      '$_baseUrl/posts?per_page=100&status=publish,future&categories=6&author=$authorId';
+
+  static String getPublicGoals() =>
+      '$_baseUrl/posts?per_page=100&status=publish,future&tags=26&categories=6';
+
+  static String getFriendsGoals() =>
+      '$_baseUrl/posts?per_page=100&status=publish,future&tags=27&categories=6';
+
+  static String getGoalById(int id) => '$_baseUrl/posts/$id';
 
   static String completeGoal(int postId) => '$_baseUrl/posts/$postId?tags=8';
 
-  static String likeGoal(int postId, String content) =>
-      '$_baseUrl/posts/$postId?content=$content';
+  static String updateGoal(int id) => '$_baseUrl/posts/$id';
 
   static const policyPrivacy = 'https://unpasso.org/privacy/';
 

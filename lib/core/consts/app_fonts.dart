@@ -185,4 +185,18 @@ class AppFonts {
     fontSize: 16.0,
     color: AppColors.modalButtonCancelText,
   );
+
+  static const megaMenu = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 12.0,
+    color: AppColors.megaMenu,
+  );
+
+  static const megaMenuActive = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 12.0,
+    color: AppColors.megaMenuActive,
+  );
 }

@@ -56,14 +56,6 @@ class AppColors {
 
   // Mega menu (at the bottom)
   static const megaMenuBg = Colors.white;
-  static const megaMenuIconsHome = Colors.black;
-  static const megaMenuIconsHomeActive = Color.fromRGBO(43, 39, 239, 1);
-  static const megaMenuIconsFriends = Colors.black;
-  static const megaMenuIconsFriendsActive = Color.fromRGBO(43, 39, 239, 1);
-  static const megaMenuIconsMy = Colors.black;
-  static const megaMenuIconsMyActive = Color.fromRGBO(43, 39, 239, 1);
-  static const megaMenuIconsGames = Colors.black;
-  static const megaMenuIconsGamesActive = Color.fromRGBO(43, 39, 239, 1);
-  static const megaMenuIconsProfile = Colors.black;
-  static const megaMenuIconsProfileActive = Color.fromRGBO(43, 39, 239, 1);
+  static const megaMenu = Color.fromRGBO(194, 201, 209, 1);
+  static const megaMenuActive = Color.fromRGBO(43, 39, 239, 1);
 }
