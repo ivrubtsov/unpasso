@@ -31,8 +31,9 @@ dependencies:
   flutter_secure_storage: ^5.0.2
   cupertino_icons: ^1.0.2
   dio: ^4.0.6
-  intl: ^0.17.0
+  intl: ^0.18.1
   url_launcher: ^6.1.5
+  pay: ^1.1.2
   
 
 dev_dependencies:
