@@ -78,6 +78,7 @@ class HomeScreenContentState extends State<HomeScreenContent>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    homeListScrollController.dispose();
     super.dispose();
   }
 
@@ -85,40 +86,45 @@ class HomeScreenContentState extends State<HomeScreenContent>
   Widget build(BuildContext context) {
     return BlocBuilder<HomeScreenCubit, HomeScreenState>(
       builder: (context, state) {
+        final model = context.read<HomeScreenCubit>();
         if (state.currentDate.day != currentDate.day) {
-          final model = context.read<HomeScreenCubit>();
-          model.getAllGoals();
+          model.getFirstGoals();
         }
         if (state.status == HomeScreenStateStatus.loading) {
           return const Center(
             child: CircularProgressIndicator(),
           );
         }
-        return GoalsMainContainer(goals: state.goals);
-      },
-    );
-  }
-}
-
-class GoalsMainContainer extends StatelessWidget {
-  const GoalsMainContainer({Key? key, required this.goals}) : super(key: key);
-  final List<Goal> goals;
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<HomeScreenCubit, HomeScreenState>(
-      builder: (context, state) {
-        return ListView.builder(
-            scrollDirection: Axis.vertical,
-            controller: homeListScrollController,
-            reverse: false,
-            itemCount: goals.length,
-            itemBuilder: (BuildContext context, int index) {
-              return GoalItem(
-                key: ValueKey<Goal>(goals[index]),
-                goal: goals[index],
-                goalId: index,
-              );
-            });
+        final List<Goal> goals = state.goals;
+        final bool hasMore = state.goalsHasMore;
+        return RefreshIndicator(
+          onRefresh: () => model.getFirstGoals(),
+          child: ListView.builder(
+              scrollDirection: Axis.vertical,
+              controller: homeListScrollController,
+              reverse: false,
+              itemCount: goals.length + 1,
+              itemBuilder: (BuildContext context, int index) {
+                if (index < goals.length) {
+                  return GoalItem(
+                    key: ValueKey<Goal>(goals[index]),
+                    goal: goals[index],
+                    goalId: index,
+                  );
+                } else {
+                  return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20.0),
+                      child: Center(
+                        child: hasMore
+                            ? const CircularProgressIndicator()
+                            : const Text(
+                                'No more goals to load',
+                                style: AppFonts.homeEndOfList,
+                              ),
+                      ));
+                }
+              }),
+        );
       },
     );
   }

@@ -33,11 +33,13 @@ class ApiConsts {
       '$_baseUrl/posts?status=publish&title=$title&author=$authorId&categories=6&date_gmt=$date';*/
   static String createGoal() => '$_baseUrl/posts';
 
-  static String getUserGoals(int authorId) =>
-      '$_baseUrl/posts?per_page=100&status=publish,future&categories=6&author=$authorId';
+  static int fetchPageLimit = 100;
 
-  static String getAvailableGoals(int userId) =>
-      '$_baseUrl/posts?per_page=100&status=publish,future&tags=27&categories=6&user=$userId';
+  static String getUserGoals(int authorId) =>
+      '$_baseUrl/posts?per_page=$fetchPageLimit&status=publish,future&categories=6&author=$authorId';
+
+  static String getAvailableGoals(int userId, int page) =>
+      '$_baseUrl/posts?per_page=$fetchPageLimit&page=$page&status=publish,future&tags=27&categories=6&user=$userId';
 
   static String getGoalById(int id) => '$_baseUrl/posts/$id';
 

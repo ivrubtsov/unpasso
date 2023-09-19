@@ -214,6 +214,13 @@ class AppFonts {
     color: AppColors.homeGoalLikeNumber,
   );
 
+  static const homeEndOfList = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 12.0,
+    color: AppColors.homeGoalAuthor,
+  );
+
   static const megaMenu = TextStyle(
     fontFamily: 'Fredoka',
     fontWeight: FontWeight.w400,

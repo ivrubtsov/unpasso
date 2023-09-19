@@ -44,11 +44,11 @@ class HomeRepoImpl implements HomeRepo {
   }
 
   @override
-  Future<List<Goal>> getGoals(int userId) async {
+  Future<List<Goal>> getGoals(int userId, int page) async {
     try {
       // getting goals for friends
-      final response =
-          await _dio().get<List<dynamic>>(ApiConsts.getAvailableGoals(userId));
+      final response = await _dio()
+          .get<List<dynamic>>(ApiConsts.getAvailableGoals(userId, page));
 
       if (response.data == null) throw ServerException();
 
