@@ -36,11 +36,8 @@ class ApiConsts {
   static String getUserGoals(int authorId) =>
       '$_baseUrl/posts?per_page=100&status=publish,future&categories=6&author=$authorId';
 
-  static String getPublicGoals() =>
-      '$_baseUrl/posts?per_page=100&status=publish,future&tags=26&categories=6';
-
-  static String getFriendsGoals() =>
-      '$_baseUrl/posts?per_page=100&status=publish,future&tags=27&categories=6';
+  static String getAvailableGoals(int userId) =>
+      '$_baseUrl/posts?per_page=100&status=publish,future&tags=27&categories=6&user=$userId';
 
   static String getGoalById(int id) => '$_baseUrl/posts/$id';
 

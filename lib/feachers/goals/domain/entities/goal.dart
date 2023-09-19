@@ -6,6 +6,7 @@ class Goal {
   final String authorName;
   final String authorUserName;
   final int authorAvatar;
+  final int authorRating;
   bool isCompleted;
   bool isExist;
   bool isPublic;
@@ -24,6 +25,7 @@ class Goal {
     this.authorName = '',
     this.authorUserName = '',
     this.authorAvatar = 0,
+    this.authorRating = 0,
     this.isCompleted = false,
     this.isExist = true,
     this.isPublic = false,
@@ -43,6 +45,7 @@ class Goal {
     String? authorName,
     String? authorUserName,
     int? authorAvatar,
+    int? authorRating,
     bool? isCompleted,
     bool? isExist,
     bool? isPublic,
@@ -61,6 +64,7 @@ class Goal {
       authorName: authorName ?? this.authorName,
       authorUserName: authorUserName ?? this.authorUserName,
       authorAvatar: authorAvatar ?? this.authorAvatar,
+      authorRating: authorRating ?? this.authorRating,
       isCompleted: isCompleted ?? this.isCompleted,
       isExist: isExist ?? this.isExist,
       isPublic: isPublic ?? this.isPublic,
@@ -82,6 +86,7 @@ class Goal {
         authorName,
         authorUserName,
         authorAvatar,
+        authorRating,
         isCompleted,
         isExist,
         isPublic,

@@ -186,6 +186,34 @@ class AppFonts {
     color: AppColors.modalButtonCancelText,
   );
 
+  static const homeGoalTitle = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w500,
+    fontSize: 16.0,
+    color: AppColors.homeGoalTitle,
+  );
+
+  static const homeGoalAuthor = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 12.0,
+    color: AppColors.homeGoalAuthor,
+  );
+
+  static const homeGoalAuthorRating = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 12.0,
+    color: AppColors.homeGoalAuthorRating,
+  );
+
+  static const homeGoalLikeNumber = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 12.0,
+    color: AppColors.homeGoalLikeNumber,
+  );
+
   static const megaMenu = TextStyle(
     fontFamily: 'Fredoka',
     fontWeight: FontWeight.w400,

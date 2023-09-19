@@ -1,5 +1,3 @@
-import 'dart:math';
-
 class AppTexts {
   AppTexts._();
 

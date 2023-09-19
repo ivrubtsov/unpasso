@@ -82,6 +82,8 @@ class GoalScreenContentState extends State<GoalScreenContent>
         break;
       case AppLifecycleState.detached:
         break;
+      case AppLifecycleState.hidden:
+        break;
     }
   }
 

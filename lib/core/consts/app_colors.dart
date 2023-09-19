@@ -13,6 +13,7 @@ class AppColors {
   static const disabled = Color.fromRGBO(43, 39, 239, 0.5);
   static const enabled = Color.fromRGBO(43, 39, 239, 1);
   static const inputBg = Colors.white;
+
   // List of dates with goals
   static const dateBg = bg;
   static const dateText = Colors.black;
@@ -44,6 +45,15 @@ class AppColors {
   static const profileName = Colors.black;
   static const profileUsername = Color.fromRGBO(80, 85, 92, 1);
   static const profileButtonDeleteAccount = Color.fromRGBO(241, 94, 142, 1);
+
+  // Home screen with goals list
+  static const homeBg = Colors.white;
+  static const homeGoalTitle = Color.fromRGBO(0, 26, 52, 1);
+  static const homeGoalAuthor = Color.fromRGBO(80, 85, 92, 1);
+  static const homeGoalAuthorRating = Color.fromRGBO(43, 39, 239, 1);
+  static const homeGoalLikeIcon = Color.fromRGBO(80, 85, 92, 1);
+  static const homeGoalLikeIconActive = Color.fromRGBO(43, 39, 239, 1);
+  static const homeGoalLikeNumber = Color.fromRGBO(80, 85, 92, 1);
 
   // Modal windows
   static const modalBg = Color.fromRGBO(220, 231, 255, 1);

@@ -9,6 +9,7 @@ class GoalModel extends Goal {
     final String? authorName,
     final String? authorUserName,
     final int? authorAvatar,
+    final int? authorRating,
     required bool isCompleted,
     required bool isExist,
     final bool? isPublic,
@@ -26,6 +27,7 @@ class GoalModel extends Goal {
           authorName: authorName ?? '',
           authorUserName: authorUserName ?? '',
           authorAvatar: authorAvatar ?? 0,
+          authorRating: authorRating ?? 0,
           isCompleted: isCompleted,
           isExist: isExist,
           isPublic: isPublic ?? false,
@@ -44,6 +46,7 @@ class GoalModel extends Goal {
         authorName: goal.authorName,
         authorUserName: goal.authorUserName,
         authorAvatar: goal.authorAvatar,
+        authorRating: goal.authorRating,
         isCompleted: goal.isCompleted,
         isExist: goal.isExist,
         isPublic: goal.isPublic,
@@ -66,6 +69,7 @@ class GoalModel extends Goal {
     String authorName;
     String authorUserName;
     int authorAvatar;
+    int authorRating;
     List<int> likeUsers;
     bool like = false;
     final tags = json['tags'] as List<dynamic>?;
@@ -94,12 +98,14 @@ class GoalModel extends Goal {
       authorName = '';
       authorUserName = '';
       authorAvatar = 0;
+      authorRating = 0;
       friendsUsers = [];
       likeUsers = [];
     } else {
       authorName = description['authorName'];
       authorUserName = description['authorUserName'];
       authorAvatar = description['authorAvatar'];
+      authorRating = description['authorRating'];
       friendsUsers = description['friendsUsers'];
       likeUsers = description['likeUsers'];
     }
@@ -114,6 +120,7 @@ class GoalModel extends Goal {
       authorName: authorName,
       authorUserName: authorUserName,
       authorAvatar: authorAvatar,
+      authorRating: authorRating,
       isCompleted: checkIsCompleted,
       isExist: true,
       isPublic: checkIsPublic,
@@ -136,6 +143,7 @@ class GoalModel extends Goal {
       'authorName': authorName,
       'authorUserName': authorUserName,
       'authorAvatar': authorAvatar,
+      'authorRating': authorRating,
       'friendsUsers': friendsUsers,
       'likeUsers': likeUsers,
       'likes': likeUsers.length + 1,

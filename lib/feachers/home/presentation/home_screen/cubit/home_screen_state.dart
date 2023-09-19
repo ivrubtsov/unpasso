@@ -7,38 +7,38 @@ enum HomeScreenStateStatus {
 }
 
 class HomeScreenState extends Equatable {
-  final List<Goal> goalsPublic;
-  final List<Goal> goalsFriends;
+  final DateTime currentDate;
+  final List<Goal> goals;
   final HomeScreenStateStatus status;
 
   const HomeScreenState({
-    required this.goalsPublic,
-    required this.goalsFriends,
+    required this.currentDate,
+    required this.goals,
     required this.status,
   });
 
   factory HomeScreenState.initial() => HomeScreenState(
-        goalsPublic: [],
-        goalsFriends: [],
+        currentDate: DateTime.now(),
+        goals: [],
         status: HomeScreenStateStatus.ready,
       );
 
   HomeScreenState copyWith({
-    List<Goal>? goalsPublic,
-    List<Goal>? goalsFriends,
+    DateTime? currentDate,
+    List<Goal>? goals,
     HomeScreenStateStatus? status,
   }) {
     return HomeScreenState(
-      goalsPublic: goalsPublic ?? this.goalsPublic,
-      goalsFriends: goalsFriends ?? this.goalsFriends,
+      currentDate: currentDate ?? this.currentDate,
+      goals: goals ?? this.goals,
       status: status ?? this.status,
     );
   }
 
   @override
   List<Object> get props => [
-        goalsPublic,
-        goalsFriends,
+        currentDate,
+        goals,
         status,
       ];
 }

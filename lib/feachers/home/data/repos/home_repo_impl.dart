@@ -44,27 +44,11 @@ class HomeRepoImpl implements HomeRepo {
   }
 
   @override
-  Future<List<Goal>> getPublicGoals() async {
-    try {
-      // getting public goals
-      final response =
-          await _dio().get<List<dynamic>>(ApiConsts.getPublicGoals());
-
-      if (response.data == null) throw ServerException();
-      final goals = response.data!.map((e) => GoalModel.fromJson(e)).toList();
-
-      return goals;
-    } on DioError {
-      throw ServerException();
-    }
-  }
-
-  @override
-  Future<List<Goal>> getFriendsGoals(int userId) async {
+  Future<List<Goal>> getGoals(int userId) async {
     try {
       // getting goals for friends
       final response =
-          await _dio().get<List<dynamic>>(ApiConsts.getFriendsGoals());
+          await _dio().get<List<dynamic>>(ApiConsts.getAvailableGoals(userId));
 
       if (response.data == null) throw ServerException();
 

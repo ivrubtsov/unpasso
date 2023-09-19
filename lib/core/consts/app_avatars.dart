@@ -14,6 +14,7 @@ class AppAvatars {
   static Image getAvatarImage(int? id) {
     id = id ?? 0;
     return Image(
+      width: 56.0,
       image: AssetImage('assets/avatars/$id.png'),
     );
   }
