@@ -77,7 +77,6 @@ class Goal {
     );
   }
 
-  @override
   List<Object?> get props => [
         id,
         text,

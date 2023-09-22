@@ -5,7 +5,8 @@ class Profile {
   int? avatar;
   List<int> achievements;
   List<int> friends;
-  List<int> friendsRequests;
+  List<int> friendsRequestsReceived;
+  List<int> friendsRequestsSent;
 
   Profile({
     required this.id,
@@ -14,7 +15,8 @@ class Profile {
     this.avatar,
     this.achievements = const [],
     this.friends = const [],
-    this.friendsRequests = const [],
+    this.friendsRequestsReceived = const [],
+    this.friendsRequestsSent = const [],
   });
 
   Profile copyWith({
@@ -24,7 +26,8 @@ class Profile {
     int? avatar,
     List<int>? achievements,
     List<int>? friends,
-    List<int>? friendsRequests,
+    List<int>? friendsRequestsReceived,
+    List<int>? friendsRequestsSent,
   }) {
     return Profile(
       id: id ?? this.id,
@@ -33,7 +36,9 @@ class Profile {
       avatar: avatar ?? this.avatar,
       achievements: achievements ?? this.achievements,
       friends: friends ?? this.friends,
-      friendsRequests: friendsRequests ?? this.friendsRequests,
+      friendsRequestsReceived:
+          friendsRequestsReceived ?? this.friendsRequestsReceived,
+      friendsRequestsSent: friendsRequestsSent ?? this.friendsRequestsSent,
     );
   }
 
@@ -51,6 +56,7 @@ class Profile {
         avatar,
         achievements,
         friends,
-        friendsRequests,
+        friendsRequestsReceived,
+        friendsRequestsSent,
       ];
 }

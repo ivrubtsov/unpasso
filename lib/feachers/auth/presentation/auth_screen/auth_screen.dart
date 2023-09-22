@@ -23,8 +23,8 @@ class AuthScreen extends StatelessWidget {
             children: [
               const SizedBox(height: 30.0),
               // HEADER
-              Center(
-                child: Column(children: const [
+              const Center(
+                child: Column(children: [
                   Text(
                     'Log In',
                     style: AppFonts.header,

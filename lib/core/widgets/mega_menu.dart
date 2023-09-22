@@ -217,7 +217,7 @@ class MegaButton extends StatelessWidget {
   final bool active;
   final String label;
   final IconData buttonIcon;
-  final link;
+  final String link;
 
   @override
   Widget build(BuildContext context) {

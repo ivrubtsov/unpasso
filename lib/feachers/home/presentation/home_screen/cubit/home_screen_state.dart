@@ -24,7 +24,7 @@ class HomeScreenState extends Equatable {
 
   factory HomeScreenState.initial() => HomeScreenState(
         currentDate: DateTime.now(),
-        goals: [],
+        goals: const [],
         goalsPage: 1,
         goalsHasMore: true,
         status: HomeScreenStateStatus.ready,

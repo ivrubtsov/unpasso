@@ -69,7 +69,7 @@ class ProfileRepoImpl implements ProfileRepo {
         return [];
       }
       //final achs = description["achievements"].cast<int>();
-      List<int> achs = new List<int>.from(achievements);
+      List<int> achs = List<int>.from(achievements);
       return achs;
     } on DioError {
       throw ServerException();

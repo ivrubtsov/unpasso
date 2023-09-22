@@ -78,6 +78,8 @@ class FriendsScreenContentState extends State<FriendsScreenContent>
         break;
       case AppLifecycleState.detached:
         break;
+      case AppLifecycleState.hidden:
+        break;
     }
   }
 

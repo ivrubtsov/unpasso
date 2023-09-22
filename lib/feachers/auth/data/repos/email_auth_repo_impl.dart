@@ -68,11 +68,11 @@ class EmailAuthRepoImpl implements AuthRepo {
         throw AuthException.type(AuthExceptionType.unknown);
       }
       final id = response.data['id'];
-      final name = response.data['name'];
+      final username = response.data['username'];
       await sessionRepo.saveSessionData(SessionData(
         id: id,
         password: credentials.password,
-        username: credentials.username,
+        username: username,
       ));
     } on DioError catch (e) {
       throw AuthException(
@@ -103,7 +103,6 @@ class EmailAuthRepoImpl implements AuthRepo {
       }
 
       final id = response.data['id'];
-      final name = response.data['name'];
       await sessionRepo.saveSessionData(SessionData(
         id: id,
         password: credentials.password,

@@ -22,7 +22,7 @@ class GamesScreen extends StatelessWidget {
           'Enjoy your time!',
           style: AppFonts.header,
         ),
-        actions: [],
+        actions: const [],
       ),
       backgroundColor: AppColors.bg,
       body: const GamesScreenContent(),
@@ -57,8 +57,8 @@ class GamesScreenContentState extends State<GamesScreenContent>
             child: CircularProgressIndicator(),
           );
         }
-        return Column(
-          children: const [
+        return const Column(
+          children: [
             Expanded(
               child: Align(
                 alignment: Alignment.topCenter,
@@ -93,9 +93,9 @@ class QuoteWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       mainAxisAlignment: MainAxisAlignment.end,
-      children: const [
+      children: [
         Text(
           '"A journey of a thousand miles begins with a single step"',
           style: AppFonts.goal,

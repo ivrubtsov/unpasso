@@ -16,7 +16,7 @@ class GamesScreenState extends Equatable {
     required this.displayFunFront,
   });
 
-  factory GamesScreenState.initial() => GamesScreenState(
+  factory GamesScreenState.initial() => const GamesScreenState(
         status: GamesScreenStateStatus.ready,
         displayFunFront: true,
       );

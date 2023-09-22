@@ -29,7 +29,7 @@ class HomeScreen extends StatelessWidget {
           'Unpasso community',
           style: AppFonts.header,
         ),
-        actions: [],
+        actions: const [],
       ),
       backgroundColor: AppColors.bg,
       body: const HomeScreenContent(),
@@ -238,7 +238,7 @@ class GoalLikeActive extends StatelessWidget {
         builder: (context, state) {
       return IconButton(
         onPressed: () => context.read<HomeScreenCubit>().unLikeGoal(goalId),
-        icon: Icon(
+        icon: const Icon(
           Icons.thumb_up,
           color: AppColors.homeGoalLikeIconActive,
           size: 32.0,
@@ -262,7 +262,7 @@ class GoalLikeInActive extends StatelessWidget {
         builder: (context, state) {
       return IconButton(
         onPressed: () => context.read<HomeScreenCubit>().likeGoal(goalId),
-        icon: Icon(
+        icon: const Icon(
           Icons.thumb_up_outlined,
           color: AppColors.homeGoalLikeIcon,
           size: 32.0,

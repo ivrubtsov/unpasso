@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:goal_app/core/consts/api_consts.dart';
-import 'package:goal_app/core/consts/app_avatars.dart';
 import 'package:goal_app/feachers/profile/domain/entities/profile.dart';
 
 class ProfileModel extends Profile {
@@ -11,7 +10,8 @@ class ProfileModel extends Profile {
     int? avatar,
     List<int> achievements = const [],
     List<int> friends = const [],
-    List<int> friendsRequests = const [],
+    List<int> friendsRequestsReceived = const [],
+    List<int> friendsRequestsSent = const [],
   }) : super(
           id: id,
           name: name,
@@ -19,7 +19,8 @@ class ProfileModel extends Profile {
           avatar: avatar,
           achievements: achievements,
           friends: friends,
-          friendsRequests: friendsRequests,
+          friendsRequestsReceived: friendsRequestsReceived,
+          friendsRequestsSent: friendsRequestsSent,
         );
   factory ProfileModel.fromProfile(Profile profile) => ProfileModel(
         id: profile.id,
@@ -28,7 +29,8 @@ class ProfileModel extends Profile {
         avatar: profile.avatar,
         achievements: profile.achievements,
         friends: profile.friends,
-        friendsRequests: profile.friendsRequests,
+        friendsRequestsReceived: profile.friendsRequestsReceived,
+        friendsRequestsSent: profile.friendsRequestsSent,
       );
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
@@ -36,11 +38,13 @@ class ProfileModel extends Profile {
     int avatar;
     List<int> achievements;
     List<int> friends;
-    List<int> friendsRequests;
+    List<int> friendsRequestsReceived;
+    List<int> friendsRequestsSent;
     avatar = 0;
     achievements = [];
     friends = [];
-    friendsRequests = [];
+    friendsRequestsReceived = [];
+    friendsRequestsSent = [];
 
     final Map description = jsonDecode(json['description']);
     if (!(json['description'] == null || json['description'] == '')) {
@@ -60,10 +64,17 @@ class ProfileModel extends Profile {
           description['friends'] == [])) {
         friends = List<int>.from(description['friends']);
       }
-      if (!(description['friendsRequests'] == null ||
-          description['friendsRequests'] == '' ||
-          description['friendsRequests'] == [])) {
-        friendsRequests = List<int>.from(description['friendsRequests']);
+      if (!(description['friendsRequestsReceived'] == null ||
+          description['friendsRequestsReceived'] == '' ||
+          description['friendsRequestsReceived'] == [])) {
+        friendsRequestsReceived =
+            List<int>.from(description['friendsRequestsReceived']);
+      }
+      if (!(description['friendsRequestsSent'] == null ||
+          description['friendsRequestsSent'] == '' ||
+          description['friendsRequestsSent'] == [])) {
+        friendsRequestsSent =
+            List<int>.from(description['friendsRequestsSent']);
       }
     }
     if (json['name'] == null || json['name'] == '') {
@@ -78,7 +89,8 @@ class ProfileModel extends Profile {
       avatar: avatar,
       achievements: achievements,
       friends: friends,
-      friendsRequests: friendsRequests,
+      friendsRequestsReceived: friendsRequestsReceived,
+      friendsRequestsSent: friendsRequestsSent,
     );
   }
 
@@ -90,19 +102,21 @@ class ProfileModel extends Profile {
       'avatar': avatar,
       'achievements': achievements,
       'friends': friends,
-      'friendsRequests': friendsRequests,
+      'friendsRequestsReceived': friendsRequestsReceived,
+      'friendsRequestsSent': friendsRequestsSent,
     };
   }
 
   String submitUrlString() {
     final achievementsString = achievements.join(',');
     final friendsString = friends.join(',');
-    final friendsRequestsString = friendsRequests.join(',');
+    final friendsRequestsReceivedString = friendsRequestsReceived.join(',');
+    final friendsRequestsSentString = friendsRequestsSent.join(',');
     return ApiConsts.updateUser(
       id,
       name ?? 'Unknown',
       userName ?? '',
-      '{"avatar":$avatar,"achievements":[$achievementsString],"friends":[$friendsString],"friendsRequests":[$friendsRequestsString]}',
+      '{"avatar":$avatar,"achievements":[$achievementsString],"friends":[$friendsString],"friendsRequestsReceived":[$friendsRequestsReceivedString],"friendsRequestsSent":[$friendsRequestsSentString]}',
     );
   }
 }

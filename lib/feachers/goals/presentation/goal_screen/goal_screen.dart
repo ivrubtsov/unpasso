@@ -484,7 +484,7 @@ class CompletedStatus extends StatelessWidget {
         return Container(
           height: 40.0,
           alignment: Alignment.center,
-          child: Column(children: const [
+          child: const Column(children: [
             Icon(
               Icons.update,
               color: AppColors.goalHint,
@@ -501,7 +501,7 @@ class CompletedStatus extends StatelessWidget {
         return Container(
           height: 40.0,
           alignment: Alignment.center,
-          child: Column(children: const [
+          child: const Column(children: [
             Icon(
               Icons.check_circle,
               color: AppColors.goalCompleted,
@@ -518,7 +518,7 @@ class CompletedStatus extends StatelessWidget {
           return Container(
             height: 40.0,
             alignment: Alignment.center,
-            child: Column(children: const [
+            child: const Column(children: [
               Icon(
                 Icons.arrow_circle_down,
                 color: AppColors.goalHint,
@@ -534,7 +534,7 @@ class CompletedStatus extends StatelessWidget {
           return Container(
             height: 40.0,
             alignment: Alignment.center,
-            child: Column(children: const [
+            child: const Column(children: [
               Icon(
                 Icons.unpublished,
                 color: AppColors.goalInCompleted,
