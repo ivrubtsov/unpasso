@@ -103,9 +103,11 @@ class EmailAuthRepoImpl implements AuthRepo {
       }
 
       final id = response.data['id'];
+      // final username = response.data['username'];
       await sessionRepo.saveSessionData(SessionData(
         id: id,
         password: credentials.password,
+        // username: username,
         username: credentials.user.username,
       ));
     } on DioError catch (e) {

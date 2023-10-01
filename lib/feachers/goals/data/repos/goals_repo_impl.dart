@@ -141,9 +141,11 @@ class GoalsRepoImpl implements GoalsRepo {
     }
   }
 
+/*
   @override
   Future<void> removeTodaysGoal() async {
     final shP = await SharedPreferences.getInstance();
     shP.remove(Keys.todaysGoal);
   }
+*/
 }

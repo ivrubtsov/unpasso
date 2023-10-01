@@ -23,13 +23,15 @@ class ApiConsts {
           int id, String name, String userName, String description) =>
       '$_baseUrl/users/$id?name=$name&username=$userName&description=$description';
 
-  static String getFriends(int id) => '$_baseUrl/users/$id';
+  static String getFriends() => '$_baseUrl/friends';
 
-  static String setFriends(int id, String description) =>
-      '$_baseUrl/users/$id?description=$description';
+  static String inviteFriend(int id) => '$_baseUrl/friends/$id?action=invite';
 
-  static String inviteFriends(int id, String description) =>
-      '$_baseUrl/users/$id?description=$description';
+  static String acceptFriend(int id) => '$_baseUrl/friends/$id?action=accept';
+
+  static String rejectFriend(int id) => '$_baseUrl/friends/$id?action=reject';
+
+  static String removeFriend(int id) => '$_baseUrl/friends/$id?action=remove';
 
 /*  static String createGoal(String title, int authorId, String date) =>
       '$_baseUrl/posts?status=publish&title=$title&author=$authorId&categories=6&date_gmt=$date';*/
@@ -40,8 +42,8 @@ class ApiConsts {
   static String getUserGoals(int authorId) =>
       '$_baseUrl/posts?per_page=$fetchPageLimit&status=publish,future&categories=6&author=$authorId';
 
-  static String getAvailableGoals(int userId, int page) =>
-      '$_baseUrl/posts?per_page=$fetchPageLimit&page=$page&status=publish,future&tags=27&categories=6&user=$userId';
+  static String getAvailableGoals(int page) =>
+      '$_baseUrl/posts?per_page=$fetchPageLimit&page=$page&status=publish,future&categories=6';
 
   static String getGoalById(int id) => '$_baseUrl/posts/$id';
 
@@ -53,7 +55,4 @@ class ApiConsts {
 
   static const forgotPassword =
       'https://unpasso.org/wp-login.php?action=lostpassword';
-
-  static String getTodaysGoal(int authorId, String date) =>
-      '$_baseUrl/posts?author=$authorId&after=$date';
 }
