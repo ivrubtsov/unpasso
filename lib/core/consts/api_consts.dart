@@ -25,13 +25,20 @@ class ApiConsts {
 
   static String getFriends() => '$_baseUrl/friends';
 
-  static String inviteFriend(int id) => '$_baseUrl/friends/$id?action=invite';
+  static String searchFriends(String text) =>
+      '$_baseUrl/friends/search?text=$text';
 
-  static String acceptFriend(int id) => '$_baseUrl/friends/$id?action=accept';
+  static String inviteFriend(int id) =>
+      '$_baseUrl/friends/requests/$id?action=invite';
 
-  static String rejectFriend(int id) => '$_baseUrl/friends/$id?action=reject';
+  static String acceptFriend(int id) =>
+      '$_baseUrl/friends/requests/$id?action=accept';
 
-  static String removeFriend(int id) => '$_baseUrl/friends/$id?action=remove';
+  static String rejectFriend(int id) =>
+      '$_baseUrl/friends/requests/$id?action=reject';
+
+  static String removeFriend(int id) =>
+      '$_baseUrl/friends/requests/$id?action=remove';
 
 /*  static String createGoal(String title, int authorId, String date) =>
       '$_baseUrl/posts?status=publish&title=$title&author=$authorId&categories=6&date_gmt=$date';*/
