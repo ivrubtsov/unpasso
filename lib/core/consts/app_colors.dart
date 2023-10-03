@@ -50,10 +50,23 @@ class AppColors {
   static const homeBg = Colors.white;
   static const homeGoalTitle = Color.fromRGBO(0, 26, 52, 1);
   static const homeGoalAuthor = Color.fromRGBO(80, 85, 92, 1);
+  static const homeGoalIconRating = Colors.amber;
   static const homeGoalAuthorRating = Color.fromRGBO(43, 39, 239, 1);
   static const homeGoalLikeIcon = Color.fromRGBO(80, 85, 92, 1);
   static const homeGoalLikeIconActive = Color.fromRGBO(43, 39, 239, 1);
   static const homeGoalLikeNumber = Color.fromRGBO(80, 85, 92, 1);
+
+  // Friends screen
+  static const friendsBg = Colors.white;
+  static const friendsHeader = Colors.black;
+  static const friendsName = Colors.black;
+  static const friendsUsername = Color.fromRGBO(80, 85, 92, 1);
+  static const friendsIconRating = Colors.amber;
+  static const friendsRating = Color.fromRGBO(43, 39, 239, 1);
+  static const friendsApprove = Color.fromRGBO(30, 160, 41, 1);
+  static const friendsReject = Color.fromRGBO(241, 94, 142, 1);
+  static const friendsInvite = Color.fromRGBO(80, 85, 92, 1);
+  static const friendsInviteActive = Color.fromRGBO(43, 39, 239, 1);
 
   // Modal windows
   static const modalBg = Color.fromRGBO(220, 231, 255, 1);

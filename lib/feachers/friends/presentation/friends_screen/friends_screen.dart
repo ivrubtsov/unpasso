@@ -1,13 +1,11 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:goal_app/core/widgets/fun.dart';
-import 'package:goal_app/feachers/friends/data/models/friends_model/friend_model.dart';
-import 'package:intl/intl.dart';
+import 'package:goal_app/core/consts/app_avatars.dart';
+import 'package:goal_app/core/consts/keys.dart';
 import 'package:goal_app/core/consts/app_colors.dart';
 import 'package:goal_app/core/consts/app_fonts.dart';
-import 'package:goal_app/feachers/friends/domain/entities/friend.dart';
 import 'package:goal_app/feachers/friends/presentation/friends_screen/cubit/friends_screen_cubit.dart';
+import 'package:goal_app/feachers/profile/domain/entities/profile.dart';
 
 enum FriendsScreenStatus {
   loading,
@@ -24,24 +22,82 @@ class FriendsScreen extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: AppColors.bg,
+        backgroundColor: AppColors.friendsBg,
         elevation: 0,
         title: const Text(
-          'Friends',
+          'My dear friends',
           style: AppFonts.header,
         ),
         actions: [
           IconButton(
-            onPressed: () =>
-                context.read<FriendsScreenCubit>().onProfileTapped(context),
-            icon: const Icon(Icons.person),
-            color: AppColors.headerIcon,
-          )
+            onPressed: () {
+              context.read<FriendsScreenCubit>().openSearchBar();
+              showSearch(
+                context: context,
+                delegate: FriendsSearchDelegate(),
+              );
+            },
+            icon: const Icon(Icons.search),
+          ),
         ],
       ),
-      backgroundColor: AppColors.bg,
-      body: const FriendsScreenContent(),
+      backgroundColor: AppColors.friendsBg,
+      body: const SingleChildScrollView(
+        child: FriendsScreenContent(),
+      ),
     );
+  }
+}
+
+class FriendsSearchDelegate extends SearchDelegate {
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        onPressed: () {
+          if (query == '') {
+            context.read<FriendsScreenCubit>().closeSearchBar();
+            close(context, null);
+          } else {
+            query = '';
+          }
+        },
+        icon: const Icon(Icons.clear),
+      ),
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        context.read<FriendsScreenCubit>().closeSearchBar();
+        close(context, null);
+      },
+      icon: const Icon(Icons.arrow_back),
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    // TODO: implement buildResults
+    return Container();
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    List<Profile> suggestions =
+        context.read<FriendsScreenCubit>().searchFriends();
+    return ListView.builder(
+        itemCount: suggestions.length,
+        itemBuilder: (context, index) {
+          /* final suggestion = suggestions[index];
+          return ListTile(
+            title: Text(suggestion.name ?? '@${suggestion.userName}'),
+            onTap: () {},
+          ); */
+          return FriendSearchProfile(profile: suggestions[index]);
+        });
   }
 }
 
@@ -93,54 +149,24 @@ class FriendsScreenContentState extends State<FriendsScreenContent>
   Widget build(BuildContext context) {
     return BlocBuilder<FriendsScreenCubit, FriendsScreenState>(
       builder: (context, state) {
-        if (state.currentDate.day != currentDate.day) {
-          final model = context.read<FriendsScreenCubit>();
-          model.getAllGoals();
-          model.setSelectedDateToday();
+        final model = context.read<FriendsScreenCubit>();
+        final timeDiff = currentDate.difference(state.currentDate).inMinutes;
+        if (timeDiff > Keys.refreshTimeoutFriends) {
+          model.getFriends();
         }
         if (state.status == FriendsScreenStateStatus.loading) {
           return const Center(
             child: CircularProgressIndicator(),
           );
         }
-        return Column(
-          children: [
-            DatesListView(goals: state.goals),
-            GoalsMainContainer(goals: state.goals),
-            FunFlipAnimation(),
-            /* Expanded(
-              child: Align(
-                alignment: Alignment.bottomLeft,
-                child: QuoteWidget(),
-              ),
-            ),*/
-          ],
-        );
-      },
-    );
-  }
-}
-
-class DatesListView extends StatelessWidget {
-  const DatesListView({Key? key, required this.goals}) : super(key: key);
-  final List<Goal> goals;
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<GoalScreenCubit, GoalScreenState>(
-      builder: (context, state) {
-        return Padding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
-          child: SizedBox(
-            height: 62.0,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              reverse: true,
-              controller: dateListScrollController,
-              itemCount: goals.length,
-              itemBuilder: (BuildContext context, int index) {
-                return DateListViewItem(goal: goals[index]);
-              },
-            ),
+        return RefreshIndicator(
+          onRefresh: () => model.getFriends(),
+          child: const Column(
+            children: [
+              //SearchFriends(),
+              FriendsRequests(),
+              FriendsList(),
+            ],
           ),
         );
       },
@@ -148,489 +174,359 @@ class DatesListView extends StatelessWidget {
   }
 }
 
-class DateListViewItem extends StatelessWidget {
-  const DateListViewItem({Key? key, required this.goal}) : super(key: key);
-  final Goal goal;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: Column(children: [
-        /*
-        Container(
-          width: 24.0,
-          height: 24.0,
-          alignment: Alignment.center,
-          child: DateButton(goal: goal),
-        ),
-        Container(
-          width: 24.0,
-          height: 14.0,
-          alignment: Alignment.center,
-          child: DateStatus(goal: goal),
-        ),
-        */
-        DateButton(goal: goal),
-        DateStatus(goal: goal),
-      ]),
-    );
-  }
-}
-
-class DateButton extends StatelessWidget {
-  const DateButton({Key? key, required this.goal}) : super(key: key);
-  final Goal goal;
-  @override
-  Widget build(BuildContext context) {
-    final model = context.read<GoalScreenCubit>();
-    return BlocBuilder<GoalScreenCubit, GoalScreenState>(
-      builder: (context, state) {
-        final selectedDate = state.selectedDate;
-        if (selectedDate.year == goal.createdAt.year &&
-            selectedDate.month == goal.createdAt.month &&
-            selectedDate.day == goal.createdAt.day) {
-          return FloatingActionButton.small(
-            onPressed: () {},
-            backgroundColor: AppColors.selectedDateBg,
-            child: Text(
-              DateFormat('dd').format(goal.createdAt),
-              style: AppFonts.dateSelected,
-            ),
-          );
-        } else {
-          final double winWidth = MediaQuery.of(context).size.width;
-          return FloatingActionButton.small(
-            onPressed: () {
-              model.setSelectedDate(goal.createdAt, winWidth);
-            },
-            backgroundColor: AppColors.dateBg,
-            child: Text(
-              DateFormat('dd').format(goal.createdAt),
-              style: AppFonts.date,
-            ),
-          );
-        }
-      },
-    );
-  }
-}
-
-class DateStatus extends StatelessWidget {
-  const DateStatus({Key? key, required this.goal}) : super(key: key);
-  final Goal goal;
-  @override
-  Widget build(BuildContext context) {
-    if (goal.isCompleted) {
-      return const Icon(
-        Icons.check,
-        color: AppColors.dateIcon,
-        size: 14.0,
-      );
-    }
-    if (goal.isExist) {
-      return const Icon(
-        Icons.close,
-        color: AppColors.dateIcon,
-        size: 14.0,
-      );
-    }
-    return const Icon(
-      Icons.fiber_new,
-      color: AppColors.dateBg,
-      size: 14.0,
-    );
-  }
-}
-
-class GoalsMainContainer extends StatelessWidget {
-  const GoalsMainContainer({Key? key, required this.goals}) : super(key: key);
-  final List<Goal> goals;
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<GoalScreenCubit, GoalScreenState>(
-      builder: (context, state) {
-        final double goalBoxSize = MediaQuery.of(context).size.width - 40;
-        return SizedBox(
-            height: goalBoxSize,
-            child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                controller: goalsListScrollController,
-                reverse: true,
-                itemCount: goals.length,
-                itemBuilder: (BuildContext context, int index) {
-                  /*WidgetsBinding.instance.addPostFrameCallback((_) => {
-                        goalsListScrollController.jumpTo(
-                            goalsListScrollController.position.maxScrollExtent)
-                      });*/
-                  final model = context.read<GoalScreenCubit>();
-                  final DateTime today = DateTime.now();
-                  // WIDGET FOR ENTERING A NEW GOAL
-                  if (goals[index].text == '%%!!-!!%%') {
-                    return Container(
-                      key: ValueKey<Goal>(goals[index]),
-                      width: goalBoxSize,
-                      height: goalBoxSize,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20.0, vertical: 20.0),
-                      decoration: BoxDecoration(
-                        color: AppColors.goalBg,
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 20.0, vertical: 0.0),
-                      child: Column(
-                        children: [
-                          // CARD HEADER WITH A BUTTON
-                          Row(
-                            children: [
-                              const Expanded(
-                                child: SizedBox(
-                                  child: Text(
-                                    'Today',
-                                    style: AppFonts.goalHeader,
-                                    textAlign: TextAlign.left,
-                                  ),
-                                ),
-                              ),
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: OutlinedButton(
-                                  onPressed: () {
-                                    model.submitGoal(context);
-                                    // final id = state.goal.id;
-                                    // final g = state.goal;
-                                    goals.removeAt(index);
-                                    goals.insert(
-                                        0,
-                                        GoalModel(
-                                          createdAt: DateTime.now(),
-                                          text: state.goal.text,
-                                          authorId: state.goal.authorId,
-                                          isCompleted: false,
-                                          isExist: true,
-                                        ));
-                                  },
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        AppColors.enabled),
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                            side: const BorderSide(
-                                                color: AppColors.enabled))),
-                                  ),
-                                  child: Container(
-                                    height: 30.0,
-                                    width: 40.0,
-                                    alignment: Alignment.center,
-                                    child: const Text(
-                                      'Save',
-                                      style: AppFonts.button,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          // GOAL TEXT INPUT FIELD
-                          GoalTextField(),
-                        ],
-                      ),
-                    );
-
-                    // return EnterGoal();
-                  }
-                  // The goal for today is set but it isn't completed yet, we should create
-                  // a dismissive widget so a user can swipe the goal to complete it
-                  final bool isToday;
-                  if (today.year == goals[index].createdAt.year &&
-                      today.month == goals[index].createdAt.month &&
-                      today.day == goals[index].createdAt.day) {
-                    isToday = true;
-                  } else {
-                    isToday = false;
-                  }
-                  // WIDGET FOR SHOWING THE TODAY'S GOAL WITH A FUNCTION TO COMPLETE IT WITH SWIPE
-                  if (!goals[index].isCompleted &&
-                      isToday &&
-                      state.status == GoalScreenStateStatus.ready) {
-                    return Dismissible(
-                      key: ValueKey<Goal>(goals[index]),
-                      direction: DismissDirection.down,
-                      onDismissed: (DismissDirection direction) {
-                        model.completeGoal(context);
-                        goals.removeAt(index);
-                        goals.insert(
-                            0,
-                            GoalModel(
-                              createdAt: state.goal.createdAt,
-                              text: state.goal.text,
-                              authorId: state.goal.authorId,
-                              isCompleted: true,
-                              isExist: true,
-                            ));
-                      },
-                      background: const CompleteGoalBG(),
-                      child: GoalItem(
-                        goal: goals[index],
-                        isToday: isToday,
-                      ),
-                    );
-                  }
-                  // GENERAL WIDGET FOR ALL THE PAST GOALS
-                  return Container(
-                      key: ValueKey<Goal>(goals[index]),
-                      child: GoalItem(
-                        goal: goals[index],
-                        isToday: isToday,
-                      ));
-                }));
-      },
-    );
-  }
-}
-
-// WIDGET TO SHOW EXISTING GOAL
-class GoalItem extends StatelessWidget {
-  const GoalItem({
+// WIDGET TO SHOW SEARCH BAR AND RESULTS
+/*
+class SearchFriends extends StatelessWidget {
+  const SearchFriends({
     Key? key,
-    required this.goal,
-    required this.isToday,
   }) : super(key: key);
-  final Goal goal;
-  final bool isToday;
   @override
   Widget build(BuildContext context) {
-    final String goalDate;
-    if (isToday) {
-      goalDate = 'Today';
-    } else {
-      goalDate = DateFormat.yMMMd().format(goal.createdAt);
-    }
-    final double goalBoxSize = MediaQuery.of(context).size.width - 40;
-    return Container(
-      width: goalBoxSize,
-      height: goalBoxSize,
-      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
-      decoration: BoxDecoration(
-        color: AppColors.goalBg,
-        borderRadius: BorderRadius.circular(20.0),
-      ),
-      margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 0.0),
-      child: Column(
-        children: [
-          Text(
-            goalDate,
-            style: AppFonts.goalHeader,
-            textAlign: TextAlign.center,
-          ),
-          Expanded(
-            child: Text(
-              goal.text,
-              style: AppFonts.goal,
-              textAlign: TextAlign.center,
-            ),
-          ),
-          Center(
-            child: CompletedStatus(
-              isCompleted: goal.isCompleted,
-              isToday: isToday,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class CompletedStatus extends StatelessWidget {
-  const CompletedStatus(
-      {Key? key, required this.isCompleted, required this.isToday})
-      : super(key: key);
-  final bool isCompleted;
-  final bool isToday;
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<GoalScreenCubit, GoalScreenState>(
+    return BlocBuilder<FriendsScreenCubit, FriendsScreenState>(
         builder: (context, state) {
-      if (state.status != GoalScreenStateStatus.ready) {
-        return Container(
-          height: 40.0,
-          alignment: Alignment.center,
-          child: Column(children: const [
-            Icon(
-              Icons.update,
-              color: AppColors.goalHint,
-              size: 20.0,
-            ),
-            Text(
-              'The goal is being updated...',
-              style: AppFonts.goalHint,
-            ),
-          ]),
-        );
-      }
-      if (isCompleted) {
-        return Container(
-          height: 40.0,
-          alignment: Alignment.center,
-          child: Column(children: const [
-            Icon(
-              Icons.check_circle,
-              color: AppColors.goalCompleted,
-              size: 20.0,
-            ),
-            Text(
-              'The goal is completed!',
-              style: AppFonts.goalCompleted,
-            ),
-          ]),
+      if (state.friendsRequestsReceived.isNotEmpty) {
+        final friendsRequests = state.friendsRequestsReceived;
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+          child: Column(
+            children: [
+              Text(
+                'Friend requests',
+                style: AppFonts.friendsHeader,
+                textAlign: TextAlign.left,
+              ),
+              SizedBox(
+                height: 10.0,
+              ),
+              ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  reverse: false,
+                  itemCount: friendsRequests.length + 1,
+                  itemBuilder: (BuildContext context, int index) {
+                    return FriendRequest(
+                      key: ValueKey<Profile>(friendsRequests[index]),
+                      profile: friendsRequests[index],
+                    );
+                  }),
+            ],
+          ),
         );
       } else {
-        if (isToday) {
-          return Container(
-            height: 40.0,
-            alignment: Alignment.center,
-            child: Column(children: const [
-              Icon(
-                Icons.arrow_circle_down,
-                color: AppColors.goalHint,
-                size: 20.0,
-              ),
-              Text(
-                'Swipe down to complete!',
-                style: AppFonts.goalHint,
-              ),
-            ]),
-          );
-        } else {
-          return Container(
-            height: 40.0,
-            alignment: Alignment.center,
-            child: Column(children: const [
-              Icon(
-                Icons.unpublished,
-                color: AppColors.goalInCompleted,
-                size: 20.0,
-              ),
-              Text(
-                'The goal is not completed :(',
-                style: AppFonts.goalInCompleted,
-              ),
-            ]),
-          );
-        }
+        return Container();
       }
     });
-  }
-}
-
-class CompleteGoalBG extends StatelessWidget {
-  const CompleteGoalBG({Key? key}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 75.0,
-      alignment: Alignment.center,
-      child: Image.asset('assets/goodjob.png'),
-    );
-  }
-}
-
-/*
-class QuoteWidget extends StatelessWidget {
-  const QuoteWidget({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: const [
-        Text(
-          '"A journey of a thousand miles begins with a single step"',
-          style: AppFonts.goal,
-        ),
-        SizedBox(height: 20.0),
-        Align(
-          alignment: Alignment.bottomRight,
-          child: Text(
-            'Lao Tzu',
-            style: AppFonts.goalHint,
-          ),
-        ),
-      ],
-    );
   }
 }
 */
-class GoalTextField extends StatelessWidget {
-  const GoalTextField({
+
+// WIDGET TO SHOW ONE USER TO SEND A FRIEND REQUEST
+class FriendSearchProfile extends StatelessWidget {
+  const FriendSearchProfile({
     Key? key,
+    required this.profile,
   }) : super(key: key);
+  final Profile profile;
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<GoalScreenCubit>();
-    return TextFormField(
-      initialValue: '',
-      onChanged: model.changeGoal,
-      style: AppFonts.goal,
-      decoration: const InputDecoration(
-        hintText: 'Enter your goal here',
-        hintStyle: AppFonts.goal,
-        border: InputBorder.none,
-      ),
-    );
-  }
-}
-
-class FunFlipAnimation extends StatelessWidget {
-  const FunFlipAnimation({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final model = context.read<GoalScreenCubit>();
-
-    return BlocBuilder<GoalScreenCubit, GoalScreenState>(
+    final model = context.read<FriendsScreenCubit>();
+    return BlocBuilder<FriendsScreenCubit, FriendsScreenState>(
         builder: (context, state) {
-      return GestureDetector(
-        onTap: () => model.flipFunCard(),
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 800),
-          transitionBuilder: __transitionBuilder,
-          layoutBuilder: (widget, list) =>
-              Stack(children: [widget ?? const FunFront(), ...list]),
-          switchInCurve: Curves.easeInBack,
-          switchOutCurve: Curves.easeInBack.flipped,
-          child: model.getFunGoalWidget(),
+      final isAlreadySent = model.checkInviteSent(profile);
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+        child: Row(
+          children: [
+            AppAvatars.getAvatarImage(profile.avatar),
+            Expanded(
+              child: Column(
+                children: [
+                  Text(
+                    profile.name ?? 'Unknown',
+                    style: AppFonts.friendsName,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          '@${profile.userName}',
+                          style: AppFonts.friendsUsername,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 56.0,
+                        child: Row(children: [
+                          const Icon(
+                            Icons.star,
+                            color: AppColors.friendsIconRating,
+                          ),
+                          Text(
+                            profile.rating.toString(),
+                            style: AppFonts.friendsRating,
+                            textAlign: TextAlign.left,
+                          ),
+                        ]),
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+              child: Center(
+                child: isAlreadySent
+                    ? const Icon(
+                        Icons.add,
+                        color: AppColors.friendsInvite,
+                        size: 32.0,
+                      )
+                    : IconButton(
+                        onPressed: () => model.inviteFriend(profile),
+                        icon: const Icon(
+                          Icons.add,
+                          color: AppColors.friendsInviteActive,
+                          size: 32.0,
+                        ),
+                      ),
+              ),
+            ),
+          ],
         ),
       );
     });
   }
 }
 
-Widget __transitionBuilder(Widget widget, Animation<double> animation) {
-  final rotateAnim = Tween(begin: pi, end: 0.0).animate(animation);
-  return AnimatedBuilder(
-    animation: rotateAnim,
-    child: widget,
-    builder: (context, widget) {
-      final model = context.read<GoalScreenCubit>();
-      final isUnder = (ValueKey(model.getDisplayFunFront()) != widget?.key);
-      var tilt = ((animation.value - 0.5).abs() - 0.5) * 0.003;
-      tilt *= isUnder ? -1.0 : 1.0;
-      final value = isUnder ? min(rotateAnim.value, pi / 2) : rotateAnim.value;
-      return Transform(
-        transform: Matrix4.rotationY(value)..setEntry(3, 0, tilt),
-        alignment: Alignment.center,
-        child: widget,
+// WIDGET TO SHOW ALL FRIENDS REQUESTS
+class FriendsRequests extends StatelessWidget {
+  const FriendsRequests({
+    Key? key,
+  }) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<FriendsScreenCubit, FriendsScreenState>(
+        builder: (context, state) {
+      if (!state.searchOpen && state.friendsRequestsReceived.isNotEmpty) {
+        final friendsRequests = state.friendsRequestsReceived;
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+          child: Column(
+            children: [
+              const Text(
+                'Friend requests',
+                style: AppFonts.friendsHeader,
+                textAlign: TextAlign.left,
+              ),
+              const SizedBox(
+                height: 10.0,
+              ),
+              ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  reverse: false,
+                  itemCount: friendsRequests.length + 1,
+                  itemBuilder: (BuildContext context, int index) {
+                    return FriendRequest(
+                      key: ValueKey<Profile>(friendsRequests[index]),
+                      profile: friendsRequests[index],
+                    );
+                  }),
+            ],
+          ),
+        );
+      } else {
+        return Container();
+      }
+    });
+  }
+}
+
+// WIDGET TO SHOW ONE FRIEND REQUEST
+class FriendRequest extends StatelessWidget {
+  const FriendRequest({
+    Key? key,
+    required this.profile,
+  }) : super(key: key);
+  final Profile profile;
+
+  @override
+  Widget build(BuildContext context) {
+    final model = context.read<FriendsScreenCubit>();
+    return BlocBuilder<FriendsScreenCubit, FriendsScreenState>(
+        builder: (context, state) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+        child: Row(
+          children: [
+            AppAvatars.getAvatarImage(profile.avatar),
+            Expanded(
+              child: Column(
+                children: [
+                  Text(
+                    profile.name ?? 'Unknown',
+                    style: AppFonts.friendsName,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          '@${profile.userName}',
+                          style: AppFonts.friendsUsername,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 56.0,
+                        child: Row(children: [
+                          const Icon(
+                            Icons.star,
+                            color: AppColors.friendsIconRating,
+                          ),
+                          Text(
+                            profile.rating.toString(),
+                            style: AppFonts.friendsRating,
+                            textAlign: TextAlign.left,
+                          ),
+                        ]),
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+              child: Center(
+                child: IconButton(
+                  onPressed: () => model.acceptRequest(profile),
+                  icon: const Icon(
+                    Icons.check_box,
+                    color: AppColors.friendsApprove,
+                    size: 32.0,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+              child: Center(
+                child: IconButton(
+                  onPressed: () => model.rejectRequest(profile),
+                  icon: const Icon(
+                    Icons.cancel_outlined,
+                    color: AppColors.friendsReject,
+                    size: 32.0,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       );
-    },
-  );
+    });
+  }
+}
+
+// WIDGET TO SHOW ALL FRIENDS
+class FriendsList extends StatelessWidget {
+  const FriendsList({
+    Key? key,
+  }) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<FriendsScreenCubit, FriendsScreenState>(
+        builder: (context, state) {
+      if (!state.searchOpen && state.friends.isNotEmpty) {
+        final friends = state.friends;
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+          child: Column(
+            children: [
+              const Text(
+                'Friends',
+                style: AppFonts.friendsHeader,
+                textAlign: TextAlign.left,
+              ),
+              const SizedBox(
+                height: 10.0,
+              ),
+              ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  reverse: false,
+                  itemCount: friends.length + 1,
+                  itemBuilder: (BuildContext context, int index) {
+                    return FriendProfile(
+                      key: ValueKey<Profile>(friends[index]),
+                      profile: friends[index],
+                    );
+                  }),
+            ],
+          ),
+        );
+      } else {
+        return Container();
+      }
+    });
+  }
+}
+
+// WIDGET TO SHOW ONE FRIEND
+class FriendProfile extends StatelessWidget {
+  const FriendProfile({
+    Key? key,
+    required this.profile,
+  }) : super(key: key);
+  final Profile profile;
+
+  @override
+  Widget build(BuildContext context) {
+    final model = context.read<FriendsScreenCubit>();
+    return BlocBuilder<FriendsScreenCubit, FriendsScreenState>(
+        builder: (context, state) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+        child: Row(
+          children: [
+            AppAvatars.getAvatarImage(profile.avatar),
+            Expanded(
+              child: Column(
+                children: [
+                  Text(
+                    profile.name ?? 'Unknown',
+                    style: AppFonts.friendsName,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          '@${profile.userName}',
+                          style: AppFonts.friendsUsername,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 56.0,
+                        child: Row(children: [
+                          const Icon(
+                            Icons.star,
+                            color: AppColors.friendsIconRating,
+                          ),
+                          Text(
+                            profile.rating.toString(),
+                            style: AppFonts.friendsRating,
+                            textAlign: TextAlign.left,
+                          ),
+                        ]),
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+  }
 }

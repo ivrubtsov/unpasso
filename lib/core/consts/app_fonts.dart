@@ -221,6 +221,34 @@ class AppFonts {
     color: AppColors.homeGoalAuthor,
   );
 
+  static const friendsHeader = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w500,
+    fontSize: 40.0,
+    color: AppColors.friendsHeader,
+  );
+
+  static const friendsName = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w500,
+    fontSize: 24.0,
+    color: AppColors.friendsName,
+  );
+
+  static const friendsUsername = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 12.0,
+    color: AppColors.friendsUsername,
+  );
+
+  static const friendsRating = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 12.0,
+    color: AppColors.friendsRating,
+  );
+
   static const megaMenu = TextStyle(
     fontFamily: 'Fredoka',
     fontWeight: FontWeight.w400,

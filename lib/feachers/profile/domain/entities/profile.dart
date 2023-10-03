@@ -4,6 +4,7 @@ class Profile {
   String? userName;
   int? avatar;
   List<int> achievements;
+  int? rating;
   List<int> friends;
   List<int> friendsRequestsReceived;
   List<int> friendsRequestsSent;
@@ -14,6 +15,7 @@ class Profile {
     this.userName,
     this.avatar,
     this.achievements = const [],
+    this.rating = 0,
     this.friends = const [],
     this.friendsRequestsReceived = const [],
     this.friendsRequestsSent = const [],
@@ -25,6 +27,7 @@ class Profile {
     String? userName,
     int? avatar,
     List<int>? achievements,
+    int? rating,
     List<int>? friends,
     List<int>? friendsRequestsReceived,
     List<int>? friendsRequestsSent,
@@ -35,6 +38,7 @@ class Profile {
       userName: userName ?? this.userName,
       avatar: avatar ?? this.avatar,
       achievements: achievements ?? this.achievements,
+      rating: rating ?? this.rating,
       friends: friends ?? this.friends,
       friendsRequestsReceived:
           friendsRequestsReceived ?? this.friendsRequestsReceived,
@@ -55,6 +59,7 @@ class Profile {
         userName,
         avatar,
         achievements,
+        rating,
         friends,
         friendsRequestsReceived,
         friendsRequestsSent,

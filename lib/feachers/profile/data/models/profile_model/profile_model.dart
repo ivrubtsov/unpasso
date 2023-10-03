@@ -9,6 +9,7 @@ class ProfileModel extends Profile {
     String? userName,
     int? avatar,
     List<int> achievements = const [],
+    int? rating,
     List<int> friends = const [],
     List<int> friendsRequestsReceived = const [],
     List<int> friendsRequestsSent = const [],
@@ -18,6 +19,7 @@ class ProfileModel extends Profile {
           userName: userName,
           avatar: avatar,
           achievements: achievements,
+          rating: rating,
           friends: friends,
           friendsRequestsReceived: friendsRequestsReceived,
           friendsRequestsSent: friendsRequestsSent,
@@ -28,6 +30,7 @@ class ProfileModel extends Profile {
         userName: profile.userName,
         avatar: profile.avatar,
         achievements: profile.achievements,
+        rating: profile.rating,
         friends: profile.friends,
         friendsRequestsReceived: profile.friendsRequestsReceived,
         friendsRequestsSent: profile.friendsRequestsSent,
@@ -37,11 +40,13 @@ class ProfileModel extends Profile {
     String name;
     int avatar;
     List<int> achievements;
+    int rating;
     List<int> friends;
     List<int> friendsRequestsReceived;
     List<int> friendsRequestsSent;
     avatar = 0;
     achievements = [];
+    rating = 0;
     friends = [];
     friendsRequestsReceived = [];
     friendsRequestsSent = [];
@@ -58,6 +63,11 @@ class ProfileModel extends Profile {
           description['achievements'] == [])) {
       } else {
         achievements = List<int>.from(description['achievements']);
+      }
+      if (!(description['rating'] == null ||
+          description['rating'] == '' ||
+          description['rating'] == 0)) {
+        rating = description['rating'] as int;
       }
       if (!(description['friends'] == null ||
           description['friends'] == '' ||
@@ -88,6 +98,7 @@ class ProfileModel extends Profile {
       userName: json['username'] ?? '',
       avatar: avatar,
       achievements: achievements,
+      rating: rating,
       friends: friends,
       friendsRequestsReceived: friendsRequestsReceived,
       friendsRequestsSent: friendsRequestsSent,
@@ -101,6 +112,7 @@ class ProfileModel extends Profile {
       'username': userName,
       'avatar': avatar,
       'achievements': achievements,
+      'rating': rating,
       'friends': friends,
       'friendsRequestsReceived': friendsRequestsReceived,
       'friendsRequestsSent': friendsRequestsSent,
@@ -116,7 +128,7 @@ class ProfileModel extends Profile {
       id,
       name ?? 'Unknown',
       userName ?? '',
-      '{"avatar":$avatar,"achievements":[$achievementsString],"friends":[$friendsString],"friendsRequestsReceived":[$friendsRequestsReceivedString],"friendsRequestsSent":[$friendsRequestsSentString]}',
+      '{"avatar":$avatar,"achievements":[$achievementsString],"rating":$rating,"friends":[$friendsString],"friendsRequestsReceived":[$friendsRequestsReceivedString],"friendsRequestsSent":[$friendsRequestsSentString]}',
     );
   }
 }

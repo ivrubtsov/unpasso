@@ -1,17 +1,13 @@
-import 'package:goal_app/feachers/friends/domain/entities/friend.dart';
-
-enum GetFriendsQueryType { userHistory }
+import 'package:goal_app/feachers/profile/domain/entities/profile.dart';
 
 abstract class FriendsRepo {
-  Future<Friend> createFriend(Friend friend);
+  Future<void> getFriends();
 
-  // Future<Goal?> getTodaysGoal();
+  Future<void> acceptRequest(Profile profile);
 
-  Future<void> removeTodaysFriends();
+  Future<void> rejectRequest(Profile profile);
 
-  Future<List<Friend>> getFriends(GetFriendsQueryType queryType);
+  Future<void> removeFriend(Profile profile);
 
-  // Future<List<Goal>> getProcessedListFriends();
-
-  Future<void> completeFriend(Friend friend);
+  Future<List<Profile>> searchFriends();
 }

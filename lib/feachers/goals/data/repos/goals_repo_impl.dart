@@ -2,13 +2,11 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:goal_app/core/consts/api_consts.dart';
-import 'package:goal_app/core/consts/keys.dart';
 import 'package:goal_app/core/exceptions/exceptions.dart';
 import 'package:goal_app/feachers/auth/domain/repos/session_repo.dart';
 import 'package:goal_app/feachers/goals/data/models/goal_model/goal_model.dart';
 import 'package:goal_app/feachers/goals/domain/entities/goal.dart';
 import 'package:goal_app/feachers/goals/domain/repos/goals_repo.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class GoalsRepoImpl implements GoalsRepo {
   GoalsRepoImpl({
@@ -52,8 +50,10 @@ class GoalsRepoImpl implements GoalsRepo {
   Future<List<Goal>> getCurrentUserGoals(GetGoalsQueryType queryType) async {
     if (_sessionRepo.sessionData == null) throw ServerException();
     try {
+      const int page = 1;
       final response = await _dio().get<List<dynamic>>(ApiConsts.getUserGoals(
         _sessionRepo.sessionData!.id,
+        page,
       ));
 
       if (response.data == null) throw ServerException();
@@ -133,7 +133,8 @@ class GoalsRepoImpl implements GoalsRepo {
       final id = goal.id;
       if (id == null) throw ServerException();
       final String url = ApiConsts.completeGoal(id);
-      final response = await _dio().post(url);
+      // final response = await _dio().post(url);
+      await _dio().post(url);
       // final updatedGoal = GoalModel.fromJson(response.data);
       // await _saveGoalToLocal(updatedGoal);
     } on DioError {

@@ -46,8 +46,8 @@ class ApiConsts {
 
   static int fetchPageLimit = 100;
 
-  static String getUserGoals(int authorId) =>
-      '$_baseUrl/posts?per_page=$fetchPageLimit&status=publish,future&categories=6&author=$authorId';
+  static String getUserGoals(int authorId, int page) =>
+      '$_baseUrl/posts?per_page=$fetchPageLimit&page=$page&status=publish,future&categories=6&author=$authorId';
 
   static String getAvailableGoals(int page) =>
       '$_baseUrl/posts?per_page=$fetchPageLimit&page=$page&status=publish,future&categories=6';

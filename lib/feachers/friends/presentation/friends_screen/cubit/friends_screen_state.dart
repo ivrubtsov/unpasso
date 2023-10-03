@@ -2,70 +2,69 @@ part of 'friends_screen_cubit.dart';
 
 enum FriendsScreenStateStatus {
   loading,
-  loaded,
   error,
-  goalCompleted,
-  goalIsSubmitting,
-  goalIsCompleting,
   ready,
+  fetch,
 }
 
 class FriendsScreenState extends Equatable {
-  final DateTime selectedDate;
   final DateTime currentDate;
-  final List<Friend> friends;
-  final List<int> achievements;
+  final List<Profile> friends;
+  final List<Profile> friendsRequestsReceived;
+  final List<Profile> friendsRequestsSent;
   final FriendsScreenStateStatus status;
-  final bool displayFunFront;
+  final String searchText;
+  final bool searchOpen;
 
   const FriendsScreenState({
-    required this.selectedDate,
     required this.currentDate,
-    required this.friend,
     required this.friends,
-    required this.achievements,
+    required this.friendsRequestsReceived,
+    required this.friendsRequestsSent,
     required this.status,
-    required this.displayFunFront,
+    required this.searchText,
+    required this.searchOpen,
   });
 
-  factory FriendsScreenState.initial() => GoalScreenState(
-        selectedDate: DateTime.now(),
+  factory FriendsScreenState.initial() => FriendsScreenState(
         currentDate: DateTime.now(),
-        goal: Goal(text: '', createdAt: DateTime(0), authorId: 0),
-        goals: [],
-        achievements: [],
-        status: GoalScreenStateStatus.ready,
-        displayFunFront: true,
+        friends: const [],
+        friendsRequestsReceived: const [],
+        friendsRequestsSent: const [],
+        status: FriendsScreenStateStatus.ready,
+        searchText: '',
+        searchOpen: false,
       );
 
-  GoalScreenState copyWith({
-    DateTime? selectedDate,
+  FriendsScreenState copyWith({
     DateTime? currentDate,
-    Goal? goal,
-    List<Goal>? goals,
-    List<int>? achievements,
-    GoalScreenStateStatus? status,
-    bool displayFunFront = true,
+    List<Profile>? friends,
+    List<Profile>? friendsRequestsReceived,
+    List<Profile>? friendsRequestsSent,
+    FriendsScreenStateStatus? status,
+    String? searchText,
+    bool? searchOpen,
   }) {
-    return GoalScreenState(
-      selectedDate: selectedDate ?? this.selectedDate,
+    return FriendsScreenState(
       currentDate: currentDate ?? this.currentDate,
-      goal: goal ?? this.goal,
-      goals: goals ?? this.goals,
-      achievements: achievements ?? this.achievements,
+      friends: friends ?? this.friends,
+      friendsRequestsReceived:
+          friendsRequestsReceived ?? this.friendsRequestsReceived,
+      friendsRequestsSent: friendsRequestsSent ?? this.friendsRequestsSent,
       status: status ?? this.status,
-      displayFunFront: displayFunFront,
+      searchText: searchText ?? this.searchText,
+      searchOpen: searchOpen ?? this.searchOpen,
     );
   }
 
   @override
   List<Object> get props => [
-        selectedDate,
         currentDate,
-        goal,
-        goals,
-        achievements,
+        friends,
+        friendsRequestsReceived,
+        friendsRequestsSent,
         status,
-        displayFunFront
+        searchText,
+        searchOpen,
       ];
 }

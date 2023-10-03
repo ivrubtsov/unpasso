@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:goal_app/core/consts/app_avatars.dart';
+import 'package:goal_app/core/consts/keys.dart';
 import 'package:goal_app/feachers/goals/domain/entities/goal.dart';
 import 'package:goal_app/core/consts/app_colors.dart';
 import 'package:goal_app/core/consts/app_fonts.dart';
@@ -87,7 +88,8 @@ class HomeScreenContentState extends State<HomeScreenContent>
     return BlocBuilder<HomeScreenCubit, HomeScreenState>(
       builder: (context, state) {
         final model = context.read<HomeScreenCubit>();
-        if (state.currentDate.day != currentDate.day) {
+        final timeDiff = currentDate.difference(state.currentDate).inMinutes;
+        if (timeDiff > Keys.refreshTimeoutHome) {
           model.getFirstGoals();
         }
         if (state.status == HomeScreenStateStatus.loading) {
@@ -168,13 +170,13 @@ class GoalItem extends StatelessWidget {
                       child: Row(children: [
                         const Icon(
                           Icons.star,
-                          color: AppColors.homeGoalAuthorRating,
+                          color: AppColors.homeGoalIconRating,
                         ),
                         Text(
                           goal.authorRating.toString(),
                           style: AppFonts.homeGoalAuthorRating,
                           textAlign: TextAlign.left,
-                        )
+                        ),
                       ]),
                     )
                   ],
