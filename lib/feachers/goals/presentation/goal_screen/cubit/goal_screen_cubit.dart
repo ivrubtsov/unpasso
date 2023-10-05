@@ -5,6 +5,7 @@ import 'package:goal_app/core/consts/achievements.dart';
 import 'package:goal_app/core/consts/app_colors.dart';
 import 'package:goal_app/core/consts/app_fonts.dart';
 import 'package:goal_app/core/consts/funnytasks.dart';
+import 'package:goal_app/core/consts/keys.dart';
 import 'package:goal_app/core/exceptions/exceptions.dart';
 import 'package:goal_app/core/navigation/app_router.dart';
 import 'package:goal_app/core/widgets/error_presentor.dart';
@@ -61,6 +62,36 @@ class GoalScreenCubit extends Cubit<GoalScreenState> {
     }
   }
 */
+
+// CHANGE GOAL VISIBILITY (PRIVACY)
+  void changePrivacy(Privacy privacy) {
+    switch (privacy) {
+      case Privacy.isPrivate:
+        emit(state.copyWith(
+            goal: state.goal.copyWith(
+          isPrivate: true,
+          isFriends: false,
+          isPublic: false,
+        )));
+        return;
+      case Privacy.isFriends:
+        emit(state.copyWith(
+            goal: state.goal.copyWith(
+          isPrivate: false,
+          isFriends: true,
+          isPublic: false,
+        )));
+        return;
+      case Privacy.isPublic:
+        emit(state.copyWith(
+            goal: state.goal.copyWith(
+          isPrivate: false,
+          isFriends: false,
+          isPublic: true,
+        )));
+        return;
+    }
+  }
 
 // МЕНЯЕМ ТЕКСТ ЦЕЛИ В STATE
   void changeGoal(String value) {

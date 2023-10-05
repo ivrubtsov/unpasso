@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:goal_app/core/consts/keys.dart';
 import 'package:goal_app/core/widgets/fun.dart';
 import 'package:goal_app/core/widgets/mega_menu.dart';
 import 'package:goal_app/feachers/goals/data/models/goal_model/goal_model.dart';
@@ -320,9 +321,9 @@ class GoalsMainContainer extends StatelessWidget {
                                           authorAvatar: state.profile.avatar,
                                           isCompleted: false,
                                           isExist: true,
-                                          isPublic: false,
+                                          isPublic: true,
                                           isFriends: false,
-                                          isPrivate: true,
+                                          isPrivate: false,
                                           likeUsers: const [],
                                           likes: 0,
                                         ));
@@ -352,7 +353,105 @@ class GoalsMainContainer extends StatelessWidget {
                             ],
                           ),
                           // GOAL TEXT INPUT FIELD
-                          GoalTextField(),
+                          const Expanded(
+                            child: GoalTextField(),
+                          ),
+                          // GOAL PRIVACY (VISIBILITY) BUTTONS
+                          Container(
+                            height: 40.0,
+                            alignment: Alignment.center,
+                            child: Row(
+                              children: [
+                                state.goal.isPrivate
+                                    ? const Column(children: [
+                                        Icon(
+                                          Icons.person,
+                                          color: AppColors.goalPrivacyActive,
+                                          size: 20.0,
+                                        ),
+                                        Text(
+                                          'Private',
+                                          style: AppFonts.goalPrivacyActive,
+                                        ),
+                                      ])
+                                    : Column(children: [
+                                        IconButton(
+                                          onPressed: () {
+                                            model.changePrivacy(
+                                                Privacy.isPrivate);
+                                          },
+                                          icon: const Icon(
+                                            Icons.person,
+                                            color: AppColors.goalPrivacy,
+                                            size: 20.0,
+                                          ),
+                                        ),
+                                        const Text(
+                                          'Private',
+                                          style: AppFonts.goalPrivacy,
+                                        ),
+                                      ]),
+                                state.goal.isFriends
+                                    ? const Column(children: [
+                                        Icon(
+                                          Icons.people,
+                                          color: AppColors.goalPrivacyActive,
+                                          size: 20.0,
+                                        ),
+                                        Text(
+                                          'Friends',
+                                          style: AppFonts.goalPrivacyActive,
+                                        ),
+                                      ])
+                                    : Column(children: [
+                                        IconButton(
+                                          onPressed: () {
+                                            model.changePrivacy(
+                                                Privacy.isFriends);
+                                          },
+                                          icon: const Icon(
+                                            Icons.people,
+                                            color: AppColors.goalPrivacy,
+                                            size: 20.0,
+                                          ),
+                                        ),
+                                        const Text(
+                                          'Friends',
+                                          style: AppFonts.goalPrivacy,
+                                        ),
+                                      ]),
+                                state.goal.isPublic
+                                    ? const Column(children: [
+                                        Icon(
+                                          Icons.public,
+                                          color: AppColors.goalPrivacyActive,
+                                          size: 20.0,
+                                        ),
+                                        Text(
+                                          'Public',
+                                          style: AppFonts.goalPrivacyActive,
+                                        ),
+                                      ])
+                                    : Column(children: [
+                                        IconButton(
+                                          onPressed: () {
+                                            model.changePrivacy(
+                                                Privacy.isPublic);
+                                          },
+                                          icon: const Icon(
+                                            Icons.public,
+                                            color: AppColors.goalPrivacy,
+                                            size: 20.0,
+                                          ),
+                                        ),
+                                        const Text(
+                                          'Public',
+                                          style: AppFonts.goalPrivacy,
+                                        ),
+                                      ]),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     );
@@ -609,6 +708,7 @@ class GoalTextField extends StatelessWidget {
         hintStyle: AppFonts.goal,
         border: InputBorder.none,
       ),
+      maxLines: Keys.goalInputFieldMaxLines,
     );
   }
 }

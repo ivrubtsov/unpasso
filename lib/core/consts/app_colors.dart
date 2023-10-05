@@ -27,6 +27,8 @@ class AppColors {
   static const goalHint = Color.fromRGBO(43, 39, 239, 1);
   static const goalCompleted = Color.fromRGBO(30, 160, 41, 1);
   static const goalInCompleted = Color.fromRGBO(241, 94, 142, 1);
+  static const goalPrivacy = Color.fromRGBO(80, 85, 92, 1);
+  static const goalPrivacyActive = Color.fromRGBO(43, 39, 239, 1);
   // Funny goals
   static const funBg = Color.fromRGBO(248, 250, 251, 1);
   static const funHeader = Colors.black;

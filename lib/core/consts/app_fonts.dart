@@ -95,6 +95,20 @@ class AppFonts {
     color: AppColors.goalInCompleted,
   );
 
+  static const goalPrivacy = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 12.0,
+    color: AppColors.goalPrivacy,
+  );
+
+  static const goalPrivacyActive = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 12.0,
+    color: AppColors.goalPrivacyActive,
+  );
+
   static const funHeader = TextStyle(
     fontFamily: 'Fredoka',
     fontWeight: FontWeight.w500,

@@ -124,8 +124,6 @@ class EmailAuthRepoImpl implements AuthRepo {
   @override
   void logOut() {
     sessionRepo.removeSessionData();
-    // TODO: implement logOut
-    // throw UnimplementedError();
   }
 
   @override

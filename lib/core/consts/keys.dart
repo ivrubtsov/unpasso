@@ -5,4 +5,11 @@ class Keys {
   static const achievements = 'achievements';
   static const refreshTimeoutHome = 10;
   static const refreshTimeoutFriends = 10;
+  static const goalInputFieldMaxLines = 5;
+}
+
+enum Privacy {
+  isPrivate,
+  isFriends,
+  isPublic,
 }
