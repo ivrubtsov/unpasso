@@ -104,7 +104,6 @@ class AppRouter {
                 friendsRepo: sl(),
                 sessionRepo: sl(),
                 profileRepo: sl(),
-                goalsRepo: sl(),
               )..initFriendsScreen(),
               child: const FriendsScreen(),
             ));

@@ -4,6 +4,7 @@ import 'package:goal_app/core/consts/api_consts.dart';
 import 'package:goal_app/core/exceptions/exceptions.dart';
 import 'package:goal_app/feachers/auth/domain/repos/session_repo.dart';
 import 'package:goal_app/feachers/friends/domain/repos/friends_repo.dart';
+import 'package:goal_app/feachers/profile/data/models/profile_model/profile_model.dart';
 import 'package:goal_app/feachers/profile/domain/entities/profile.dart';
 
 class FriendsRepoImpl implements FriendsRepo {
@@ -24,13 +25,68 @@ class FriendsRepoImpl implements FriendsRepo {
   }
 
   @override
-  Future<void> getFriends() async {
+  Future<List<Profile>> getFriends() async {
     try {
       final response = await _dio().get<List<dynamic>>(ApiConsts.getFriends());
 
       if (response.data == null) throw ServerException();
       //final goals = response.data!.map((e) => GoalModel.fromJson(e)).toList();
 
+      final users = response.data!.map((e) {
+        return ProfileModel.fromJson(e);
+      }).toList();
+
+      return users;
+    } on DioError {
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<List<Profile>> getFriendsRequestsReceived() async {
+    try {
+      final response = await _dio()
+          .get<List<dynamic>>(ApiConsts.getFriendsRequestsReceived());
+
+      if (response.data == null) throw ServerException();
+      //final goals = response.data!.map((e) => GoalModel.fromJson(e)).toList();
+
+      final users = response.data!.map((e) {
+        return ProfileModel.fromJson(e);
+      }).toList();
+
+      return users;
+    } on DioError {
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<List<Profile>> getFriendsRequestsSent() async {
+    try {
+      final response =
+          await _dio().get<List<dynamic>>(ApiConsts.getFriendsRequestsSent());
+
+      if (response.data == null) throw ServerException();
+      //final goals = response.data!.map((e) => GoalModel.fromJson(e)).toList();
+
+      final users = response.data!.map((e) {
+        return ProfileModel.fromJson(e);
+      }).toList();
+
+      return users;
+    } on DioError {
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<void> processRequest(Profile profile, String action) async {
+    try {
+      final response = await _dio().post<List<dynamic>>(
+          ApiConsts.processFriendsRequest(profile.id, action));
+
+      if (response.data == null) throw ServerException();
       return;
     } on DioError {
       throw ServerException();
@@ -38,22 +94,21 @@ class FriendsRepoImpl implements FriendsRepo {
   }
 
   @override
-  Future<void> acceptRequest(Profile profile) async {
-    return;
-  }
+  Future<List<Profile>> searchFriends(String text) async {
+    try {
+      final response =
+          await _dio().get<List<dynamic>>(ApiConsts.searchFriends(text));
 
-  @override
-  Future<void> rejectRequest(Profile profile) async {
-    return;
-  }
+      if (response.data == null) throw ServerException();
+      //final goals = response.data!.map((e) => GoalModel.fromJson(e)).toList();
 
-  @override
-  Future<void> removeFriend(Profile profile) async {
-    return;
-  }
+      final users = response.data!.map((e) {
+        return ProfileModel.fromJson(e);
+      }).toList();
 
-  @override
-  Future<List<Profile>> searchFriends() async {
-    return [];
+      return users;
+    } on DioError {
+      throw ServerException();
+    }
   }
 }

@@ -53,6 +53,7 @@ class HomeRepoImpl implements HomeRepo {
       if (response.data == null) throw ServerException();
 
       // filtering friends-only goals
+      /*
       final goals = response.data!
           .map((e) {
             final goal = GoalModel.fromJson(e);
@@ -61,6 +62,13 @@ class HomeRepoImpl implements HomeRepo {
             } else {
               return null;
             }
+          })
+          .whereNotNull()
+          .toList();
+      */
+      final goals = response.data!
+          .map((e) {
+            return GoalModel.fromJson(e);
           })
           .whereNotNull()
           .toList();

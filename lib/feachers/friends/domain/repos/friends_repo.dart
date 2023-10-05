@@ -1,13 +1,13 @@
 import 'package:goal_app/feachers/profile/domain/entities/profile.dart';
 
 abstract class FriendsRepo {
-  Future<void> getFriends();
+  Future<List<Profile>> getFriends();
 
-  Future<void> acceptRequest(Profile profile);
+  Future<List<Profile>> getFriendsRequestsReceived();
 
-  Future<void> rejectRequest(Profile profile);
+  Future<List<Profile>> getFriendsRequestsSent();
 
-  Future<void> removeFriend(Profile profile);
+  Future<void> processRequest(Profile profile, String action);
 
-  Future<List<Profile>> searchFriends();
+  Future<List<Profile>> searchFriends(String text);
 }

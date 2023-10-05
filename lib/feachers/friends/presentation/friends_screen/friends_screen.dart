@@ -86,18 +86,24 @@ class FriendsSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    List<Profile> suggestions =
-        context.read<FriendsScreenCubit>().searchFriends();
-    return ListView.builder(
-        itemCount: suggestions.length,
-        itemBuilder: (context, index) {
-          /* final suggestion = suggestions[index];
-          return ListTile(
-            title: Text(suggestion.name ?? '@${suggestion.userName}'),
-            onTap: () {},
-          ); */
-          return FriendSearchProfile(profile: suggestions[index]);
-        });
+    return FutureBuilder<List<Profile>>(
+      future: context.read<FriendsScreenCubit>().searchFriends(query),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.data != null) {
+          return ListView.builder(
+              //itemCount: suggestions.length,
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                return FriendSearchProfile(profile: snapshot.data![index]);
+              });
+        } else {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
+    );
   }
 }
 
@@ -152,7 +158,7 @@ class FriendsScreenContentState extends State<FriendsScreenContent>
         final model = context.read<FriendsScreenCubit>();
         final timeDiff = currentDate.difference(state.currentDate).inMinutes;
         if (timeDiff > Keys.refreshTimeoutFriends) {
-          model.getFriends();
+          model.getFriendsnRequests();
         }
         if (state.status == FriendsScreenStateStatus.loading) {
           return const Center(
@@ -160,7 +166,7 @@ class FriendsScreenContentState extends State<FriendsScreenContent>
           );
         }
         return RefreshIndicator(
-          onRefresh: () => model.getFriends(),
+          onRefresh: () => model.getFriendsnRequests(),
           child: const Column(
             children: [
               //SearchFriends(),
@@ -460,6 +466,7 @@ class FriendsList extends StatelessWidget {
                     return FriendProfile(
                       key: ValueKey<Profile>(friends[index]),
                       profile: friends[index],
+                      isFriend: true,
                     );
                   }),
             ],
@@ -477,8 +484,10 @@ class FriendProfile extends StatelessWidget {
   const FriendProfile({
     Key? key,
     required this.profile,
+    required this.isFriend,
   }) : super(key: key);
   final Profile profile;
+  final bool isFriend;
 
   @override
   Widget build(BuildContext context) {
@@ -518,12 +527,28 @@ class FriendProfile extends StatelessWidget {
                             textAlign: TextAlign.left,
                           ),
                         ]),
-                      )
+                      ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
+            isFriend
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10.0, vertical: 10.0),
+                    child: Center(
+                      child: IconButton(
+                        onPressed: () => model.removeFriend(profile),
+                        icon: const Icon(
+                          Icons.delete,
+                          color: AppColors.friendsRemove,
+                          size: 32.0,
+                        ),
+                      ),
+                    ),
+                  )
+                : Container()
           ],
         ),
       );

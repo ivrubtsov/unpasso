@@ -67,6 +67,7 @@ class AppColors {
   static const friendsReject = Color.fromRGBO(241, 94, 142, 1);
   static const friendsInvite = Color.fromRGBO(80, 85, 92, 1);
   static const friendsInviteActive = Color.fromRGBO(43, 39, 239, 1);
+  static const friendsRemove = Colors.black;
 
   // Modal windows
   static const modalBg = Color.fromRGBO(220, 231, 255, 1);

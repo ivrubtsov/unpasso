@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:goal_app/core/consts/achievements.dart';
 import 'package:goal_app/core/consts/app_colors.dart';
 import 'package:goal_app/core/consts/app_fonts.dart';
+import 'package:goal_app/core/exceptions/exceptions.dart';
 import 'package:goal_app/feachers/auth/domain/repos/session_repo.dart';
 import 'package:goal_app/feachers/friends/domain/repos/friends_repo.dart';
 import 'package:goal_app/feachers/profile/domain/entities/profile.dart';
@@ -25,6 +26,11 @@ class FriendsScreenCubit extends Cubit<FriendsScreenState> {
   final SessionRepo _sessionRepo;
   final ProfileRepo _profileRepo;
 
+// FRIENDS PAGE INITIALIZATION
+  void initFriendsScreen() async {
+    getFriendsnRequests();
+  }
+
 // CHANGING THE SEARCH TEXT IN THE STATE
   void changeSearchText(String value) {
     if (state.searchText == value) return;
@@ -36,27 +42,53 @@ class FriendsScreenCubit extends Cubit<FriendsScreenState> {
     return _sessionRepo.sessionData!.id;
   }
 
-  Future<void> getFriends() async {
-    return;
+  Future<void> getFriendsnRequests() async {
+    try {
+      emit(
+        state.copyWith(
+          status: FriendsScreenStateStatus.loading,
+        ),
+      );
+
+      List<Profile> friends = await _friendsRepo.getFriends();
+      List<Profile> friendsRequestsReceived =
+          await _friendsRepo.getFriendsRequestsReceived();
+      List<Profile> friendsRequestsSent =
+          await _friendsRepo.getFriendsRequestsSent();
+      emit(
+        state.copyWith(
+          friends: friends,
+          friendsRequestsReceived: friendsRequestsReceived,
+          friendsRequestsSent: friendsRequestsSent,
+          status: FriendsScreenStateStatus.ready,
+        ),
+      );
+    } on ServerException {
+      emit(state.copyWith(status: FriendsScreenStateStatus.error));
+    }
   }
 
   void acceptRequest(Profile profile) {
+    _friendsRepo.processRequest(profile, 'accept');
+    getFriendsnRequests();
     return;
   }
 
   void rejectRequest(Profile profile) {
+    _friendsRepo.processRequest(profile, 'reject');
+    getFriendsnRequests();
     return;
   }
 
   void removeFriend(Profile profile) {
+    _friendsRepo.processRequest(profile, 'remove');
+    getFriendsnRequests();
     return;
   }
 
-  List<Profile> searchFriends() {
-    return [];
-  }
-
   void inviteFriend(Profile profile) {
+    _friendsRepo.processRequest(profile, 'invite');
+    getFriendsnRequests();
     return;
   }
 
@@ -64,6 +96,11 @@ class FriendsScreenCubit extends Cubit<FriendsScreenState> {
     var findById = (obj) => obj.id == profile.id;
     var result = state.friendsRequestsSent.where(findById);
     return result.isNotEmpty;
+  }
+
+  Future<List<Profile>> searchFriends(String text) async {
+    List<Profile> friends = await _friendsRepo.searchFriends(text);
+    return friends;
   }
 
   void openSearchBar() {
