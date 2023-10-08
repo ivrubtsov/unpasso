@@ -15,6 +15,7 @@ class AppAvatars {
     id = id ?? 0;
     return Image(
       width: 56.0,
+      height: 56.0,
       image: AssetImage('assets/avatars/$id.png'),
     );
   }

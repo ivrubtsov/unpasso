@@ -47,3 +47,6 @@ app.*.map.json
 
 # Secure access
 lib/core/consts/api_key.dart
+
+# Licensed content
+assets/avatars/
