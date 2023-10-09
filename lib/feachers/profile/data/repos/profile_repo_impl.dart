@@ -41,7 +41,10 @@ class ProfileRepoImpl implements ProfileRepo {
       final json = response.data;
       final profile = ProfileModel.fromJson(json);
       profile.achievements = achievements;
-      await _dio().post(profile.submitUrlString());
+      await _dio().post(
+        ApiConsts.updateUserJSON(profile.id),
+        data: jsonEncode(profile.submitJSON()),
+      );
     } on DioError {
       throw ServerException();
     }

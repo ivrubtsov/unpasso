@@ -14,6 +14,8 @@ class ApiConsts {
   ) =>
       '$_baseUrl/users?username=$username&name=$name&email=$email&password=$password&description=$description';
 
+  static String registerUserJSON() => '$_baseUrl/users';
+
   static String deleteUser(int id) =>
       '$_baseUrl/users/$id?force=True&reassign=111';
 
@@ -22,6 +24,7 @@ class ApiConsts {
   static String updateUser(
           int id, String name, String userName, String description) =>
       '$_baseUrl/users/$id?name=$name&username=$userName&description=$description';
+  static String updateUserJSON(int id) => '$_baseUrl/users/$id';
 
   static String getFriends() => '$_baseUrl/friends';
 
@@ -35,6 +38,8 @@ class ApiConsts {
 
   static String processFriendsRequest(int id, String action) =>
       '$_baseUrl/friends/requests/$id?action=$action';
+  static String processFriendsRequestJSON(int id) =>
+      '$_baseUrl/friends/requests/$id';
 
 /*  static String createGoal(String title, int authorId, String date) =>
       '$_baseUrl/posts?status=publish&title=$title&author=$authorId&categories=6&date_gmt=$date';*/

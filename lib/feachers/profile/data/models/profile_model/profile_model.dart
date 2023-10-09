@@ -131,4 +131,17 @@ class ProfileModel extends Profile {
       '{"avatar":$avatar,"achievements":[$achievementsString],"rating":$rating,"friends":[$friendsString],"friendsRequestsReceived":[$friendsRequestsReceivedString],"friendsRequestsSent":[$friendsRequestsSentString]}',
     );
   }
+
+  Map<String, String> submitJSON() {
+    final achievementsString = achievements.join(',');
+    final friendsString = friends.join(',');
+    final friendsRequestsReceivedString = friendsRequestsReceived.join(',');
+    final friendsRequestsSentString = friendsRequestsSent.join(',');
+    return {
+      'name': name ?? 'Unknown',
+      'userName': userName ?? '',
+      'description':
+          '{"avatar":$avatar,"achievements":[$achievementsString],"rating":$rating,"friends":[$friendsString],"friendsRequestsReceived":[$friendsRequestsReceivedString],"friendsRequestsSent":[$friendsRequestsSentString]}',
+    };
+  }
 }

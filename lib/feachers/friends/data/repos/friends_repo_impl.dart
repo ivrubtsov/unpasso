@@ -83,8 +83,13 @@ class FriendsRepoImpl implements FriendsRepo {
   @override
   Future<void> processRequest(Profile profile, String action) async {
     try {
+      final data = {
+        'action': action,
+      };
       final response = await _dio().post<List<dynamic>>(
-          ApiConsts.processFriendsRequest(profile.id, action));
+        ApiConsts.processFriendsRequestJSON(profile.id),
+        data: jsonEncode(data),
+      );
 
       if (response.data == null) throw ServerException();
       return;

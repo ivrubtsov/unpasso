@@ -132,9 +132,19 @@ class GoalsRepoImpl implements GoalsRepo {
     try {
       final id = goal.id;
       if (id == null) throw ServerException();
-      final String url = ApiConsts.completeGoal(id);
-      // final response = await _dio().post(url);
-      await _dio().post(url);
+      final String url = ApiConsts.updateGoal(id);
+      final List<int> tags = [8];
+      if (goal.isPublic) tags.add(26);
+      if (goal.isFriends) tags.add(27);
+      if (goal.isPrivate) tags.add(28);
+      final data = {
+        'tags': tags,
+      };
+      await _dio().post(
+        url,
+        data: jsonEncode(data),
+      );
+      return;
       // final updatedGoal = GoalModel.fromJson(response.data);
       // await _saveGoalToLocal(updatedGoal);
     } on DioError {
