@@ -73,8 +73,7 @@ class GoalModel extends Goal {
     List<int> likeUsers;
     bool like = false;
     final tags = json['tags'] as List<dynamic>?;
-    // Если тэг == 8, то цель выполнена
-    // С другой стороны если массив с тэгами пустой, тогда она не выполнена
+    // If tag == 8, then the goal is completed
     if (tags == null || tags.isEmpty) {
       checkIsCompleted = false;
       checkIsPublic = false;
@@ -93,7 +92,7 @@ class GoalModel extends Goal {
       }
     }
     final description = json['content']['rendered'] as Map<String, dynamic>?;
-    if (description == null || description == {}) {
+    if (description == null || description.isEmpty || description == {}) {
       // TODO: Update author's name and username
       authorName = '';
       authorUserName = '';
@@ -102,12 +101,28 @@ class GoalModel extends Goal {
       friendsUsers = [];
       likeUsers = [];
     } else {
+      List<int> users = [];
       authorName = description['authorName'];
       authorUserName = description['authorUserName'];
       authorAvatar = description['authorAvatar'];
       authorRating = description['authorRating'];
-      friendsUsers = description['friendsUsers'];
-      likeUsers = description['likeUsers'];
+      if (description['friendsUsers'].isNotEmpty) {
+        for (int user in description['friendsUsers']) {
+          users.add(user);
+        }
+        friendsUsers = users;
+      } else {
+        friendsUsers = [];
+      }
+      users = [];
+      if (description['likeUsers'].isNotEmpty) {
+        for (int user in description['likeUsers']) {
+          users.add(user);
+        }
+        likeUsers = users;
+      } else {
+        likeUsers = [];
+      }
     }
     if (id != null && likeUsers.contains(id)) {
       like = true;

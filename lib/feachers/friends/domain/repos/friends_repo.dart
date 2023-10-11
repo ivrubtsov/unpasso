@@ -7,7 +7,9 @@ abstract class FriendsRepo {
 
   Future<List<Profile>> getFriendsRequestsSent();
 
-  Future<void> processRequest(Profile profile, String action);
+  Future<Map<String, dynamic>> getFriendsData();
+
+  Future<Map<String, dynamic>> processRequest(Profile profile, String action);
 
   Future<List<Profile>> searchFriends(String text);
 }

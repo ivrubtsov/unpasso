@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:goal_app/core/consts/app_avatars.dart';
 import 'package:goal_app/core/consts/keys.dart';
+import 'package:goal_app/core/widgets/mega_menu.dart';
 import 'package:goal_app/feachers/goals/domain/entities/goal.dart';
 import 'package:goal_app/core/consts/app_colors.dart';
 import 'package:goal_app/core/consts/app_fonts.dart';
@@ -33,7 +34,16 @@ class HomeScreen extends StatelessWidget {
         actions: const [],
       ),
       backgroundColor: AppColors.bg,
-      body: const HomeScreenContent(),
+      body: const Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: HomeScreenContent(),
+            ),
+          ),
+          MegaMenu(active: 1),
+        ],
+      ),
     );
   }
 }

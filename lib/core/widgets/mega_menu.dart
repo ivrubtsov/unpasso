@@ -15,6 +15,7 @@ class MegaMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 4.0),
       color: AppColors.megaMenuBg,
       height: 64,
       child: Row(
@@ -227,6 +228,7 @@ class MegaButton extends StatelessWidget {
           Icon(
             buttonIcon,
             color: AppColors.megaMenuActive,
+            size: 32.0,
           ),
           Text(
             label,
@@ -244,8 +246,11 @@ class MegaButton extends StatelessWidget {
             icon: Icon(
               buttonIcon,
               color: AppColors.megaMenu,
+              size: 32.0,
             ),
             iconSize: 32.0,
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
           ),
           Text(
             label,

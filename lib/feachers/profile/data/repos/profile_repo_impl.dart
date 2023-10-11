@@ -61,7 +61,6 @@ class ProfileRepoImpl implements ProfileRepo {
       if (response.data == null || response.data!.isEmpty) {
         return [];
       }
-
       final json = response.data;
       if (json['description'] == null || json['description'] == '') {
         return [];

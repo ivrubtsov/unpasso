@@ -8,7 +8,8 @@ enum AuthExceptionType {
   usernameExists,
   invalidEmail,
   userNotExist,
-  incorrectPassword
+  incorrectPassword,
+  authRequired,
 }
 
 class AuthException extends DetailedException {
@@ -28,6 +29,8 @@ class AuthException extends DetailedException {
         return AuthException.type(AuthExceptionType.emailExists);
       case 'Invalid parameter(s): email':
         return AuthException.type(AuthExceptionType.invalidEmail);
+      case 'Authentication required':
+        return AuthException.type(AuthExceptionType.authRequired);
 
       default:
         return AuthException.type(AuthExceptionType.unknown);
@@ -60,6 +63,9 @@ class AuthException extends DetailedException {
         break;
       case AuthExceptionType.incorrectPassword:
         typeMessage = 'Password is incorrect';
+        break;
+      case AuthExceptionType.authRequired:
+        typeMessage = 'Authentication is required';
         break;
     }
     return AuthException(typeMessage, type);

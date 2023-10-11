@@ -32,39 +32,44 @@ class ProfileScreen extends StatelessWidget {
               color: AppColors.headerIcon,
             )
           ],
+          /*
           leading: IconButton(
             onPressed: () =>
                 context.read<ProfileScreenCubit>().onBackTapped(context),
             icon: const Icon(Icons.arrow_back_ios),
             color: AppColors.headerIcon,
           ),
+          */
         ),
         backgroundColor: AppColors.profileBg,
         body: Column(
           children: [
-            PersonalData(),
-            AchievementsView(),
-            // Settings(),
-            Container(
-              height: 90.0,
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
-              alignment: Alignment.center,
-              child: Modal(
-                buttonText: 'Delete account',
-                title: 'Delete account',
-                content:
-                    'Are you sure you want to erase your account and all the data associated with it?',
-                buttonOkText: 'Yes, delete',
-                buttonCancelText: 'Cancel',
-                onPressedOk: () => context
-                    .read<ProfileScreenCubit>()
-                    .onDeleteAccountTapped(context),
-                onPressedCancel: () => Navigator.pop(context),
+            Expanded(
+              child: Column(
+                children: [
+                  const PersonalData(),
+                  const AchievementsView(),
+                  // Settings(),
+                  Container(
+                    height: 90.0,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20.0, vertical: 20.0),
+                    alignment: Alignment.center,
+                    child: Modal(
+                      buttonText: 'Delete account',
+                      title: 'Delete account',
+                      content:
+                          'Are you sure you want to erase your account and all the data associated with it?',
+                      buttonOkText: 'Yes, delete',
+                      buttonCancelText: 'Cancel',
+                      onPressedOk: () => context
+                          .read<ProfileScreenCubit>()
+                          .onDeleteAccountTapped(context),
+                      onPressedCancel: () => Navigator.pop(context),
+                    ),
+                  ),
+                ],
               ),
-            ),
-            const Expanded(
-              child: Placeholder(),
             ),
             const MegaMenu(active: 5),
           ],
@@ -82,6 +87,7 @@ class PersonalData extends StatelessWidget {
     final model = context.read<ProfileScreenCubit>();
     final name = model.getName();
     final username = model.getUsername();
+    final rating = model.getRating();
     return BlocBuilder<ProfileScreenCubit, ProfileScreenState>(
         builder: (context, state) {
       return Padding(
@@ -89,23 +95,48 @@ class PersonalData extends StatelessWidget {
         child: Row(
           children: [
             AppAvatars.getAvatarImage(state.profile.avatar),
-            /*
-            const Icon(
-              Icons.person,
-              size: 56.0,
+            const SizedBox(
+              width: 20.0,
             ),
-            */
-            Column(
-              children: [
-                Text(
-                  name,
-                  style: AppFonts.profileName,
-                ),
-                Text(
-                  '@$username',
-                  style: AppFonts.profileUsername,
-                ),
-              ],
+            Expanded(
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      name,
+                      style: AppFonts.profileName,
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            '@$username',
+                            style: AppFonts.friendsUsername,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 56.0,
+                        child: Row(children: [
+                          const Icon(
+                            Icons.star,
+                            color: AppColors.friendsIconRating,
+                          ),
+                          Text(
+                            rating.toString(),
+                            style: AppFonts.friendsRating,
+                            textAlign: TextAlign.left,
+                          ),
+                        ]),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -154,7 +185,7 @@ class AchievementsView extends StatelessWidget {
                       '$achCollected of $achTotal collected',
                       style: AppFonts.achText,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 240,
                       child: AchievementsList(),
                     ),

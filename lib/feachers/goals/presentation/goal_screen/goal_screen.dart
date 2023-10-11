@@ -35,17 +35,26 @@ class GoalScreen extends StatelessWidget {
           'My goals',
           style: AppFonts.header,
         ),
-        actions: [
+        actions: const [
+          /*
           IconButton(
             onPressed: () =>
                 context.read<GoalScreenCubit>().onProfileTapped(context),
             icon: const Icon(Icons.person),
             color: AppColors.headerIcon,
           )
+          */
         ],
       ),
       backgroundColor: AppColors.bg,
-      body: const GoalScreenContent(),
+      body: const Column(
+        children: [
+          Expanded(
+            child: GoalScreenContent(),
+          ),
+          MegaMenu(active: 3),
+        ],
+      ),
     );
   }
 }
@@ -119,10 +128,6 @@ class GoalScreenContentState extends State<GoalScreenContent>
                 child: QuoteWidget(),
               ),
             ),*/
-            const Expanded(
-              child: Placeholder(),
-            ),
-            const MegaMenu(active: 3),
           ],
         );
       },
@@ -357,11 +362,11 @@ class GoalsMainContainer extends StatelessWidget {
                             child: GoalTextField(),
                           ),
                           // GOAL PRIVACY (VISIBILITY) BUTTONS
-                          Container(
+                          SizedBox(
                             height: 40.0,
-                            alignment: Alignment.center,
                             child: Row(
                               children: [
+                                const Expanded(child: Placeholder()),
                                 state.goal.isPrivate
                                     ? const Column(children: [
                                         Icon(
@@ -385,12 +390,18 @@ class GoalsMainContainer extends StatelessWidget {
                                             color: AppColors.goalPrivacy,
                                             size: 20.0,
                                           ),
+                                          iconSize: 20.0,
+                                          padding: EdgeInsets.zero,
+                                          constraints: const BoxConstraints(),
                                         ),
                                         const Text(
                                           'Private',
                                           style: AppFonts.goalPrivacy,
                                         ),
                                       ]),
+                                const SizedBox(
+                                  width: 20.0,
+                                ),
                                 state.goal.isFriends
                                     ? const Column(children: [
                                         Icon(
@@ -414,12 +425,18 @@ class GoalsMainContainer extends StatelessWidget {
                                             color: AppColors.goalPrivacy,
                                             size: 20.0,
                                           ),
+                                          iconSize: 20.0,
+                                          padding: EdgeInsets.zero,
+                                          constraints: const BoxConstraints(),
                                         ),
                                         const Text(
                                           'Friends',
                                           style: AppFonts.goalPrivacy,
                                         ),
                                       ]),
+                                const SizedBox(
+                                  width: 20.0,
+                                ),
                                 state.goal.isPublic
                                     ? const Column(children: [
                                         Icon(
@@ -443,12 +460,16 @@ class GoalsMainContainer extends StatelessWidget {
                                             color: AppColors.goalPrivacy,
                                             size: 20.0,
                                           ),
+                                          iconSize: 20.0,
+                                          padding: EdgeInsets.zero,
+                                          constraints: const BoxConstraints(),
                                         ),
                                         const Text(
                                           'Public',
                                           style: AppFonts.goalPrivacy,
                                         ),
                                       ]),
+                                const Expanded(child: Placeholder()),
                               ],
                             ),
                           ),
@@ -663,34 +684,6 @@ class CompleteGoalBG extends StatelessWidget {
   }
 }
 
-/*
-class QuoteWidget extends StatelessWidget {
-  const QuoteWidget({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: const [
-        Text(
-          '"A journey of a thousand miles begins with a single step"',
-          style: AppFonts.goal,
-        ),
-        SizedBox(height: 20.0),
-        Align(
-          alignment: Alignment.bottomRight,
-          child: Text(
-            'Lao Tzu',
-            style: AppFonts.goalHint,
-          ),
-        ),
-      ],
-    );
-  }
-}
-*/
 class GoalTextField extends StatelessWidget {
   const GoalTextField({
     Key? key,

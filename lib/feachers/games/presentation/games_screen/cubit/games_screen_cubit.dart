@@ -3,17 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:goal_app/core/consts/funnytasks.dart';
 import 'package:goal_app/core/widgets/fun.dart';
-import 'package:goal_app/feachers/auth/domain/repos/session_repo.dart';
 
 part 'games_screen_state.dart';
 
 class GamesScreenCubit extends Cubit<GamesScreenState> {
-  GamesScreenCubit({
-    required SessionRepo sessionRepo,
-  })  : _sessionRepo = sessionRepo,
-        super(GamesScreenState.initial());
-
-  final SessionRepo _sessionRepo;
+  GamesScreenCubit() : super(GamesScreenState.initial());
 
 // ИНИЦИАЛИЗАЦИЯ СТРАНИЦЫ С ЦЕЛЯМИ: ЗАГРУЗКА ВСЕХ ЦЕЛЕЙ И АЧИВОК
   void initGamesScreen() async {}

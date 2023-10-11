@@ -1,12 +1,11 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:goal_app/core/consts/achievements.dart';
-import 'package:goal_app/core/consts/app_colors.dart';
-import 'package:goal_app/core/consts/app_fonts.dart';
 import 'package:goal_app/core/exceptions/exceptions.dart';
+import 'package:goal_app/core/widgets/error_presentor.dart';
 import 'package:goal_app/feachers/auth/domain/repos/session_repo.dart';
 import 'package:goal_app/feachers/friends/domain/repos/friends_repo.dart';
+import 'package:goal_app/feachers/profile/data/models/profile_model/profile_model.dart';
 import 'package:goal_app/feachers/profile/domain/entities/profile.dart';
 import 'package:goal_app/feachers/profile/domain/repos/profile_repo.dart';
 
@@ -42,6 +41,29 @@ class FriendsScreenCubit extends Cubit<FriendsScreenState> {
     return _sessionRepo.sessionData!.id;
   }
 
+  void processFriendsResponse(Map<String, dynamic> json) {
+    List<Profile> friends = [];
+    List<Profile> friendsRequestsReceived = [];
+    List<Profile> friendsRequestsSent = [];
+    for (var json in json['friends']) {
+      friends.add(ProfileModel.fromJson(json));
+    }
+    for (var json in json['friendsRequestsReceived']) {
+      friendsRequestsReceived.add(ProfileModel.fromJson(json));
+    }
+    for (var json in json['friendsRequestsSent']) {
+      friendsRequestsSent.add(ProfileModel.fromJson(json));
+    }
+    emit(
+      state.copyWith(
+        friends: friends,
+        friendsRequestsReceived: friendsRequestsReceived,
+        friendsRequestsSent: friendsRequestsSent,
+      ),
+    );
+    return;
+  }
+
   Future<void> getFriendsnRequests() async {
     try {
       emit(
@@ -49,47 +71,71 @@ class FriendsScreenCubit extends Cubit<FriendsScreenState> {
           status: FriendsScreenStateStatus.loading,
         ),
       );
-
-      List<Profile> friends = await _friendsRepo.getFriends();
-      List<Profile> friendsRequestsReceived =
-          await _friendsRepo.getFriendsRequestsReceived();
-      List<Profile> friendsRequestsSent =
-          await _friendsRepo.getFriendsRequestsSent();
+      final Map<String, dynamic> userData = await _friendsRepo.getFriendsData();
+      processFriendsResponse(userData);
       emit(
         state.copyWith(
-          friends: friends,
-          friendsRequestsReceived: friendsRequestsReceived,
-          friendsRequestsSent: friendsRequestsSent,
           status: FriendsScreenStateStatus.ready,
         ),
       );
+      return;
     } on ServerException {
+      /*ErrorPresentor.showError(context,
+          'Unable to download profile data. Check internet connection');*/
       emit(state.copyWith(status: FriendsScreenStateStatus.error));
     }
   }
 
-  void acceptRequest(Profile profile) {
-    _friendsRepo.processRequest(profile, 'accept');
-    getFriendsnRequests();
-    return;
+  void acceptRequest(Profile profile, BuildContext context) async {
+    try {
+      final Map<String, dynamic> userData =
+          await _friendsRepo.processRequest(profile, 'accept');
+      processFriendsResponse(userData);
+      return;
+    } on ServerException {
+      ErrorPresentor.showError(
+          context, 'Unable to process the request. Check internet connection');
+      emit(state.copyWith(status: FriendsScreenStateStatus.error));
+    }
   }
 
-  void rejectRequest(Profile profile) {
-    _friendsRepo.processRequest(profile, 'reject');
-    getFriendsnRequests();
-    return;
+  void rejectRequest(Profile profile, BuildContext context) async {
+    try {
+      final Map<String, dynamic> userData =
+          await _friendsRepo.processRequest(profile, 'reject');
+      processFriendsResponse(userData);
+      return;
+    } on ServerException {
+      ErrorPresentor.showError(
+          context, 'Unable to process the request. Check internet connection');
+      emit(state.copyWith(status: FriendsScreenStateStatus.error));
+    }
   }
 
-  void removeFriend(Profile profile) {
-    _friendsRepo.processRequest(profile, 'remove');
-    getFriendsnRequests();
-    return;
+  void removeFriend(Profile profile, BuildContext context) async {
+    try {
+      final Map<String, dynamic> userData =
+          await _friendsRepo.processRequest(profile, 'remove');
+      processFriendsResponse(userData);
+      return;
+    } on ServerException {
+      ErrorPresentor.showError(
+          context, 'Unable to process the request. Check internet connection');
+      emit(state.copyWith(status: FriendsScreenStateStatus.error));
+    }
   }
 
-  void inviteFriend(Profile profile) {
-    _friendsRepo.processRequest(profile, 'invite');
-    getFriendsnRequests();
-    return;
+  void inviteFriend(Profile profile, BuildContext context) async {
+    try {
+      final Map<String, dynamic> userData =
+          await _friendsRepo.processRequest(profile, 'invite');
+      processFriendsResponse(userData);
+      return;
+    } on ServerException {
+      ErrorPresentor.showError(
+          context, 'Unable to process the request. Check internet connection');
+      emit(state.copyWith(status: FriendsScreenStateStatus.error));
+    }
   }
 
   bool checkInviteSent(Profile profile) {
@@ -111,56 +157,5 @@ class FriendsScreenCubit extends Cubit<FriendsScreenState> {
   void closeSearchBar() {
     if (!state.searchOpen) return;
     emit(state.copyWith(searchOpen: false));
-  }
-
-// SHOW THE SEARCH MODAL WINDOW
-  void showSearchModal(int ach, BuildContext context) {
-    showModalBottomSheet<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-          height: 300,
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
-          decoration: const BoxDecoration(
-            color: AppColors.achBg,
-            // borderRadius: BorderRadius.circular(30.0),
-          ),
-          child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center,
-            // mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                children: [
-                  const Expanded(
-                    child: Text(
-                      'Congratulations!!!',
-                      style: AppFonts.achModalHeader,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: IconButton(
-                        onPressed: () => Navigator.pop(context),
-                        icon: const Icon(Icons.close),
-                        color: AppColors.achCloseIcon),
-                  ),
-                ],
-              ),
-              Expanded(
-                child: Center(
-                  child: Achievements.getNewAchievement(ach),
-                ),
-              ),
-              Text(
-                Achievements.congrats[ach],
-                style: AppFonts.achModalText,
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        );
-      },
-    );
   }
 }

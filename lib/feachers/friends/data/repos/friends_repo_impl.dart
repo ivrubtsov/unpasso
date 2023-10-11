@@ -30,7 +30,6 @@ class FriendsRepoImpl implements FriendsRepo {
       final response = await _dio().get<List<dynamic>>(ApiConsts.getFriends());
 
       if (response.data == null) throw ServerException();
-      //final goals = response.data!.map((e) => GoalModel.fromJson(e)).toList();
 
       final users = response.data!.map((e) {
         return ProfileModel.fromJson(e);
@@ -49,7 +48,6 @@ class FriendsRepoImpl implements FriendsRepo {
           .get<List<dynamic>>(ApiConsts.getFriendsRequestsReceived());
 
       if (response.data == null) throw ServerException();
-      //final goals = response.data!.map((e) => GoalModel.fromJson(e)).toList();
 
       final users = response.data!.map((e) {
         return ProfileModel.fromJson(e);
@@ -68,7 +66,6 @@ class FriendsRepoImpl implements FriendsRepo {
           await _dio().get<List<dynamic>>(ApiConsts.getFriendsRequestsSent());
 
       if (response.data == null) throw ServerException();
-      //final goals = response.data!.map((e) => GoalModel.fromJson(e)).toList();
 
       final users = response.data!.map((e) {
         return ProfileModel.fromJson(e);
@@ -81,18 +78,50 @@ class FriendsRepoImpl implements FriendsRepo {
   }
 
   @override
-  Future<void> processRequest(Profile profile, String action) async {
+  Future<Map<String, dynamic>> getFriendsData() async {
+    try {
+      final id = _sessionRepo.sessionData!.id;
+      final response = await _dio().get(ApiConsts.getFriendsData(id));
+
+      if (response.data == null) throw ServerException();
+      if (response.data['description'] == null ||
+          response.data['description'] == '') {
+        return {
+          'friends': [],
+          'friendsRequestsReceived': [],
+          'friendsRequestsSent': [],
+        };
+      } else {
+        return response.data['description'];
+      }
+    } on DioError {
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> processRequest(
+      Profile profile, String action) async {
     try {
       final data = {
         'action': action,
       };
-      final response = await _dio().post<List<dynamic>>(
+      final response = await _dio().post(
         ApiConsts.processFriendsRequestJSON(profile.id),
         data: jsonEncode(data),
       );
 
       if (response.data == null) throw ServerException();
-      return;
+      if (response.data['description'] == null ||
+          response.data['description'] == '') {
+        return {
+          'friends': [],
+          'friendsRequestsReceived': [],
+          'friendsRequestsSent': [],
+        };
+      } else {
+        return response.data['description'];
+      }
     } on DioError {
       throw ServerException();
     }
@@ -105,7 +134,6 @@ class FriendsRepoImpl implements FriendsRepo {
           await _dio().get<List<dynamic>>(ApiConsts.searchFriends(text));
 
       if (response.data == null) throw ServerException();
-      //final goals = response.data!.map((e) => GoalModel.fromJson(e)).toList();
 
       final users = response.data!.map((e) {
         return ProfileModel.fromJson(e);

@@ -11,12 +11,19 @@ class AppAvatars {
     return random.nextInt(length) + 1;
   }
 
-  static Image getAvatarImage(int? id) {
+  static Widget getAvatarImage(int? id) {
     id = id ?? 0;
-    return Image(
-      width: 56.0,
-      height: 56.0,
-      image: AssetImage('assets/avatars/$id.png'),
-    );
+    if (id == 0) {
+      return const Icon(
+        Icons.person,
+        size: 56.0,
+      );
+    } else {
+      return Image(
+        width: 56.0,
+        height: 56.0,
+        image: AssetImage('assets/avatars/$id.png'),
+      );
+    }
   }
 }

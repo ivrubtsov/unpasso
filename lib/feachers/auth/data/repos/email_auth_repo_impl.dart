@@ -87,8 +87,12 @@ class EmailAuthRepoImpl implements AuthRepo {
     try {
       credentials as RegisterCreds;
       final int avatar = AppAvatars.chooseAvatar();
-      final String description =
-          '{"avatar":$avatar,"achievements":[],"friends":[],"friendsRequests":[]}';
+      final description = {
+        'avatar': avatar,
+        'achievements': [],
+        'friends': [],
+        'friendsRequests': [],
+      };
       final url = ApiConsts.registerUserJSON();
       final data = {
         'username': credentials.user.username,
@@ -97,19 +101,13 @@ class EmailAuthRepoImpl implements AuthRepo {
         'password': credentials.password,
         'description': description,
       };
-      print('registering');
-      print(url);
       final response = await _dio().post(
         url,
         data: jsonEncode(data),
       );
-      print('response');
-      print('code:${response.statusCode}');
-      print(response.toString());
       if (response.data == null) {
         throw AuthException.type(AuthExceptionType.unknown);
       }
-      print(response.data);
 
       final id = response.data['id'];
       // final username = response.data['username'];
@@ -120,10 +118,6 @@ class EmailAuthRepoImpl implements AuthRepo {
         username: credentials.user.username,
       ));
     } on DioError catch (e) {
-      print('error');
-      print(e.message);
-      print(e.error);
-      print(e.toString());
       throw AuthException.fromServerMessage(e.response?.data['message']);
     }
   }

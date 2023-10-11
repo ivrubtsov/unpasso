@@ -4,6 +4,7 @@ import 'package:goal_app/core/consts/app_avatars.dart';
 import 'package:goal_app/core/consts/keys.dart';
 import 'package:goal_app/core/consts/app_colors.dart';
 import 'package:goal_app/core/consts/app_fonts.dart';
+import 'package:goal_app/core/widgets/mega_menu.dart';
 import 'package:goal_app/feachers/friends/presentation/friends_screen/cubit/friends_screen_cubit.dart';
 import 'package:goal_app/feachers/profile/domain/entities/profile.dart';
 
@@ -38,12 +39,18 @@ class FriendsScreen extends StatelessWidget {
               );
             },
             icon: const Icon(Icons.search),
+            color: AppColors.headerIcon,
           ),
         ],
       ),
       backgroundColor: AppColors.friendsBg,
-      body: const SingleChildScrollView(
-        child: FriendsScreenContent(),
+      body: const Column(
+        children: [
+          Expanded(
+            child: FriendsScreenContent(),
+          ),
+          MegaMenu(active: 2),
+        ],
       ),
     );
   }
@@ -167,11 +174,21 @@ class FriendsScreenContentState extends State<FriendsScreenContent>
         }
         return RefreshIndicator(
           onRefresh: () => model.getFriendsnRequests(),
-          child: const Column(
+          child: Column(
             children: [
               //SearchFriends(),
-              FriendsRequests(),
-              FriendsList(),
+              state.friendsRequestsReceived.isNotEmpty
+                  ? const Expanded(
+                      flex: 2,
+                      child: FriendsRequests(),
+                    )
+                  : Container(),
+              state.friends.isNotEmpty
+                  ? const Expanded(
+                      flex: 2,
+                      child: FriendsList(),
+                    )
+                  : Container(),
             ],
           ),
         );
@@ -248,7 +265,7 @@ class FriendSearchProfile extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    profile.name ?? 'Unknown',
+                    profile.name ?? profile.userName ?? 'Unknown',
                     style: AppFonts.friendsName,
                   ),
                   Row(
@@ -289,7 +306,7 @@ class FriendSearchProfile extends StatelessWidget {
                         size: 32.0,
                       )
                     : IconButton(
-                        onPressed: () => model.inviteFriend(profile),
+                        onPressed: () => model.inviteFriend(profile, context),
                         icon: const Icon(
                           Icons.add,
                           color: AppColors.friendsInviteActive,
@@ -320,24 +337,28 @@ class FriendsRequests extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
           child: Column(
             children: [
-              const Text(
-                'Friend requests',
+              Text(
+                'Friend requests (${friendsRequests.length})',
                 style: AppFonts.friendsHeader,
                 textAlign: TextAlign.left,
               ),
               const SizedBox(
                 height: 10.0,
               ),
-              ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  reverse: false,
-                  itemCount: friendsRequests.length + 1,
-                  itemBuilder: (BuildContext context, int index) {
-                    return FriendRequest(
-                      key: ValueKey<Profile>(friendsRequests[index]),
-                      profile: friendsRequests[index],
-                    );
-                  }),
+              Expanded(
+                child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    reverse: false,
+                    itemCount: friendsRequests.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return FriendProfile(
+                        key: ValueKey<Profile>(friendsRequests[index]),
+                        profile: friendsRequests[index],
+                        isFriend: false,
+                        isRequest: true,
+                      );
+                    }),
+              ),
             ],
           ),
         );
@@ -349,6 +370,7 @@ class FriendsRequests extends StatelessWidget {
 }
 
 // WIDGET TO SHOW ONE FRIEND REQUEST
+/*
 class FriendRequest extends StatelessWidget {
   const FriendRequest({
     Key? key,
@@ -366,19 +388,28 @@ class FriendRequest extends StatelessWidget {
         child: Row(
           children: [
             AppAvatars.getAvatarImage(profile.avatar),
+            const SizedBox(
+              width: 20.0,
+            ),
             Expanded(
               child: Column(
                 children: [
-                  Text(
-                    profile.name ?? 'Unknown',
-                    style: AppFonts.friendsName,
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      profile.name ?? profile.userName ?? 'Unknown',
+                      style: AppFonts.friendsName,
+                    ),
                   ),
                   Row(
                     children: [
                       Expanded(
-                        child: Text(
-                          '@${profile.userName}',
-                          style: AppFonts.friendsUsername,
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            '@${profile.userName}',
+                            style: AppFonts.friendsUsername,
+                          ),
                         ),
                       ),
                       SizedBox(
@@ -400,9 +431,11 @@ class FriendRequest extends StatelessWidget {
                 ],
               ),
             ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+            const SizedBox(
+              width: 20.0,
+            ),
+            SizedBox(
+              width: 32.0,
               child: Center(
                 child: IconButton(
                   onPressed: () => model.acceptRequest(profile),
@@ -411,20 +444,26 @@ class FriendRequest extends StatelessWidget {
                     color: AppColors.friendsApprove,
                     size: 32.0,
                   ),
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
                 ),
               ),
             ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+            const SizedBox(
+              width: 10.0,
+            ),
+            SizedBox(
+              width: 32.0,
               child: Center(
                 child: IconButton(
                   onPressed: () => model.rejectRequest(profile),
                   icon: const Icon(
-                    Icons.cancel_outlined,
+                    Icons.cancel,
                     color: AppColors.friendsReject,
                     size: 32.0,
                   ),
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
                 ),
               ),
             ),
@@ -434,6 +473,7 @@ class FriendRequest extends StatelessWidget {
     });
   }
 }
+*/
 
 // WIDGET TO SHOW ALL FRIENDS
 class FriendsList extends StatelessWidget {
@@ -450,25 +490,28 @@ class FriendsList extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
           child: Column(
             children: [
-              const Text(
-                'Friends',
+              Text(
+                'Friends (${friends.length})',
                 style: AppFonts.friendsHeader,
                 textAlign: TextAlign.left,
               ),
               const SizedBox(
                 height: 10.0,
               ),
-              ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  reverse: false,
-                  itemCount: friends.length + 1,
-                  itemBuilder: (BuildContext context, int index) {
-                    return FriendProfile(
-                      key: ValueKey<Profile>(friends[index]),
-                      profile: friends[index],
-                      isFriend: true,
-                    );
-                  }),
+              Expanded(
+                child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    reverse: false,
+                    itemCount: friends.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return FriendProfile(
+                        key: ValueKey<Profile>(friends[index]),
+                        profile: friends[index],
+                        isFriend: true,
+                        isRequest: false,
+                      );
+                    }),
+              ),
             ],
           ),
         );
@@ -485,9 +528,11 @@ class FriendProfile extends StatelessWidget {
     Key? key,
     required this.profile,
     required this.isFriend,
+    required this.isRequest,
   }) : super(key: key);
   final Profile profile;
   final bool isFriend;
+  final bool isRequest;
 
   @override
   Widget build(BuildContext context) {
@@ -499,19 +544,28 @@ class FriendProfile extends StatelessWidget {
         child: Row(
           children: [
             AppAvatars.getAvatarImage(profile.avatar),
+            const SizedBox(
+              width: 20.0,
+            ),
             Expanded(
               child: Column(
                 children: [
-                  Text(
-                    profile.name ?? 'Unknown',
-                    style: AppFonts.friendsName,
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      profile.name ?? profile.userName ?? 'Unknown',
+                      style: AppFonts.friendsName,
+                    ),
                   ),
                   Row(
                     children: [
                       Expanded(
-                        child: Text(
-                          '@${profile.userName}',
-                          style: AppFonts.friendsUsername,
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            '@${profile.userName}',
+                            style: AppFonts.friendsUsername,
+                          ),
                         ),
                       ),
                       SizedBox(
@@ -527,28 +581,73 @@ class FriendProfile extends StatelessWidget {
                             textAlign: TextAlign.left,
                           ),
                         ]),
-                      ),
+                      )
                     ],
-                  ),
+                  )
                 ],
               ),
             ),
+            const SizedBox(
+              width: 20.0,
+            ),
             isFriend
-                ? Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10.0, vertical: 10.0),
+                ? SizedBox(
+                    width: 32.0,
                     child: Center(
                       child: IconButton(
-                        onPressed: () => model.removeFriend(profile),
+                        onPressed: () => model.removeFriend(profile, context),
                         icon: const Icon(
                           Icons.delete,
                           color: AppColors.friendsRemove,
                           size: 32.0,
                         ),
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
                       ),
                     ),
                   )
-                : Container()
+                : Container(),
+            isRequest
+                ? Row(
+                    children: [
+                      SizedBox(
+                        width: 32.0,
+                        child: Center(
+                          child: IconButton(
+                            onPressed: () =>
+                                model.acceptRequest(profile, context),
+                            icon: const Icon(
+                              Icons.check_box,
+                              color: AppColors.friendsApprove,
+                              size: 32.0,
+                            ),
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10.0,
+                      ),
+                      SizedBox(
+                        width: 32.0,
+                        child: Center(
+                          child: IconButton(
+                            onPressed: () =>
+                                model.rejectRequest(profile, context),
+                            icon: const Icon(
+                              Icons.cancel,
+                              color: AppColors.friendsReject,
+                              size: 32.0,
+                            ),
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                : Container(),
           ],
         ),
       );

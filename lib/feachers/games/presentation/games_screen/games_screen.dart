@@ -65,7 +65,10 @@ class GamesScreenContentState extends State<GamesScreenContent>
                 child: Games(),
               ),
             ),
-            QuoteWidget(),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+              child: QuoteWidget(),
+            ),
             MegaMenu(active: 4),
           ],
         );

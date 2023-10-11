@@ -124,9 +124,7 @@ class AppRouter {
   Route _buildGamesScreen() {
     return MaterialPageRoute(
         builder: (context) => BlocProvider.value(
-              value: GamesScreenCubit(
-                sessionRepo: sl(),
-              )..initGamesScreen(),
+              value: GamesScreenCubit()..initGamesScreen(),
               child: const GamesScreen(),
             ));
   }

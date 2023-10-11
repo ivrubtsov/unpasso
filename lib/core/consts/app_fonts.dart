@@ -104,7 +104,7 @@ class AppFonts {
 
   static const goalPrivacyActive = TextStyle(
     fontFamily: 'Fredoka',
-    fontWeight: FontWeight.w400,
+    fontWeight: FontWeight.w600,
     fontSize: 12.0,
     color: AppColors.goalPrivacyActive,
   );
@@ -238,7 +238,7 @@ class AppFonts {
   static const friendsHeader = TextStyle(
     fontFamily: 'Fredoka',
     fontWeight: FontWeight.w500,
-    fontSize: 40.0,
+    fontSize: 32.0,
     color: AppColors.friendsHeader,
   );
 
@@ -272,7 +272,7 @@ class AppFonts {
 
   static const megaMenuActive = TextStyle(
     fontFamily: 'Fredoka',
-    fontWeight: FontWeight.w400,
+    fontWeight: FontWeight.w600,
     fontSize: 12.0,
     color: AppColors.megaMenuActive,
   );

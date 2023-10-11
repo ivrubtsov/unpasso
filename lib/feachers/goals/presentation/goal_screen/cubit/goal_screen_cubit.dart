@@ -125,9 +125,9 @@ class GoalScreenCubit extends Cubit<GoalScreenState> {
         authorUserName: state.profile.userName ?? '',
         authorAvatar: state.profile.avatar ?? 0,
         isCompleted: false,
-        isPublic: false,
-        isFriends: false,
-        isPrivate: true,
+        isPublic: state.goal.isPublic,
+        isFriends: state.goal.isFriends,
+        isPrivate: state.goal.isPrivate,
         likeUsers: const [],
         likes: 0,
       ));
@@ -313,6 +313,9 @@ class GoalScreenCubit extends Cubit<GoalScreenState> {
               authorId: authorId,
               isCompleted: false,
               isExist: false,
+              isPublic: true,
+              isFriends: false,
+              isPrivate: false,
             ));
       }
       // Load the today goal to the state

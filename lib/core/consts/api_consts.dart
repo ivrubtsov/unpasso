@@ -33,6 +33,8 @@ class ApiConsts {
 
   static String getFriendsRequestsSent() => '$_baseUrl/friends/requests/sent';
 
+  static String getFriendsData(int id) => '$_baseUrl/friends/$id';
+
   static String searchFriends(String text) =>
       '$_baseUrl/friends/search?text=$text';
 

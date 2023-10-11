@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:goal_app/core/consts/api_consts.dart';
 import 'package:goal_app/feachers/profile/domain/entities/profile.dart';
 
@@ -51,8 +50,8 @@ class ProfileModel extends Profile {
     friendsRequestsReceived = [];
     friendsRequestsSent = [];
 
-    final Map description = jsonDecode(json['description']);
     if (!(json['description'] == null || json['description'] == '')) {
+      final Map<String, dynamic> description = json['description'];
       if (!(description['avatar'] == null ||
           description['avatar'] == '' ||
           description['avatar'] == 0)) {
@@ -61,7 +60,6 @@ class ProfileModel extends Profile {
       if (!(description['achievements'] == null ||
           description['achievements'] == '' ||
           description['achievements'] == [])) {
-      } else {
         achievements = List<int>.from(description['achievements']);
       }
       if (!(description['rating'] == null ||
@@ -88,7 +86,7 @@ class ProfileModel extends Profile {
       }
     }
     if (json['name'] == null || json['name'] == '') {
-      name = 'Unknown';
+      name = json['username'] ?? 'Unknown';
     } else {
       name = json['name'];
     }
@@ -132,16 +130,18 @@ class ProfileModel extends Profile {
     );
   }
 
-  Map<String, String> submitJSON() {
-    final achievementsString = achievements.join(',');
-    final friendsString = friends.join(',');
-    final friendsRequestsReceivedString = friendsRequestsReceived.join(',');
-    final friendsRequestsSentString = friendsRequestsSent.join(',');
+  Map<String, dynamic> submitJSON() {
     return {
-      'name': name ?? 'Unknown',
+      'name': name ?? userName ?? 'Unknown',
       'userName': userName ?? '',
-      'description':
-          '{"avatar":$avatar,"achievements":[$achievementsString],"rating":$rating,"friends":[$friendsString],"friendsRequestsReceived":[$friendsRequestsReceivedString],"friendsRequestsSent":[$friendsRequestsSentString]}',
+      'description': {
+        'avatar': avatar,
+        'achievements': achievements,
+        'rating': rating,
+        'friends': friends,
+        'friendsRequestsReceived': friendsRequestsReceived,
+        'friendsRequestsSent': friendsRequestsSent,
+      },
     };
   }
 }
