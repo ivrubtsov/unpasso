@@ -6,7 +6,6 @@ import 'package:goal_app/core/consts/app_fonts.dart';
 import 'package:goal_app/core/exceptions/exceptions.dart';
 import 'package:goal_app/core/navigation/app_router.dart';
 import 'package:goal_app/feachers/auth/domain/repos/auth_repo.dart';
-import 'package:goal_app/feachers/auth/domain/repos/session_repo.dart';
 import 'package:goal_app/feachers/profile/domain/entities/profile.dart';
 import 'package:goal_app/feachers/profile/domain/repos/profile_repo.dart';
 
@@ -16,32 +15,12 @@ class ProfileScreenCubit extends Cubit<ProfileScreenState> {
   ProfileScreenCubit({
     required ProfileRepo profileRepo,
     required AuthRepo authRepo,
-    required SessionRepo sessionRepo,
   })  : _profileRepo = profileRepo,
         _authRepo = authRepo,
-        _sessionRepo = sessionRepo,
         super(ProfileScreenState.initial());
 
   final ProfileRepo _profileRepo;
   final AuthRepo _authRepo;
-  final SessionRepo _sessionRepo;
-
-// ПОЛУЧАЕМ ДАННЫЕ ПОЛЬЗОВАТЕЛЯ
-  int getUserId() {
-    return _sessionRepo.sessionData!.id;
-  }
-
-  String getName() {
-    return state.profile.name ?? state.profile.userName ?? 'Unknown';
-  }
-
-  String getUsername() {
-    return _sessionRepo.sessionData!.username;
-  }
-
-  int getRating() {
-    return state.profile.rating ?? 0;
-  }
 
 // ИНИЦИАЛИЗАЦИЯ СТРАНИЦЫ ПРОФИЛЯ
   void initProfileScreen() async {

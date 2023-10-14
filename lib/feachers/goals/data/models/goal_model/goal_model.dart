@@ -91,38 +91,66 @@ class GoalModel extends Goal {
         checkIsPrivate = tags.contains(28) ? true : false;
       }
     }
-    final description = json['content']['rendered'] as Map<String, dynamic>?;
-    if (description == null || description.isEmpty || description == {}) {
-      // TODO: Update author's name and username
+    if (json['content'] != null &&
+        json['content'] != '' &&
+        json['content']['rendered'] != null &&
+        json['content']['rendered'] != '') {
+      final description = json['content']['rendered'] as Map<String, dynamic>?;
+      if (description == null || description.isEmpty || description == {}) {
+        // TODO: Update author's name and username
+        authorName = '';
+        authorUserName = '';
+        authorAvatar = 0;
+        authorRating = 0;
+        friendsUsers = [];
+        likeUsers = [];
+      } else {
+        friendsUsers = [];
+        likeUsers = [];
+        if (description['authorUserName'] != null &&
+            description['authorUserName'] != '') {
+          authorUserName = description['authorUserName'];
+        } else {
+          authorUserName = '';
+        }
+        if (description['authorName'] != null &&
+            description['authorName'] != '') {
+          authorName = description['authorName'];
+        } else {
+          authorName = authorUserName;
+        }
+        if (description['authorAvatar'] != null &&
+            description['authorAvatar'] != '') {
+          authorAvatar = description['authorAvatar'] as int;
+        } else {
+          authorAvatar = 0;
+        }
+        if (description['authorRating'] != null &&
+            description['authorRating'] == '') {
+          authorRating = description['authorRating'] as int;
+        } else {
+          authorRating = 0;
+        }
+        if (description['friendsUsers'].isNotEmpty) {
+          final List<int> idsList = List<int>.from(description['friendsUsers']);
+          for (int user in idsList) {
+            friendsUsers.add(user);
+          }
+        }
+        if (description['likeUsers'].isNotEmpty) {
+          final List<int> idsList = List<int>.from(description['friendsUsers']);
+          for (int user in idsList) {
+            likeUsers.add(user);
+          }
+        }
+      }
+    } else {
       authorName = '';
       authorUserName = '';
       authorAvatar = 0;
       authorRating = 0;
       friendsUsers = [];
       likeUsers = [];
-    } else {
-      List<int> users = [];
-      authorName = description['authorName'];
-      authorUserName = description['authorUserName'];
-      authorAvatar = description['authorAvatar'];
-      authorRating = description['authorRating'];
-      if (description['friendsUsers'].isNotEmpty) {
-        for (int user in description['friendsUsers']) {
-          users.add(user);
-        }
-        friendsUsers = users;
-      } else {
-        friendsUsers = [];
-      }
-      users = [];
-      if (description['likeUsers'].isNotEmpty) {
-        for (int user in description['likeUsers']) {
-          users.add(user);
-        }
-        likeUsers = users;
-      } else {
-        likeUsers = [];
-      }
     }
     if (id != null && likeUsers.contains(id)) {
       like = true;

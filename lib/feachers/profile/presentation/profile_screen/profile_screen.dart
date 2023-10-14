@@ -84,10 +84,6 @@ class PersonalData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<ProfileScreenCubit>();
-    final name = model.getName();
-    final username = model.getUsername();
-    final rating = model.getRating();
     return BlocBuilder<ProfileScreenCubit, ProfileScreenState>(
         builder: (context, state) {
       return Padding(
@@ -104,7 +100,7 @@ class PersonalData extends StatelessWidget {
                   Align(
                     alignment: Alignment.topLeft,
                     child: Text(
-                      name,
+                      state.profile.name ?? state.profile.userName ?? 'Unknown',
                       style: AppFonts.profileName,
                     ),
                   ),
@@ -114,7 +110,7 @@ class PersonalData extends StatelessWidget {
                         child: Align(
                           alignment: Alignment.topLeft,
                           child: Text(
-                            '@$username',
+                            '@${state.profile.userName}',
                             style: AppFonts.friendsUsername,
                           ),
                         ),
@@ -127,7 +123,7 @@ class PersonalData extends StatelessWidget {
                             color: AppColors.friendsIconRating,
                           ),
                           Text(
-                            rating.toString(),
+                            state.profile.rating.toString(),
                             style: AppFonts.friendsRating,
                             textAlign: TextAlign.left,
                           ),

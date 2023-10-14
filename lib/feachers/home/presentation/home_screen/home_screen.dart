@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:goal_app/core/consts/app_avatars.dart';
 import 'package:goal_app/core/consts/keys.dart';
+import 'package:goal_app/core/widgets/error_presentor.dart';
 import 'package:goal_app/core/widgets/mega_menu.dart';
 import 'package:goal_app/feachers/goals/domain/entities/goal.dart';
 import 'package:goal_app/core/consts/app_colors.dart';
@@ -37,9 +38,9 @@ class HomeScreen extends StatelessWidget {
       body: const Column(
         children: [
           Expanded(
-            child: SingleChildScrollView(
-              child: HomeScreenContent(),
-            ),
+//            child: SingleChildScrollView(
+            child: HomeScreenContent(),
+//            ),
           ),
           MegaMenu(active: 1),
         ],
@@ -109,34 +110,39 @@ class HomeScreenContentState extends State<HomeScreenContent>
         }
         final List<Goal> goals = state.goals;
         final bool hasMore = state.goalsHasMore;
-        return RefreshIndicator(
-          onRefresh: () => model.getFirstGoals(),
-          child: ListView.builder(
-              scrollDirection: Axis.vertical,
-              controller: homeListScrollController,
-              reverse: false,
-              itemCount: goals.length + 1,
-              itemBuilder: (BuildContext context, int index) {
-                if (index < goals.length) {
-                  return GoalItem(
-                    key: ValueKey<Goal>(goals[index]),
-                    goal: goals[index],
-                    goalId: index,
-                  );
-                } else {
-                  return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20.0),
-                      child: Center(
-                        child: hasMore
-                            ? const CircularProgressIndicator()
-                            : const Text(
-                                'No more goals to load',
-                                style: AppFonts.homeEndOfList,
-                              ),
-                      ));
-                }
-              }),
-        );
+        return Column(children: [
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () => model.getFirstGoals(),
+              child: ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  controller: homeListScrollController,
+                  reverse: false,
+                  itemCount: goals.length + 1,
+                  itemBuilder: (BuildContext context, int index) {
+                    if (index < goals.length) {
+                      return GoalItem(
+                        key: ValueKey<Goal>(goals[index]),
+                        goal: goals[index],
+                        goalId: index,
+                      );
+                    } else {
+                      return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 20.0),
+                          child: Center(
+                            child: hasMore
+                                ? const CircularProgressIndicator()
+                                : const Text(
+                                    'No more goals to load',
+                                    style: AppFonts.homeEndOfList,
+                                  ),
+                          ));
+                    }
+                  }),
+            ),
+          ),
+          ErrorMessage(message: state.errorMessage),
+        ]);
       },
     );
   }
@@ -158,39 +164,33 @@ class GoalItem extends StatelessWidget {
       child: Row(
         children: [
           AppAvatars.getAvatarImage(goal.authorAvatar),
+          const SizedBox(
+            width: 20.0,
+          ),
           Expanded(
             child: Column(
               children: [
-                Text(
-                  goal.text,
-                  style: AppFonts.homeGoalTitle,
-                  textAlign: TextAlign.left,
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    goal.text,
+                    style: AppFonts.homeGoalTitle,
+                  ),
                 ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        goal.authorName,
-                        style: AppFonts.homeGoalAuthor,
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 56.0,
-                      child: Row(children: [
-                        const Icon(
-                          Icons.star,
-                          color: AppColors.homeGoalIconRating,
-                        ),
-                        Text(
-                          goal.authorRating.toString(),
-                          style: AppFonts.homeGoalAuthorRating,
-                          textAlign: TextAlign.left,
-                        ),
-                      ]),
-                    )
-                  ],
-                )
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    goal.authorName,
+                    style: AppFonts.homeGoalAuthorName,
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    '@${goal.authorUserName}',
+                    style: AppFonts.homeGoalAuthorUserName,
+                  ),
+                ),
               ],
             ),
           ),
@@ -226,10 +226,15 @@ class GoalLike extends StatelessWidget {
                 goal: goal,
                 goalId: goalId,
               ),
-        Text(
-          goal.likes.toString(),
-          style: AppFonts.homeGoalLikeNumber,
-          textAlign: TextAlign.left,
+        const SizedBox(
+          height: 5.0,
+        ),
+        Align(
+          alignment: Alignment.topLeft,
+          child: Text(
+            goal.likes.toString(),
+            style: AppFonts.homeGoalLikeNumber,
+          ),
         ),
       ],
     );
@@ -251,10 +256,12 @@ class GoalLikeActive extends StatelessWidget {
       return IconButton(
         onPressed: () => context.read<HomeScreenCubit>().unLikeGoal(goalId),
         icon: const Icon(
-          Icons.thumb_up,
+          Icons.star,
           color: AppColors.homeGoalLikeIconActive,
           size: 32.0,
         ),
+        padding: EdgeInsets.zero,
+        constraints: const BoxConstraints(),
       );
     });
   }
@@ -275,10 +282,12 @@ class GoalLikeInActive extends StatelessWidget {
       return IconButton(
         onPressed: () => context.read<HomeScreenCubit>().likeGoal(goalId),
         icon: const Icon(
-          Icons.thumb_up_outlined,
+          Icons.star_outline,
           color: AppColors.homeGoalLikeIcon,
           size: 32.0,
         ),
+        padding: EdgeInsets.zero,
+        constraints: const BoxConstraints(),
       );
     });
   }

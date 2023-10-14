@@ -3,27 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:goal_app/core/exceptions/exceptions.dart';
 import 'package:goal_app/core/widgets/error_presentor.dart';
-import 'package:goal_app/feachers/auth/domain/repos/session_repo.dart';
 import 'package:goal_app/feachers/friends/domain/repos/friends_repo.dart';
 import 'package:goal_app/feachers/profile/data/models/profile_model/profile_model.dart';
 import 'package:goal_app/feachers/profile/domain/entities/profile.dart';
-import 'package:goal_app/feachers/profile/domain/repos/profile_repo.dart';
 
 part 'friends_screen_state.dart';
 
 class FriendsScreenCubit extends Cubit<FriendsScreenState> {
   FriendsScreenCubit({
     required FriendsRepo friendsRepo,
-    required SessionRepo sessionRepo,
-    required ProfileRepo profileRepo,
   })  : _friendsRepo = friendsRepo,
-        _sessionRepo = sessionRepo,
-        _profileRepo = profileRepo,
         super(FriendsScreenState.initial());
 
   final FriendsRepo _friendsRepo;
-  final SessionRepo _sessionRepo;
-  final ProfileRepo _profileRepo;
 
 // FRIENDS PAGE INITIALIZATION
   void initFriendsScreen() async {
@@ -34,11 +26,6 @@ class FriendsScreenCubit extends Cubit<FriendsScreenState> {
   void changeSearchText(String value) {
     if (state.searchText == value) return;
     emit(state.copyWith(searchText: value));
-  }
-
-// GET THE USER ID
-  int getUserId() {
-    return _sessionRepo.sessionData!.id;
   }
 
   void processFriendsResponse(Map<String, dynamic> json) {
@@ -76,13 +63,16 @@ class FriendsScreenCubit extends Cubit<FriendsScreenState> {
       emit(
         state.copyWith(
           status: FriendsScreenStateStatus.ready,
+          errorMessage: '',
         ),
       );
       return;
     } on ServerException {
-      /*ErrorPresentor.showError(context,
-          'Unable to download profile data. Check internet connection');*/
-      emit(state.copyWith(status: FriendsScreenStateStatus.error));
+      emit(state.copyWith(
+        status: FriendsScreenStateStatus.error,
+        errorMessage:
+            'Can\'t load data. Please check your internet connection.',
+      ));
     }
   }
 
@@ -145,8 +135,16 @@ class FriendsScreenCubit extends Cubit<FriendsScreenState> {
   }
 
   Future<List<Profile>> searchFriends(String text) async {
-    List<Profile> friends = await _friendsRepo.searchFriends(text);
-    return friends;
+    print('query:$text');
+    if (text == '') {
+      return [];
+    } else {
+      List<Profile> friends =
+          await _friendsRepo.searchFriends(text.toLowerCase());
+
+      print(friends);
+      return friends;
+    }
   }
 
   void openSearchBar() {

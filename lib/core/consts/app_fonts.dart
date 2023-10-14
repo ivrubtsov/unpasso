@@ -4,6 +4,13 @@ import 'package:goal_app/core/consts/app_colors.dart';
 class AppFonts {
   AppFonts._();
 
+  static const error = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w500,
+    fontSize: 16.0,
+    color: AppColors.error,
+  );
+
   static const header = TextStyle(
     fontFamily: 'Fredoka',
     fontWeight: FontWeight.w500,
@@ -109,6 +116,13 @@ class AppFonts {
     color: AppColors.goalPrivacyActive,
   );
 
+  static const goalGenerateText = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w600,
+    fontSize: 16.0,
+    color: AppColors.goalGenerateText,
+  );
+
   static const funHeader = TextStyle(
     fontFamily: 'Fredoka',
     fontWeight: FontWeight.w500,
@@ -207,11 +221,18 @@ class AppFonts {
     color: AppColors.homeGoalTitle,
   );
 
-  static const homeGoalAuthor = TextStyle(
+  static const homeGoalAuthorName = TextStyle(
     fontFamily: 'Fredoka',
     fontWeight: FontWeight.w400,
     fontSize: 12.0,
-    color: AppColors.homeGoalAuthor,
+    color: AppColors.homeGoalAuthorName,
+  );
+
+  static const homeGoalAuthorUserName = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 12.0,
+    color: AppColors.homeGoalAuthorUserName,
   );
 
   static const homeGoalAuthorRating = TextStyle(
@@ -232,7 +253,7 @@ class AppFonts {
     fontFamily: 'Fredoka',
     fontWeight: FontWeight.w400,
     fontSize: 12.0,
-    color: AppColors.homeGoalAuthor,
+    color: AppColors.homeGoalAuthorName,
   );
 
   static const friendsHeader = TextStyle(

@@ -4,12 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:goal_app/core/consts/achievements.dart';
 import 'package:goal_app/core/consts/app_colors.dart';
 import 'package:goal_app/core/consts/app_fonts.dart';
-import 'package:goal_app/core/consts/funnytasks.dart';
 import 'package:goal_app/core/consts/keys.dart';
 import 'package:goal_app/core/exceptions/exceptions.dart';
 import 'package:goal_app/core/navigation/app_router.dart';
 import 'package:goal_app/core/widgets/error_presentor.dart';
-import 'package:goal_app/core/widgets/fun.dart';
 import 'package:goal_app/feachers/auth/domain/repos/session_repo.dart';
 import 'package:goal_app/feachers/goals/data/models/goal_model/goal_model.dart';
 import 'package:goal_app/feachers/goals/domain/entities/goal.dart';
@@ -325,11 +323,17 @@ class GoalScreenCubit extends Cubit<GoalScreenState> {
         emit(state.copyWith(goal: goals[0]));
       }
       emit(state.copyWith(
-          goals: goals,
-          currentDate: DateTime.now(),
-          status: GoalScreenStateStatus.ready));
+        goals: goals,
+        currentDate: DateTime.now(),
+        status: GoalScreenStateStatus.ready,
+        errorMessage: '',
+      ));
     } on ServerException {
-      emit(state.copyWith(status: GoalScreenStateStatus.error));
+      emit(state.copyWith(
+        status: GoalScreenStateStatus.error,
+        errorMessage:
+            'Can\'t load data. Please check your internet connection.',
+      ));
     }
   }
 
@@ -361,24 +365,6 @@ class GoalScreenCubit extends Cubit<GoalScreenState> {
 // КНОПКА ПРОФИЛЬ
   void onProfileTapped(BuildContext context) {
     Navigator.of(context).pushNamed(MainRoutes.profileScreen);
-  }
-
-// ВОЗВРАЩАЕМ СОСТОЯНИЕ ПОВОРОТА КАРТОЧКИ
-  bool getDisplayFunFront() {
-    return state.displayFunFront;
-  }
-
-// ПЕРЕВОРАЧИВАЕМ КАРТОЧКУ С ЗАДАНИЯМИ
-  void flipFunCard() {
-    emit(state.copyWith(displayFunFront: !state.displayFunFront));
-  }
-
-// ВОЗВРАЩАЕМ ВИДЖЕТ (ЛИЦЕВАЯ ИЛИ ЗАДНЯЯ СТОРОНА) В ЗАВИСИМОСТИ ОТ СОСТОЯНИЯ
-  Widget getFunGoalWidget() {
-    final String funGoalText = FunnyTasks.getRandomTask();
-    return state.displayFunFront
-        ? const FunFront()
-        : FunBack(funText: funGoalText);
   }
 
 // ДОБАВЛЯЕМ НОВУЮ АЧИВКУ (СОХРАНЯЕМ ОБНОВЛЕННЫЙ СПИСОК)
@@ -477,5 +463,17 @@ class GoalScreenCubit extends Cubit<GoalScreenState> {
         );
       },
     );
+  }
+
+  void generateAIGoal(BuildContext context) {
+    try {
+      return;
+    } on ServerException {
+      emit(state.copyWith(
+        status: GoalScreenStateStatus.error,
+        errorMessage:
+            'Unfortunately the artificial intelligence is tired. There are too many people looking for his help. Please try again later,',
+      ));
+    }
   }
 }

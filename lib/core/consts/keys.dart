@@ -6,6 +6,7 @@ class Keys {
   static const refreshTimeoutHome = 10;
   static const refreshTimeoutFriends = 10;
   static const goalInputFieldMaxLines = 5;
+  static const aiGeneratorEnabled = false;
 }
 
 enum Privacy {

@@ -49,7 +49,8 @@ class RegisterScreen extends StatelessWidget {
               // TEXT FIELD USERNAME
               _TextField(
                 title: 'username',
-                hintText: '@username - how others can find you',
+                hintText: 'username - how others can find you',
+                isUsername: true,
                 onChanged: model.changeUserName,
               ),
               const SizedBox(height: 15.0),
@@ -100,12 +101,14 @@ class _TextField extends StatelessWidget {
     required this.hintText,
     required this.onChanged,
     this.isPassword = false,
+    this.isUsername = false,
   }) : super(key: key);
 
   final String title;
   final String hintText;
   final Function(String value) onChanged;
   final bool isPassword;
+  final bool isUsername;
 
   @override
   Widget build(BuildContext context) {
@@ -120,6 +123,7 @@ class _TextField extends StatelessWidget {
         */
         MainTextField(
           isPassword: isPassword,
+          isUsername: isUsername,
           hintText: hintText,
           onChanged: onChanged,
         ),

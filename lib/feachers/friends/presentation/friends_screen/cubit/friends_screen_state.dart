@@ -15,6 +15,7 @@ class FriendsScreenState extends Equatable {
   final FriendsScreenStateStatus status;
   final String searchText;
   final bool searchOpen;
+  final String errorMessage;
 
   const FriendsScreenState({
     required this.currentDate,
@@ -24,6 +25,7 @@ class FriendsScreenState extends Equatable {
     required this.status,
     required this.searchText,
     required this.searchOpen,
+    required this.errorMessage,
   });
 
   factory FriendsScreenState.initial() => FriendsScreenState(
@@ -34,6 +36,7 @@ class FriendsScreenState extends Equatable {
         status: FriendsScreenStateStatus.ready,
         searchText: '',
         searchOpen: false,
+        errorMessage: '',
       );
 
   FriendsScreenState copyWith({
@@ -44,6 +47,7 @@ class FriendsScreenState extends Equatable {
     FriendsScreenStateStatus? status,
     String? searchText,
     bool? searchOpen,
+    String? errorMessage,
   }) {
     return FriendsScreenState(
       currentDate: currentDate ?? this.currentDate,
@@ -54,6 +58,7 @@ class FriendsScreenState extends Equatable {
       status: status ?? this.status,
       searchText: searchText ?? this.searchText,
       searchOpen: searchOpen ?? this.searchOpen,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 
@@ -66,5 +71,6 @@ class FriendsScreenState extends Equatable {
         status,
         searchText,
         searchOpen,
+        errorMessage,
       ];
 }

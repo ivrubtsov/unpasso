@@ -8,6 +8,8 @@ class AppColors {
   static const altBg = Color.fromRGBO(236, 242, 255, 1);
   static const header = Colors.black;
   static const headerIcon = Colors.black;
+  static const errorBg = Color.fromRGBO(241, 94, 142, 1);
+  static const error = Colors.white;
   // Auth screens elements
   static const border = Color.fromRGBO(194, 201, 209, 1);
   static const disabled = Color.fromRGBO(43, 39, 239, 0.5);
@@ -29,6 +31,9 @@ class AppColors {
   static const goalInCompleted = Color.fromRGBO(241, 94, 142, 1);
   static const goalPrivacy = Color.fromRGBO(80, 85, 92, 1);
   static const goalPrivacyActive = Color.fromRGBO(43, 39, 239, 1);
+  static const goalGenerateBg = Color.fromRGBO(43, 39, 239, 1);
+  static const goalGenerateIcon = Colors.white;
+  static const goalGenerateText = Colors.white;
   // Funny goals
   static const funBg = Color.fromRGBO(248, 250, 251, 1);
   static const funHeader = Colors.black;
@@ -51,7 +56,8 @@ class AppColors {
   // Home screen with goals list
   static const homeBg = Colors.white;
   static const homeGoalTitle = Color.fromRGBO(0, 26, 52, 1);
-  static const homeGoalAuthor = Color.fromRGBO(80, 85, 92, 1);
+  static const homeGoalAuthorName = Color.fromRGBO(80, 85, 92, 1);
+  static const homeGoalAuthorUserName = Color.fromRGBO(80, 85, 92, 1);
   static const homeGoalIconRating = Colors.amber;
   static const homeGoalAuthorRating = Color.fromRGBO(43, 39, 239, 1);
   static const homeGoalLikeIcon = Color.fromRGBO(80, 85, 92, 1);

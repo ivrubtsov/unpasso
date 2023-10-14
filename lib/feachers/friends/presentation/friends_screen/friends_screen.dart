@@ -4,6 +4,7 @@ import 'package:goal_app/core/consts/app_avatars.dart';
 import 'package:goal_app/core/consts/keys.dart';
 import 'package:goal_app/core/consts/app_colors.dart';
 import 'package:goal_app/core/consts/app_fonts.dart';
+import 'package:goal_app/core/widgets/error_presentor.dart';
 import 'package:goal_app/core/widgets/mega_menu.dart';
 import 'package:goal_app/feachers/friends/presentation/friends_screen/cubit/friends_screen_cubit.dart';
 import 'package:goal_app/feachers/profile/domain/entities/profile.dart';
@@ -32,10 +33,17 @@ class FriendsScreen extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              context.read<FriendsScreenCubit>().openSearchBar();
+              //context.read<FriendsScreenCubit>().openSearchBar();
               showSearch(
                 context: context,
-                delegate: FriendsSearchDelegate(),
+                delegate: FriendsSearchDelegate(
+                  /*
+                  (query) {
+                    context.read<FriendsScreenCubit>().searchFriends(query);
+                  },
+                  */
+                  context.read<FriendsScreenCubit>(),
+                ),
               );
             },
             icon: const Icon(Icons.search),
@@ -57,13 +65,17 @@ class FriendsScreen extends StatelessWidget {
 }
 
 class FriendsSearchDelegate extends SearchDelegate {
+  final FriendsScreenCubit cubit;
+  //FriendsSearchDelegate(this.callback, this.cubit);
+  FriendsSearchDelegate(this.cubit);
+
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
         onPressed: () {
           if (query == '') {
-            context.read<FriendsScreenCubit>().closeSearchBar();
+            //context.read<FriendsScreenCubit>().closeSearchBar();
             close(context, null);
           } else {
             query = '';
@@ -78,7 +90,7 @@ class FriendsSearchDelegate extends SearchDelegate {
   Widget buildLeading(BuildContext context) {
     return IconButton(
       onPressed: () {
-        context.read<FriendsScreenCubit>().closeSearchBar();
+        //context.read<FriendsScreenCubit>().closeSearchBar();
         close(context, null);
       },
       icon: const Icon(Icons.arrow_back),
@@ -93,17 +105,25 @@ class FriendsSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return FutureBuilder<List<Profile>>(
-      future: context.read<FriendsScreenCubit>().searchFriends(query),
+    return FutureBuilder(
+      future: cubit.searchFriends(query),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.data != null) {
+          final sData = snapshot.data as List<Profile>;
           return ListView.builder(
-              //itemCount: suggestions.length,
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                return FriendSearchProfile(profile: snapshot.data![index]);
-              });
+            itemBuilder: (context, index) {
+              print('profile name ${sData[index].userName}');
+              return FriendProfile(
+                profile: sData[index],
+                isFriend: false,
+                isRequest: false,
+                isSearch: true,
+                cubit: cubit,
+              );
+            },
+            itemCount: sData.length,
+          );
         } else {
           return const Center(
             child: CircularProgressIndicator(),
@@ -172,25 +192,32 @@ class FriendsScreenContentState extends State<FriendsScreenContent>
             child: CircularProgressIndicator(),
           );
         }
-        return RefreshIndicator(
-          onRefresh: () => model.getFriendsnRequests(),
-          child: Column(
-            children: [
-              //SearchFriends(),
-              state.friendsRequestsReceived.isNotEmpty
-                  ? const Expanded(
-                      flex: 2,
-                      child: FriendsRequests(),
-                    )
-                  : Container(),
-              state.friends.isNotEmpty
-                  ? const Expanded(
-                      flex: 2,
-                      child: FriendsList(),
-                    )
-                  : Container(),
-            ],
-          ),
+        return Column(
+          children: [
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: () => model.getFriendsnRequests(),
+                child: Column(
+                  children: [
+                    //SearchFriends(),
+                    state.friendsRequestsReceived.isNotEmpty
+                        ? const Expanded(
+                            flex: 2,
+                            child: FriendsRequests(),
+                          )
+                        : Container(),
+                    state.friends.isNotEmpty
+                        ? const Expanded(
+                            flex: 2,
+                            child: FriendsList(),
+                          )
+                        : Container(),
+                  ],
+                ),
+              ),
+            ),
+            ErrorMessage(message: state.errorMessage),
+          ],
         );
       },
     );
@@ -334,7 +361,7 @@ class FriendsRequests extends StatelessWidget {
       if (!state.searchOpen && state.friendsRequestsReceived.isNotEmpty) {
         final friendsRequests = state.friendsRequestsReceived;
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 10.0),
           child: Column(
             children: [
               Text(
@@ -356,6 +383,8 @@ class FriendsRequests extends StatelessWidget {
                         profile: friendsRequests[index],
                         isFriend: false,
                         isRequest: true,
+                        isSearch: false,
+                        cubit: context.read<FriendsScreenCubit>(),
                       );
                     }),
               ),
@@ -487,7 +516,7 @@ class FriendsList extends StatelessWidget {
       if (!state.searchOpen && state.friends.isNotEmpty) {
         final friends = state.friends;
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 10.0),
           child: Column(
             children: [
               Text(
@@ -509,6 +538,8 @@ class FriendsList extends StatelessWidget {
                         profile: friends[index],
                         isFriend: true,
                         isRequest: false,
+                        isSearch: false,
+                        cubit: context.read<FriendsScreenCubit>(),
                       );
                     }),
               ),
@@ -529,128 +560,146 @@ class FriendProfile extends StatelessWidget {
     required this.profile,
     required this.isFriend,
     required this.isRequest,
+    required this.isSearch,
+    required this.cubit,
   }) : super(key: key);
   final Profile profile;
   final bool isFriend;
   final bool isRequest;
+  final bool isSearch;
+  final FriendsScreenCubit cubit;
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<FriendsScreenCubit>();
-    return BlocBuilder<FriendsScreenCubit, FriendsScreenState>(
-        builder: (context, state) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-        child: Row(
-          children: [
-            AppAvatars.getAvatarImage(profile.avatar),
-            const SizedBox(
-              width: 20.0,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+      child: Row(
+        children: [
+          AppAvatars.getAvatarImage(profile.avatar),
+          const SizedBox(
+            width: 20.0,
+          ),
+          Expanded(
+            child: Column(
+              children: [
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    profile.name ?? profile.userName ?? 'Unknown',
+                    style: AppFonts.friendsName,
+                  ),
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          '@${profile.userName}',
+                          style: AppFonts.friendsUsername,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 56.0,
+                      child: Row(children: [
+                        const Icon(
+                          Icons.star,
+                          color: AppColors.friendsIconRating,
+                        ),
+                        Text(
+                          profile.rating.toString(),
+                          style: AppFonts.friendsRating,
+                          textAlign: TextAlign.left,
+                        ),
+                      ]),
+                    )
+                  ],
+                )
+              ],
             ),
-            Expanded(
-              child: Column(
-                children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      profile.name ?? profile.userName ?? 'Unknown',
-                      style: AppFonts.friendsName,
+          ),
+          const SizedBox(
+            width: 20.0,
+          ),
+          isFriend
+              ? SizedBox(
+                  width: 32.0,
+                  child: Center(
+                    child: IconButton(
+                      onPressed: () => cubit.removeFriend(profile, context),
+                      icon: const Icon(
+                        Icons.delete,
+                        color: AppColors.friendsRemove,
+                        size: 32.0,
+                      ),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
                     ),
                   ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            '@${profile.userName}',
-                            style: AppFonts.friendsUsername,
+                )
+              : Container(),
+          isRequest
+              ? Row(
+                  children: [
+                    SizedBox(
+                      width: 32.0,
+                      child: Center(
+                        child: IconButton(
+                          onPressed: () =>
+                              cubit.acceptRequest(profile, context),
+                          icon: const Icon(
+                            Icons.check_box,
+                            color: AppColors.friendsApprove,
+                            size: 32.0,
                           ),
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
                         ),
-                      ),
-                      SizedBox(
-                        width: 56.0,
-                        child: Row(children: [
-                          const Icon(
-                            Icons.star,
-                            color: AppColors.friendsIconRating,
-                          ),
-                          Text(
-                            profile.rating.toString(),
-                            style: AppFonts.friendsRating,
-                            textAlign: TextAlign.left,
-                          ),
-                        ]),
-                      )
-                    ],
-                  )
-                ],
-              ),
-            ),
-            const SizedBox(
-              width: 20.0,
-            ),
-            isFriend
-                ? SizedBox(
-                    width: 32.0,
-                    child: Center(
-                      child: IconButton(
-                        onPressed: () => model.removeFriend(profile, context),
-                        icon: const Icon(
-                          Icons.delete,
-                          color: AppColors.friendsRemove,
-                          size: 32.0,
-                        ),
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(),
                       ),
                     ),
-                  )
-                : Container(),
-            isRequest
-                ? Row(
-                    children: [
-                      SizedBox(
-                        width: 32.0,
-                        child: Center(
-                          child: IconButton(
-                            onPressed: () =>
-                                model.acceptRequest(profile, context),
-                            icon: const Icon(
-                              Icons.check_box,
-                              color: AppColors.friendsApprove,
-                              size: 32.0,
-                            ),
-                            padding: EdgeInsets.zero,
-                            constraints: const BoxConstraints(),
+                    const SizedBox(
+                      width: 10.0,
+                    ),
+                    SizedBox(
+                      width: 32.0,
+                      child: Center(
+                        child: IconButton(
+                          onPressed: () =>
+                              cubit.rejectRequest(profile, context),
+                          icon: const Icon(
+                            Icons.cancel,
+                            color: AppColors.friendsReject,
+                            size: 32.0,
                           ),
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
                         ),
                       ),
-                      const SizedBox(
-                        width: 10.0,
+                    ),
+                  ],
+                )
+              : Container(),
+          isSearch
+              ? SizedBox(
+                  width: 32.0,
+                  child: Center(
+                    child: IconButton(
+                      onPressed: () => cubit.inviteFriend(profile, context),
+                      icon: const Icon(
+                        Icons.add_reaction_outlined,
+                        color: AppColors.friendsInvite,
+                        size: 32.0,
                       ),
-                      SizedBox(
-                        width: 32.0,
-                        child: Center(
-                          child: IconButton(
-                            onPressed: () =>
-                                model.rejectRequest(profile, context),
-                            icon: const Icon(
-                              Icons.cancel,
-                              color: AppColors.friendsReject,
-                              size: 32.0,
-                            ),
-                            padding: EdgeInsets.zero,
-                            constraints: const BoxConstraints(),
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                : Container(),
-          ],
-        ),
-      );
-    });
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                  ),
+                )
+              : Container(),
+        ],
+      ),
+    );
+    // });
   }
 }

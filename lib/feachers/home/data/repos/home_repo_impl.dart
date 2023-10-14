@@ -3,7 +3,7 @@ import 'package:collection/collection.dart';
 
 import 'package:dio/dio.dart';
 import 'package:goal_app/core/consts/api_consts.dart';
-import 'package:goal_app/core/consts/api_key.dart';
+//import 'package:goal_app/core/consts/api_key.dart';
 import 'package:goal_app/core/exceptions/exceptions.dart';
 import 'package:goal_app/feachers/auth/domain/repos/session_repo.dart';
 import 'package:goal_app/feachers/goals/data/models/goal_model/goal_model.dart';
@@ -16,6 +16,7 @@ class HomeRepoImpl implements HomeRepo {
   }) : _sessionRepo = sessionRepo;
   final SessionRepo _sessionRepo;
 
+/*
   static Dio _dioA(String key3) {
     if (key3 != ApiKey.key3) {
       throw ServerException();
@@ -30,7 +31,7 @@ class HomeRepoImpl implements HomeRepo {
       },
     ));
   }
-
+*/
   Dio _dio() {
     final username = _sessionRepo.sessionData?.username;
     final password = _sessionRepo.sessionData?.password;
@@ -82,7 +83,8 @@ class HomeRepoImpl implements HomeRepo {
   @override
   Future<Goal> likeGoal(Goal goal, int userId) async {
     try {
-      if (goal.id != null) {
+      if (goal.id != null && goal.id != 0) {
+        /*
         String url = ApiConsts.getGoalById(goal.id ?? 0);
         var response = await _dioA(ApiKey.key3).get(url);
         if (response.data == null || response.data!.isEmpty) {
@@ -103,9 +105,17 @@ class HomeRepoImpl implements HomeRepo {
         if (response.data == null || response.data!.isEmpty) {
           throw ServerException();
         }
+        */
+        final url = ApiConsts.likeGoal(goal.id ?? 0);
+        final response = await _dio().post(url);
+        if (response.data == null || response.data!.isEmpty) {
+          throw ServerException();
+        }
+        final newGoal = GoalModel.fromJson(response.data);
         return newGoal;
+      } else {
+        return goal;
       }
-      return goal;
     } on DioError {
       throw ServerException();
     }
@@ -114,7 +124,8 @@ class HomeRepoImpl implements HomeRepo {
   @override
   Future<Goal> unLikeGoal(Goal goal, int userId) async {
     try {
-      if (goal.id != null) {
+      if (goal.id != null && goal.id != 0) {
+        /*
         String url = ApiConsts.getGoalById(goal.id ?? 0);
         var response = await _dioA(ApiKey.key3).get(url);
         if (response.data == null || response.data!.isEmpty) {
@@ -135,9 +146,17 @@ class HomeRepoImpl implements HomeRepo {
         if (response.data == null || response.data!.isEmpty) {
           throw ServerException();
         }
+        */
+        final url = ApiConsts.unLikeGoal(goal.id ?? 0);
+        final response = await _dio().post(url);
+        if (response.data == null || response.data!.isEmpty) {
+          throw ServerException();
+        }
+        final newGoal = GoalModel.fromJson(response.data);
         return newGoal;
+      } else {
+        return goal;
       }
-      return goal;
     } on DioError {
       throw ServerException();
     }

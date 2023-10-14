@@ -1,8 +1,7 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:goal_app/core/consts/keys.dart';
-import 'package:goal_app/core/widgets/fun.dart';
+import 'package:goal_app/core/widgets/error_presentor.dart';
 import 'package:goal_app/core/widgets/mega_menu.dart';
 import 'package:goal_app/feachers/goals/data/models/goal_model/goal_model.dart';
 import 'package:intl/intl.dart';
@@ -121,13 +120,10 @@ class GoalScreenContentState extends State<GoalScreenContent>
           children: [
             DatesListView(goals: state.goals),
             GoalsMainContainer(goals: state.goals),
-            /*FunFlipAnimation(),
-            Expanded(
-              child: Align(
-                alignment: Alignment.bottomLeft,
-                child: QuoteWidget(),
-              ),
-            ),*/
+            const Expanded(
+              child: AIGoalGenerator(),
+            ),
+            ErrorMessage(message: state.errorMessage),
           ],
         );
       },
@@ -706,49 +702,64 @@ class GoalTextField extends StatelessWidget {
   }
 }
 
-class FunFlipAnimation extends StatelessWidget {
-  const FunFlipAnimation({
-    Key? key,
-  }) : super(key: key);
-
+class AIGoalGenerator extends StatelessWidget {
+  const AIGoalGenerator({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    final model = context.read<GoalScreenCubit>();
-
     return BlocBuilder<GoalScreenCubit, GoalScreenState>(
-        builder: (context, state) {
-      return GestureDetector(
-        onTap: () => model.flipFunCard(),
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 800),
-          transitionBuilder: __transitionBuilder,
-          layoutBuilder: (widget, list) =>
-              Stack(children: [widget ?? const FunFront(), ...list]),
-          switchInCurve: Curves.easeInBack,
-          switchOutCurve: Curves.easeInBack.flipped,
-          child: model.getFunGoalWidget(),
-        ),
-      );
-    });
+      builder: (context, state) {
+        if (state.status == GoalScreenStateStatus.ready &&
+            Keys.aiGeneratorEnabled == true) {
+          return Container(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+            height: 100.0,
+            child: Center(
+              child: OutlinedButton(
+                onPressed: () =>
+                    context.read<GoalScreenCubit>().generateAIGoal(context),
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(AppColors.goalGenerateBg),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          side: const BorderSide(
+                              color: AppColors.goalGenerateBg))),
+                ),
+                child: const SizedBox(
+                  height: 64.0,
+                  width: 200.0,
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.psychology,
+                        size: 64.0,
+                        color: AppColors.goalGenerateIcon,
+                      ),
+                      SizedBox(
+                        width: 20.0,
+                      ),
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            'Generate a new goal for me',
+                            textAlign: TextAlign.center,
+                            style: AppFonts.goalGenerateText,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        } else {
+          return Container();
+        }
+      },
+    );
   }
-}
-
-Widget __transitionBuilder(Widget widget, Animation<double> animation) {
-  final rotateAnim = Tween(begin: pi, end: 0.0).animate(animation);
-  return AnimatedBuilder(
-    animation: rotateAnim,
-    child: widget,
-    builder: (context, widget) {
-      final model = context.read<GoalScreenCubit>();
-      final isUnder = (ValueKey(model.getDisplayFunFront()) != widget?.key);
-      var tilt = ((animation.value - 0.5).abs() - 0.5) * 0.003;
-      tilt *= isUnder ? -1.0 : 1.0;
-      final value = isUnder ? min(rotateAnim.value, pi / 2) : rotateAnim.value;
-      return Transform(
-        transform: Matrix4.rotationY(value)..setEntry(3, 0, tilt),
-        alignment: Alignment.center,
-        child: widget,
-      );
-    },
-  );
 }

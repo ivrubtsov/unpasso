@@ -13,6 +13,7 @@ class HomeScreenState extends Equatable {
   final int goalsPage;
   final bool goalsHasMore;
   final HomeScreenStateStatus status;
+  final String errorMessage;
 
   const HomeScreenState({
     required this.currentDate,
@@ -20,6 +21,7 @@ class HomeScreenState extends Equatable {
     required this.goalsPage,
     required this.goalsHasMore,
     required this.status,
+    required this.errorMessage,
   });
 
   factory HomeScreenState.initial() => HomeScreenState(
@@ -28,6 +30,7 @@ class HomeScreenState extends Equatable {
         goalsPage: 1,
         goalsHasMore: true,
         status: HomeScreenStateStatus.ready,
+        errorMessage: '',
       );
 
   HomeScreenState copyWith({
@@ -36,6 +39,7 @@ class HomeScreenState extends Equatable {
     int? goalsPage,
     bool? goalsHasMore,
     HomeScreenStateStatus? status,
+    String? errorMessage,
   }) {
     return HomeScreenState(
       currentDate: currentDate ?? this.currentDate,
@@ -43,6 +47,7 @@ class HomeScreenState extends Equatable {
       goalsPage: goalsPage ?? this.goalsPage,
       goalsHasMore: goalsHasMore ?? this.goalsHasMore,
       status: status ?? this.status,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 
@@ -53,5 +58,6 @@ class HomeScreenState extends Equatable {
         goalsPage,
         goalsHasMore,
         status,
+        errorMessage,
       ];
 }

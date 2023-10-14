@@ -18,6 +18,7 @@ class GoalScreenState extends Equatable {
   final Profile profile;
   final GoalScreenStateStatus status;
   final bool displayFunFront;
+  final String errorMessage;
 
   bool get isCheckboxActive =>
       goal.text.isNotEmpty || (goal.isCompleted && goal.text.isNotEmpty);
@@ -30,6 +31,7 @@ class GoalScreenState extends Equatable {
     required this.profile,
     required this.status,
     required this.displayFunFront,
+    required this.errorMessage,
   });
 
   factory GoalScreenState.initial() => GoalScreenState(
@@ -40,6 +42,7 @@ class GoalScreenState extends Equatable {
         profile: Profile(id: 0),
         status: GoalScreenStateStatus.ready,
         displayFunFront: true,
+        errorMessage: '',
       );
 
   GoalScreenState copyWith({
@@ -50,6 +53,7 @@ class GoalScreenState extends Equatable {
     Profile? profile,
     GoalScreenStateStatus? status,
     bool displayFunFront = true,
+    String? errorMessage,
   }) {
     return GoalScreenState(
       selectedDate: selectedDate ?? this.selectedDate,
@@ -59,6 +63,7 @@ class GoalScreenState extends Equatable {
       profile: profile ?? this.profile,
       status: status ?? this.status,
       displayFunFront: displayFunFront,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 
@@ -70,6 +75,7 @@ class GoalScreenState extends Equatable {
         goals,
         profile,
         status,
-        displayFunFront
+        displayFunFront,
+        errorMessage,
       ];
 }

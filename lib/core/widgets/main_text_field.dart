@@ -8,11 +8,13 @@ class MainTextField extends StatefulWidget {
     required this.hintText,
     required this.onChanged,
     this.isPassword = false,
+    this.isUsername = false,
   }) : super(key: key);
 
   final String hintText;
   final Function(String value) onChanged;
   final bool isPassword;
+  final bool isUsername;
 
   @override
   State<MainTextField> createState() => _MainTextFieldState();
@@ -28,6 +30,12 @@ class _MainTextFieldState extends State<MainTextField> {
       decoration: InputDecoration(
         filled: true,
         fillColor: AppColors.inputBg,
+        prefixIcon: widget.isUsername
+            ? const Icon(
+                Icons.alternate_email,
+                color: AppColors.disabled,
+              )
+            : null,
         suffixIcon: widget.isPassword
             ? Material(
                 color: Colors.transparent,
