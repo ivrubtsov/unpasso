@@ -31,6 +31,11 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
     getFirstGoals();
   }
 
+// GET THE CURRENT USER ID
+  int getUserId() {
+    return _sessionRepo.sessionData!.id;
+  }
+
 // LOAD GOALS
   Future<void> getFirstGoals() async {
     try {
@@ -66,7 +71,8 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
   }
 
   Future<void> getMoreGoals() async {
-    if (state.status == HomeScreenStateStatus.fetch) return;
+    if (state.status == HomeScreenStateStatus.fetch ||
+        state.status == HomeScreenStateStatus.loading) return;
     try {
       emit(state.copyWith(status: HomeScreenStateStatus.fetch));
       final int page = state.goalsPage + 1;
@@ -118,6 +124,19 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
     }
   }
 
+  void setLikeGoal(Goal goal) async {
+    try {
+      await _homeRepo.likeGoal(goal, _sessionRepo.sessionData!.id);
+      return;
+    } on ServerException {
+      emit(state.copyWith(
+        status: HomeScreenStateStatus.error,
+        errorMessage:
+            'I don\'t like it. Please check your internet connection.',
+      ));
+    }
+  }
+
 // UNLIKE A GOAL
   void unLikeGoal(int id) async {
     try {
@@ -131,6 +150,19 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
         goals: goals,
         errorMessage: '',
       ));
+    } on ServerException {
+      emit(state.copyWith(
+        status: HomeScreenStateStatus.error,
+        errorMessage:
+            'I don\'t like it. Please check your internet connection.',
+      ));
+    }
+  }
+
+  void setUnLikeGoal(Goal goal) async {
+    try {
+      await _homeRepo.unLikeGoal(goal, _sessionRepo.sessionData!.id);
+      return;
     } on ServerException {
       emit(state.copyWith(
         status: HomeScreenStateStatus.error,

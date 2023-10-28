@@ -6,19 +6,21 @@ class GoalModel extends Goal {
     required String text,
     required DateTime createdAt,
     required int authorId,
-    final String? authorName,
-    final String? authorUserName,
-    final int? authorAvatar,
-    final int? authorRating,
+    String? authorName,
+    String? authorUserName,
+    int? authorAvatar,
+    int? authorRating,
     required bool isCompleted,
     required bool isExist,
-    final bool? isPublic,
-    final bool? isFriends,
-    final List<int>? friendsUsers,
-    final bool? isPrivate,
-    final bool? like,
-    final List<int>? likeUsers,
-    final int? likes,
+    bool? isPublic,
+    bool? isFriends,
+    List<int>? friendsUsers,
+    bool? isPrivate,
+    bool? like,
+    List<int>? likeUsers,
+    int? likes,
+    bool? isGenerated,
+    bool? isAccepted,
   }) : super(
           id: id,
           text: text,
@@ -37,6 +39,8 @@ class GoalModel extends Goal {
           like: like ?? false,
           likeUsers: likeUsers ?? [],
           likes: likes ?? 0,
+          isGenerated: isGenerated ?? false,
+          isAccepted: isAccepted ?? false,
         );
   factory GoalModel.fromGoal(Goal goal) => GoalModel(
         id: goal.id,
@@ -56,12 +60,16 @@ class GoalModel extends Goal {
         like: goal.like,
         likeUsers: goal.likeUsers,
         likes: goal.likes,
+        isGenerated: goal.isGenerated,
+        isAccepted: goal.isAccepted,
       );
 
   factory GoalModel.fromJson(Map<String, dynamic> json, [int? id]) {
     final jsonDate = json['date'] + 'Z';
     final createdDate = DateTime.parse(jsonDate).toLocal();
     bool checkIsCompleted;
+    bool checkIsGenerated;
+    bool checkIsAccepted;
     bool checkIsPublic;
     bool checkIsFriends;
     List<int> friendsUsers;
@@ -76,11 +84,15 @@ class GoalModel extends Goal {
     // If tag == 8, then the goal is completed
     if (tags == null || tags.isEmpty) {
       checkIsCompleted = false;
+      checkIsGenerated = false;
+      checkIsAccepted = false;
       checkIsPublic = false;
       checkIsFriends = false;
       checkIsPrivate = true;
     } else {
       checkIsCompleted = tags.contains(8) ? true : false;
+      checkIsGenerated = tags.contains(29) ? true : false;
+      checkIsAccepted = tags.contains(30) ? true : false;
       if (!tags.contains(26) && !tags.contains(27) && !tags.contains(28)) {
         checkIsPublic = false;
         checkIsFriends = false;
@@ -138,7 +150,7 @@ class GoalModel extends Goal {
           }
         }
         if (description['likeUsers'].isNotEmpty) {
-          final List<int> idsList = List<int>.from(description['friendsUsers']);
+          final List<int> idsList = List<int>.from(description['likeUsers']);
           for (int user in idsList) {
             likeUsers.add(user);
           }
@@ -173,6 +185,8 @@ class GoalModel extends Goal {
       like: like,
       likeUsers: likeUsers,
       likes: likeUsers.length + 1,
+      isGenerated: checkIsGenerated,
+      isAccepted: checkIsAccepted,
     );
   }
 
@@ -181,6 +195,8 @@ class GoalModel extends Goal {
     if (isPublic) tags.add(26);
     if (isFriends) tags.add(27);
     if (isPrivate) tags.add(28);
+    if (isGenerated) tags.add(29);
+    if (isAccepted) tags.add(30);
     final createdDate = createdAt.toUtc();
     final Map<String, dynamic> description = {
       'authorName': authorName,

@@ -7,6 +7,7 @@ enum GoalScreenStateStatus {
   goalCompleted,
   goalIsSubmitting,
   goalIsCompleting,
+  goalIsGenerating,
   ready,
 }
 

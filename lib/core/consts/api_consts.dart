@@ -47,6 +47,8 @@ class ApiConsts {
       '$_baseUrl/posts?status=publish&title=$title&author=$authorId&categories=6&date_gmt=$date';*/
   static String createGoal() => '$_baseUrl/posts';
 
+  static String generateGoal() => '$_baseUrl/posts/generate';
+
   static String likeGoal(int id) => '$_baseUrl/posts/like/$id';
 
   static String unLikeGoal(int id) => '$_baseUrl/posts/unlike/$id';

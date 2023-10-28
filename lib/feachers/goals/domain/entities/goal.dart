@@ -16,6 +16,8 @@ class Goal {
   bool like;
   List<int> likeUsers;
   int likes;
+  bool isGenerated;
+  bool isAccepted;
 
   Goal({
     this.id,
@@ -35,6 +37,8 @@ class Goal {
     this.like = false,
     this.likeUsers = const [],
     this.likes = 0,
+    this.isGenerated = false,
+    this.isAccepted = false,
   });
 
   Goal copyWith({
@@ -55,6 +59,8 @@ class Goal {
     bool? like,
     List<int>? likeUsers,
     int? likes,
+    bool? isGenerated,
+    bool? isAccepted,
   }) {
     return Goal(
       id: id ?? this.id,
@@ -74,6 +80,8 @@ class Goal {
       like: like ?? this.like,
       likeUsers: likeUsers ?? this.likeUsers,
       likes: likes ?? this.likes,
+      isGenerated: isGenerated ?? this.isGenerated,
+      isAccepted: isAccepted ?? this.isAccepted,
     );
   }
 
@@ -95,5 +103,7 @@ class Goal {
         like,
         likeUsers,
         likes,
+        isGenerated,
+        isAccepted,
       ];
 }

@@ -113,7 +113,6 @@ class FriendsSearchDelegate extends SearchDelegate {
           final sData = snapshot.data as List<Profile>;
           return ListView.builder(
             itemBuilder: (context, index) {
-              print('profile name ${sData[index].userName}');
               return FriendProfile(
                 profile: sData[index],
                 isFriend: false,

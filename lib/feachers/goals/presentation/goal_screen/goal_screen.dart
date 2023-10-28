@@ -12,6 +12,7 @@ import 'package:goal_app/feachers/goals/presentation/goal_screen/cubit/goal_scre
 
 ScrollController dateListScrollController = ScrollController();
 ScrollController goalsListScrollController = ScrollController();
+TextEditingController textFieldController = TextEditingController();
 
 enum GoalScreenStatus {
   loading,
@@ -75,6 +76,9 @@ class GoalScreenContentState extends State<GoalScreenContent>
     setState(() {
       currentDate = DateTime.now();
     });
+    textFieldController = TextEditingController(
+      text: '',
+    );
   }
 
   @override
@@ -304,52 +308,68 @@ class GoalsMainContainer extends StatelessWidget {
                               ),
                               Align(
                                 alignment: Alignment.topRight,
-                                child: OutlinedButton(
-                                  onPressed: () {
-                                    model.submitGoal(context);
-                                    // final id = state.goal.id;
-                                    // final g = state.goal;
-                                    goals.removeAt(index);
-                                    goals.insert(
-                                        0,
-                                        GoalModel(
-                                          createdAt: DateTime.now(),
-                                          text: state.goal.text,
-                                          authorId: state.goal.authorId,
-                                          authorName: state.profile.name,
-                                          authorUserName:
-                                              state.profile.userName,
-                                          authorAvatar: state.profile.avatar,
-                                          isCompleted: false,
-                                          isExist: true,
-                                          isPublic: true,
-                                          isFriends: false,
-                                          isPrivate: false,
-                                          likeUsers: const [],
-                                          likes: 0,
-                                        ));
-                                  },
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        AppColors.enabled),
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                            side: const BorderSide(
-                                                color: AppColors.enabled))),
-                                  ),
-                                  child: Container(
-                                    height: 30.0,
-                                    width: 40.0,
-                                    alignment: Alignment.center,
-                                    child: const Text(
-                                      'Save',
-                                      style: AppFonts.button,
-                                    ),
-                                  ),
-                                ),
+                                child: state.status ==
+                                        GoalScreenStateStatus.goalIsGenerating
+                                    ? Container(
+                                        height: 30.0,
+                                        width: 30.0,
+                                        alignment: Alignment.center,
+                                        child: const Center(
+                                          child: CircularProgressIndicator(
+                                            color: AppColors.enabled,
+                                          ),
+                                        ))
+                                    : OutlinedButton(
+                                        onPressed: () {
+                                          model.submitGoal(context);
+                                          // final id = state.goal.id;
+                                          // final g = state.goal;
+                                          goals.removeAt(index);
+                                          goals.insert(
+                                              0,
+                                              GoalModel(
+                                                createdAt: DateTime.now(),
+                                                text: state.goal.text,
+                                                authorId: state.goal.authorId,
+                                                authorName: state.profile.name,
+                                                authorUserName:
+                                                    state.profile.userName,
+                                                authorAvatar:
+                                                    state.profile.avatar,
+                                                isCompleted: false,
+                                                isExist: true,
+                                                isPublic: true,
+                                                isFriends: false,
+                                                isPrivate: false,
+                                                likeUsers: const [],
+                                                likes: 0,
+                                                isGenerated: false,
+                                                isAccepted: false,
+                                              ));
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  AppColors.enabled),
+                                          shape: MaterialStateProperty.all<
+                                                  RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                  side: const BorderSide(
+                                                      color:
+                                                          AppColors.enabled))),
+                                        ),
+                                        child: Container(
+                                          height: 30.0,
+                                          width: 40.0,
+                                          alignment: Alignment.center,
+                                          child: const Text(
+                                            'Save',
+                                            style: AppFonts.button,
+                                          ),
+                                        ),
+                                      ),
                               ),
                             ],
                           ),
@@ -511,6 +531,8 @@ class GoalsMainContainer extends StatelessWidget {
                               isPrivate: state.goal.isPrivate,
                               likeUsers: state.goal.likeUsers,
                               likes: state.goal.likes,
+                              isGenerated: false,
+                              isAccepted: false,
                             ));
                       },
                       background: const CompleteGoalBG(),
@@ -689,7 +711,7 @@ class GoalTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = context.read<GoalScreenCubit>();
     return TextFormField(
-      initialValue: '',
+      controller: textFieldController,
       onChanged: model.changeGoal,
       style: AppFonts.goal,
       decoration: const InputDecoration(
@@ -708,8 +730,10 @@ class AIGoalGenerator extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<GoalScreenCubit, GoalScreenState>(
       builder: (context, state) {
-        if (state.status == GoalScreenStateStatus.ready &&
-            Keys.aiGeneratorEnabled == true) {
+        if ((state.status == GoalScreenStateStatus.ready ||
+                state.status == GoalScreenStateStatus.goalIsGenerating) &&
+            Keys.aiGeneratorEnabled == true &&
+            (state.goal.id == 0 || state.goal.id == null)) {
           return Container(
             padding:
                 const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
@@ -727,24 +751,34 @@ class AIGoalGenerator extends StatelessWidget {
                           side: const BorderSide(
                               color: AppColors.goalGenerateBg))),
                 ),
-                child: const SizedBox(
-                  height: 64.0,
+                child: SizedBox(
+                  height: 70.0,
                   width: 200.0,
                   child: Row(
                     children: [
-                      Icon(
-                        Icons.psychology,
-                        size: 64.0,
-                        color: AppColors.goalGenerateIcon,
-                      ),
-                      SizedBox(
+                      state.status == GoalScreenStateStatus.goalIsGenerating
+                          ? Container(
+                              height: 64.0,
+                              width: 64.0,
+                              alignment: Alignment.center,
+                              child: const Center(
+                                child: CircularProgressIndicator(
+                                  color: AppColors.goalGenerateIcon,
+                                ),
+                              ))
+                          : const Icon(
+                              Icons.psychology,
+                              size: 64.0,
+                              color: AppColors.goalGenerateIcon,
+                            ),
+                      const SizedBox(
                         width: 20.0,
                       ),
-                      Expanded(
+                      const Expanded(
                         child: Align(
                           alignment: Alignment.center,
                           child: Text(
-                            'Generate a new goal for me',
+                            'Generate a new goal for me \n(~1 min)',
                             textAlign: TextAlign.center,
                             style: AppFonts.goalGenerateText,
                           ),

@@ -152,6 +152,25 @@ class GoalsRepoImpl implements GoalsRepo {
     }
   }
 
+  @override
+  Future<String> generateGoal() async {
+    try {
+      final String url = ApiConsts.generateGoal();
+      final response = await _dio().get(url);
+      if (response.data == null || response.data!.isEmpty) {
+        throw ServerException();
+      }
+
+      final json = response.data;
+      if (!(json['title'] == null || json['title'] == '')) {
+        return json['title'];
+      } else {
+        return '';
+      }
+    } on DioError {
+      throw ServerException();
+    }
+  }
 /*
   @override
   Future<void> removeTodaysGoal() async {

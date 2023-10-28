@@ -63,6 +63,7 @@ class HomeScreenContentState extends State<HomeScreenContent>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    // homeListScrollController = new ScrollController();
     setState(() {
       currentDate = DateTime.now();
     });
@@ -90,7 +91,7 @@ class HomeScreenContentState extends State<HomeScreenContent>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    homeListScrollController.dispose();
+    // homeListScrollController.dispose();
     super.dispose();
   }
 
@@ -121,11 +122,14 @@ class HomeScreenContentState extends State<HomeScreenContent>
                   itemCount: goals.length + 1,
                   itemBuilder: (BuildContext context, int index) {
                     if (index < goals.length) {
-                      return GoalItem(
-                        key: ValueKey<Goal>(goals[index]),
+                      return GoalListItem(
                         goal: goals[index],
-                        goalId: index,
                       );
+                      // return GoalItem(
+                      //   key: ValueKey<Goal>(goals[index]),
+                      //   goal: goals[index],
+                      //   goalId: index,
+                      // );
                     } else {
                       return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 20.0),
@@ -288,6 +292,141 @@ class GoalLikeInActive extends StatelessWidget {
         ),
         padding: EdgeInsets.zero,
         constraints: const BoxConstraints(),
+      );
+    });
+  }
+}
+
+class GoalListItem extends StatefulWidget {
+  const GoalListItem({Key? key, required this.goal}) : super(key: key);
+
+  final Goal goal;
+  @override
+  State<GoalListItem> createState() => GoalListItemState();
+}
+
+class GoalListItemState extends State<GoalListItem> {
+  Goal goal = Goal(
+    authorId: 0,
+    text: '',
+    createdAt: DateTime.now(),
+  );
+  int userId = 0;
+  bool like = false;
+  List<int> likeUsers = [];
+  int likes = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      goal = widget.goal;
+      likeUsers = widget.goal.likeUsers;
+      likes = likeUsers.length;
+    });
+  }
+
+  void _likeMe() {
+    setState(() {
+      likeUsers.add(userId);
+      likes++;
+      like = true;
+    });
+  }
+
+  void _unLikeMe() {
+    setState(() {
+      likeUsers.remove(userId);
+      likes--;
+      like = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<HomeScreenCubit, HomeScreenState>(
+        builder: (context, state) {
+      final model = context.read<HomeScreenCubit>();
+      userId = model.getUserId();
+      like = likeUsers.contains(userId);
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+        child: Row(
+          children: [
+            AppAvatars.getAvatarImage(goal.authorAvatar),
+            const SizedBox(
+              width: 20.0,
+            ),
+            Expanded(
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      goal.text,
+                      style: AppFonts.homeGoalTitle,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      goal.authorName,
+                      style: AppFonts.homeGoalAuthorName,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      '@${goal.authorUserName}',
+                      style: AppFonts.homeGoalAuthorUserName,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Column(
+              children: [
+                like
+                    ? IconButton(
+                        onPressed: () {
+                          model.setUnLikeGoal(goal);
+                          _unLikeMe();
+                        },
+                        icon: const Icon(
+                          Icons.favorite,
+                          color: AppColors.homeGoalLikeIconActive,
+                          size: 32.0,
+                        ),
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                      )
+                    : IconButton(
+                        onPressed: () {
+                          model.setLikeGoal(goal);
+                          _likeMe();
+                        },
+                        icon: const Icon(
+                          Icons.favorite_outline,
+                          color: AppColors.homeGoalLikeIcon,
+                          size: 32.0,
+                        ),
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                      ),
+                const SizedBox(
+                  height: 5.0,
+                ),
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    likes.toString(),
+                    style: AppFonts.homeGoalLikeNumber,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       );
     });
   }

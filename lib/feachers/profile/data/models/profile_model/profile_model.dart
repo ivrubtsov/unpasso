@@ -132,6 +132,7 @@ class ProfileModel extends Profile {
 
   Map<String, dynamic> submitJSON() {
     return {
+      'id': id,
       'name': name ?? userName ?? 'Unknown',
       'userName': userName ?? '',
       'description': {

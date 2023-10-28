@@ -91,17 +91,22 @@ class GoalScreenCubit extends Cubit<GoalScreenState> {
     }
   }
 
-// МЕНЯЕМ ТЕКСТ ЦЕЛИ В STATE
+// CHANGE THE GOAL TITLE IN THE STATE
   void changeGoal(String value) {
-    emit(state.copyWith(goal: state.goal.copyWith(text: value)));
+    emit(state.copyWith(
+        goal: state.goal.copyWith(
+      text: value,
+      isGenerated: false,
+      isAccepted: false,
+    )));
   }
 
-// ПОЛУЧАЕМ ИДЕНТИФИКАТОР ПОЛЬЗОВАТЕЛЯ
+// GET THE CURRENT USER ID
   int getUserId() {
     return _sessionRepo.sessionData!.id;
   }
 
-// СОХРАНЯЕМ НОВУЮ ЦЕЛЬ
+// SAVE THE NEW GOAL
   void submitGoal(BuildContext context) async {
     final String value = state.goal.text;
     if (value.isEmpty || value == '%%!!-!!%%') {
@@ -128,6 +133,8 @@ class GoalScreenCubit extends Cubit<GoalScreenState> {
         isPrivate: state.goal.isPrivate,
         likeUsers: const [],
         likes: 0,
+        isGenerated: state.goal.isGenerated,
+        isAccepted: state.goal.isAccepted,
       ));
 
       emit(state.copyWith(goal: goal));
@@ -465,14 +472,32 @@ class GoalScreenCubit extends Cubit<GoalScreenState> {
     );
   }
 
-  void generateAIGoal(BuildContext context) {
+  void generateAIGoal(BuildContext context) async {
     try {
-      return;
+      if (state.status == GoalScreenStateStatus.goalIsGenerating) {
+        return;
+      }
+      emit(state.copyWith(status: GoalScreenStateStatus.goalIsGenerating));
+      // get a generated goal
+      final value = await _goalsRepo.generateGoal();
+
+      emit(state.copyWith(
+        goal: state.goal.copyWith(
+          text: value,
+          isGenerated: true,
+          isAccepted: true,
+        ),
+        status: GoalScreenStateStatus.ready,
+      ));
+      textFieldController.value = textFieldController.value.copyWith(
+        text: value,
+        selection: TextSelection.collapsed(offset: value.length),
+      );
     } on ServerException {
       emit(state.copyWith(
         status: GoalScreenStateStatus.error,
         errorMessage:
-            'Unfortunately the artificial intelligence is tired. There are too many people looking for his help. Please try again later,',
+            'Unfortunately the artificial intelligence is tired. There are too many people looking for its help. Please try again later,',
       ));
     }
   }

@@ -135,14 +135,12 @@ class FriendsScreenCubit extends Cubit<FriendsScreenState> {
   }
 
   Future<List<Profile>> searchFriends(String text) async {
-    print('query:$text');
     if (text == '') {
       return [];
     } else {
       List<Profile> friends =
           await _friendsRepo.searchFriends(text.toLowerCase());
 
-      print(friends);
       return friends;
     }
   }
