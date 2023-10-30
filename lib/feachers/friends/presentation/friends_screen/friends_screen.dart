@@ -266,7 +266,6 @@ class SearchFriends extends StatelessWidget {
     });
   }
 }
-*/
 
 // WIDGET TO SHOW ONE USER TO SEND A FRIEND REQUEST
 class FriendSearchProfile extends StatelessWidget {
@@ -347,6 +346,7 @@ class FriendSearchProfile extends StatelessWidget {
     });
   }
 }
+*/
 
 // WIDGET TO SHOW ALL FRIENDS REQUESTS
 class FriendsRequests extends StatelessWidget {
@@ -396,112 +396,6 @@ class FriendsRequests extends StatelessWidget {
     });
   }
 }
-
-// WIDGET TO SHOW ONE FRIEND REQUEST
-/*
-class FriendRequest extends StatelessWidget {
-  const FriendRequest({
-    Key? key,
-    required this.profile,
-  }) : super(key: key);
-  final Profile profile;
-
-  @override
-  Widget build(BuildContext context) {
-    final model = context.read<FriendsScreenCubit>();
-    return BlocBuilder<FriendsScreenCubit, FriendsScreenState>(
-        builder: (context, state) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-        child: Row(
-          children: [
-            AppAvatars.getAvatarImage(profile.avatar),
-            const SizedBox(
-              width: 20.0,
-            ),
-            Expanded(
-              child: Column(
-                children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      profile.name ?? profile.userName ?? 'Unknown',
-                      style: AppFonts.friendsName,
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            '@${profile.userName}',
-                            style: AppFonts.friendsUsername,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 56.0,
-                        child: Row(children: [
-                          const Icon(
-                            Icons.star,
-                            color: AppColors.friendsIconRating,
-                          ),
-                          Text(
-                            profile.rating.toString(),
-                            style: AppFonts.friendsRating,
-                            textAlign: TextAlign.left,
-                          ),
-                        ]),
-                      )
-                    ],
-                  )
-                ],
-              ),
-            ),
-            const SizedBox(
-              width: 20.0,
-            ),
-            SizedBox(
-              width: 32.0,
-              child: Center(
-                child: IconButton(
-                  onPressed: () => model.acceptRequest(profile),
-                  icon: const Icon(
-                    Icons.check_box,
-                    color: AppColors.friendsApprove,
-                    size: 32.0,
-                  ),
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                ),
-              ),
-            ),
-            const SizedBox(
-              width: 10.0,
-            ),
-            SizedBox(
-              width: 32.0,
-              child: Center(
-                child: IconButton(
-                  onPressed: () => model.rejectRequest(profile),
-                  icon: const Icon(
-                    Icons.cancel,
-                    color: AppColors.friendsReject,
-                    size: 32.0,
-                  ),
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    });
-  }
-}
-*/
 
 // WIDGET TO SHOW ALL FRIENDS
 class FriendsList extends StatelessWidget {
@@ -553,7 +447,7 @@ class FriendsList extends StatelessWidget {
 }
 
 // WIDGET TO SHOW ONE FRIEND
-class FriendProfile extends StatelessWidget {
+class FriendProfile extends StatefulWidget {
   const FriendProfile({
     Key? key,
     required this.profile,
@@ -567,6 +461,46 @@ class FriendProfile extends StatelessWidget {
   final bool isRequest;
   final bool isSearch;
   final FriendsScreenCubit cubit;
+
+  @override
+  State<FriendProfile> createState() => FriendProfileState();
+}
+
+class FriendProfileState extends State<FriendProfile> {
+  Profile profile = Profile(
+    id: 0,
+  );
+  int userId = 0;
+  bool isFriend = false;
+  bool isRequestSent = false;
+  bool isRequestReceived = false;
+  List<int> friendsRequests = [];
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      profile = widget.profile;
+      isFriend = widget.cubit.checkFriend(profile.id);
+      isRequestSent = widget.cubit.checkRequestSent(profile.id);
+      isRequestReceived = widget.cubit.checkRequestReceived(profile.id);
+    });
+  }
+
+  void _requestMe() {
+    widget.cubit.inviteFriend(profile, context);
+    setState(() {
+      isRequestSent = true;
+    });
+  }
+
+  void _acceptThem() {
+    widget.cubit.acceptRequest(profile, context);
+    setState(() {
+      isRequestReceived = false;
+      isFriend = true;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -621,12 +555,13 @@ class FriendProfile extends StatelessWidget {
           const SizedBox(
             width: 20.0,
           ),
-          isFriend
+          widget.isFriend
               ? SizedBox(
                   width: 32.0,
                   child: Center(
                     child: IconButton(
-                      onPressed: () => cubit.removeFriend(profile, context),
+                      onPressed: () =>
+                          widget.cubit.removeFriend(profile, context),
                       icon: const Icon(
                         Icons.delete,
                         color: AppColors.friendsRemove,
@@ -638,7 +573,7 @@ class FriendProfile extends StatelessWidget {
                   ),
                 )
               : Container(),
-          isRequest
+          widget.isRequest
               ? Row(
                   children: [
                     SizedBox(
@@ -646,7 +581,7 @@ class FriendProfile extends StatelessWidget {
                       child: Center(
                         child: IconButton(
                           onPressed: () =>
-                              cubit.acceptRequest(profile, context),
+                              widget.cubit.acceptRequest(profile, context),
                           icon: const Icon(
                             Icons.check_box,
                             color: AppColors.friendsApprove,
@@ -665,7 +600,7 @@ class FriendProfile extends StatelessWidget {
                       child: Center(
                         child: IconButton(
                           onPressed: () =>
-                              cubit.rejectRequest(profile, context),
+                              widget.cubit.rejectRequest(profile, context),
                           icon: const Icon(
                             Icons.cancel,
                             color: AppColors.friendsReject,
@@ -679,22 +614,64 @@ class FriendProfile extends StatelessWidget {
                   ],
                 )
               : Container(),
-          isSearch
-              ? SizedBox(
-                  width: 32.0,
-                  child: Center(
-                    child: IconButton(
-                      onPressed: () => cubit.inviteFriend(profile, context),
-                      icon: const Icon(
-                        Icons.add_reaction_outlined,
-                        color: AppColors.friendsInvite,
-                        size: 32.0,
+          widget.isSearch
+              // Already a friend
+              ? isFriend
+                  ? const SizedBox(
+                      width: 32.0,
+                      child: Center(
+                        child: Icon(
+                          Icons.people,
+                          color: AppColors.friendsInvite,
+                          size: 32.0,
+                        ),
                       ),
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
-                    ),
-                  ),
-                )
+                    )
+                  // Is not a friend but already requested the connection
+                  : isRequestSent
+                      ? const SizedBox(
+                          width: 32.0,
+                          child: Center(
+                            child: Icon(
+                              Icons.more_time,
+                              color: AppColors.friendsInvite,
+                              size: 32.0,
+                            ),
+                          ),
+                        )
+                      // If this person has sent me the request for connection
+                      : isRequestReceived
+                          ? SizedBox(
+                              width: 32.0,
+                              child: Center(
+                                child: IconButton(
+                                  onPressed: () => _acceptThem(),
+                                  icon: const Icon(
+                                    Icons.check_box,
+                                    color: AppColors.friendsApprove,
+                                    size: 32.0,
+                                  ),
+                                  padding: EdgeInsets.zero,
+                                  constraints: const BoxConstraints(),
+                                ),
+                              ),
+                            )
+                          // Not a friend and didn't request the connection - button to send the request
+                          : SizedBox(
+                              width: 32.0,
+                              child: Center(
+                                child: IconButton(
+                                  onPressed: () => _requestMe(),
+                                  icon: const Icon(
+                                    Icons.person_add,
+                                    color: AppColors.friendsInviteActive,
+                                    size: 32.0,
+                                  ),
+                                  padding: EdgeInsets.zero,
+                                  constraints: const BoxConstraints(),
+                                ),
+                              ),
+                            )
               : Container(),
         ],
       ),

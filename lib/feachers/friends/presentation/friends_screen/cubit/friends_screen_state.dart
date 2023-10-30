@@ -12,6 +12,9 @@ class FriendsScreenState extends Equatable {
   final List<Profile> friends;
   final List<Profile> friendsRequestsReceived;
   final List<Profile> friendsRequestsSent;
+  final List<int> friendsIds;
+  final List<int> friendsRequestsReceivedIds;
+  final List<int> friendsRequestsSentIds;
   final FriendsScreenStateStatus status;
   final String searchText;
   final bool searchOpen;
@@ -22,6 +25,9 @@ class FriendsScreenState extends Equatable {
     required this.friends,
     required this.friendsRequestsReceived,
     required this.friendsRequestsSent,
+    required this.friendsIds,
+    required this.friendsRequestsReceivedIds,
+    required this.friendsRequestsSentIds,
     required this.status,
     required this.searchText,
     required this.searchOpen,
@@ -33,6 +39,9 @@ class FriendsScreenState extends Equatable {
         friends: const [],
         friendsRequestsReceived: const [],
         friendsRequestsSent: const [],
+        friendsIds: const [],
+        friendsRequestsReceivedIds: const [],
+        friendsRequestsSentIds: const [],
         status: FriendsScreenStateStatus.ready,
         searchText: '',
         searchOpen: false,
@@ -44,6 +53,9 @@ class FriendsScreenState extends Equatable {
     List<Profile>? friends,
     List<Profile>? friendsRequestsReceived,
     List<Profile>? friendsRequestsSent,
+    List<int>? friendsIds,
+    List<int>? friendsRequestsReceivedIds,
+    List<int>? friendsRequestsSentIds,
     FriendsScreenStateStatus? status,
     String? searchText,
     bool? searchOpen,
@@ -55,6 +67,11 @@ class FriendsScreenState extends Equatable {
       friendsRequestsReceived:
           friendsRequestsReceived ?? this.friendsRequestsReceived,
       friendsRequestsSent: friendsRequestsSent ?? this.friendsRequestsSent,
+      friendsIds: friendsIds ?? this.friendsIds,
+      friendsRequestsReceivedIds:
+          friendsRequestsReceivedIds ?? this.friendsRequestsReceivedIds,
+      friendsRequestsSentIds:
+          friendsRequestsSentIds ?? this.friendsRequestsSentIds,
       status: status ?? this.status,
       searchText: searchText ?? this.searchText,
       searchOpen: searchOpen ?? this.searchOpen,
@@ -68,6 +85,9 @@ class FriendsScreenState extends Equatable {
         friends,
         friendsRequestsReceived,
         friendsRequestsSent,
+        friendsIds,
+        friendsRequestsReceivedIds,
+        friendsRequestsSentIds,
         status,
         searchText,
         searchOpen,
