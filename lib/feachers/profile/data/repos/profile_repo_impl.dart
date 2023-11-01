@@ -106,22 +106,14 @@ class ProfileRepoImpl implements ProfileRepo {
     if (_sessionRepo.sessionData == null) throw ServerException();
     try {
       /*
-      final url = ApiConsts.getUser(
+      final url = ApiConsts.updateUserJSON(
         _sessionRepo.sessionData!.id,
       );
-      final response = await _dio().get(url);
-      if (response.data == null || response.data!.isEmpty) {
-        throw ServerException();
-      }
-
-      final json = response.data;
-      final Profile profile = ProfileModel.fromJson(json);
-      if (profile.avatar == 0) {
-      profile.avatar = AppAvatars.chooseAvatar();
-
-      }
-      return profile;
       */
+      await _dio().post(
+        ApiConsts.updateUserJSON(profile.id),
+        data: jsonEncode(ProfileModel.fromProfile(profile).submitJSON()),
+      );
     } on DioError {
       throw ServerException();
     }

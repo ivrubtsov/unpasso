@@ -9,6 +9,7 @@ class ProfileModel extends Profile {
     int? avatar,
     List<int> achievements = const [],
     int? rating,
+    bool? isPaid,
     List<int> friends = const [],
     List<int> friendsRequestsReceived = const [],
     List<int> friendsRequestsSent = const [],
@@ -19,6 +20,7 @@ class ProfileModel extends Profile {
           avatar: avatar,
           achievements: achievements,
           rating: rating,
+          isPaid: isPaid,
           friends: friends,
           friendsRequestsReceived: friendsRequestsReceived,
           friendsRequestsSent: friendsRequestsSent,
@@ -30,6 +32,7 @@ class ProfileModel extends Profile {
         avatar: profile.avatar,
         achievements: profile.achievements,
         rating: profile.rating,
+        isPaid: profile.isPaid,
         friends: profile.friends,
         friendsRequestsReceived: profile.friendsRequestsReceived,
         friendsRequestsSent: profile.friendsRequestsSent,
@@ -40,12 +43,14 @@ class ProfileModel extends Profile {
     int avatar;
     List<int> achievements;
     int rating;
+    bool isPaid;
     List<int> friends;
     List<int> friendsRequestsReceived;
     List<int> friendsRequestsSent;
     avatar = 0;
     achievements = [];
     rating = 0;
+    isPaid = false;
     friends = [];
     friendsRequestsReceived = [];
     friendsRequestsSent = [];
@@ -66,6 +71,12 @@ class ProfileModel extends Profile {
           description['rating'] == '' ||
           description['rating'] == 0)) {
         rating = description['rating'] as int;
+      }
+      if (!(description['isPaid'] == null ||
+          description['isPaid'] == '' ||
+          description['isPaid'] == false ||
+          description['isPaid'] == 'false')) {
+        isPaid = true;
       }
       if (!(description['friends'] == null ||
           description['friends'] == '' ||
@@ -97,6 +108,7 @@ class ProfileModel extends Profile {
       avatar: avatar,
       achievements: achievements,
       rating: rating,
+      isPaid: isPaid,
       friends: friends,
       friendsRequestsReceived: friendsRequestsReceived,
       friendsRequestsSent: friendsRequestsSent,
@@ -111,6 +123,7 @@ class ProfileModel extends Profile {
       'avatar': avatar,
       'achievements': achievements,
       'rating': rating,
+      'isPaid': isPaid,
       'friends': friends,
       'friendsRequestsReceived': friendsRequestsReceived,
       'friendsRequestsSent': friendsRequestsSent,
@@ -126,7 +139,7 @@ class ProfileModel extends Profile {
       id,
       name ?? 'Unknown',
       userName ?? '',
-      '{"avatar":$avatar,"achievements":[$achievementsString],"rating":$rating,"friends":[$friendsString],"friendsRequestsReceived":[$friendsRequestsReceivedString],"friendsRequestsSent":[$friendsRequestsSentString]}',
+      '{"avatar":$avatar,"achievements":[$achievementsString],"rating":$rating,"isPaid":$isPaid,"friends":[$friendsString],"friendsRequestsReceived":[$friendsRequestsReceivedString],"friendsRequestsSent":[$friendsRequestsSentString]}',
     );
   }
 
@@ -139,6 +152,7 @@ class ProfileModel extends Profile {
         'avatar': avatar,
         'achievements': achievements,
         'rating': rating,
+        'isPaid': isPaid,
         'friends': friends,
         'friendsRequestsReceived': friendsRequestsReceived,
         'friendsRequestsSent': friendsRequestsSent,

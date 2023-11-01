@@ -5,6 +5,7 @@ class Profile {
   int? avatar;
   List<int> achievements;
   int? rating;
+  bool? isPaid;
   List<int> friends;
   List<int> friendsRequestsReceived;
   List<int> friendsRequestsSent;
@@ -16,6 +17,7 @@ class Profile {
     this.avatar,
     this.achievements = const [],
     this.rating = 0,
+    this.isPaid = false,
     this.friends = const [],
     this.friendsRequestsReceived = const [],
     this.friendsRequestsSent = const [],
@@ -28,6 +30,7 @@ class Profile {
     int? avatar,
     List<int>? achievements,
     int? rating,
+    bool? isPaid,
     List<int>? friends,
     List<int>? friendsRequestsReceived,
     List<int>? friendsRequestsSent,
@@ -39,6 +42,7 @@ class Profile {
       avatar: avatar ?? this.avatar,
       achievements: achievements ?? this.achievements,
       rating: rating ?? this.rating,
+      isPaid: isPaid ?? this.isPaid,
       friends: friends ?? this.friends,
       friendsRequestsReceived:
           friendsRequestsReceived ?? this.friendsRequestsReceived,
@@ -60,6 +64,7 @@ class Profile {
         avatar,
         achievements,
         rating,
+        isPaid,
         friends,
         friendsRequestsReceived,
         friendsRequestsSent,

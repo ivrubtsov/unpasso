@@ -70,8 +70,15 @@ class AppFonts {
   static const goalHeader = TextStyle(
     fontFamily: 'Fredoka',
     fontWeight: FontWeight.w500,
-    fontSize: 40.0,
+    fontSize: 36.0,
     color: AppColors.goalDate,
+  );
+
+  static const goalLikeNumber = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 12.0,
+    color: AppColors.goalLikeNumber,
   );
 
   static const goal = TextStyle(

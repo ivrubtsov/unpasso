@@ -4,6 +4,7 @@ import 'package:goal_app/core/consts/achievements.dart';
 import 'package:goal_app/core/consts/app_avatars.dart';
 import 'package:goal_app/core/consts/app_colors.dart';
 import 'package:goal_app/core/consts/app_fonts.dart';
+import 'package:goal_app/core/widgets/main_text_field.dart';
 import 'package:goal_app/core/widgets/mega_menu.dart';
 import 'package:goal_app/core/widgets/modal.dart';
 
@@ -17,7 +18,7 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          automaticallyImplyLeading: true,
+          automaticallyImplyLeading: false,
           backgroundColor: AppColors.profileBg,
           elevation: 0,
           title: const Text(
@@ -51,9 +52,9 @@ class ProfileScreen extends StatelessWidget {
                   const AchievementsView(),
                   // Settings(),
                   Container(
-                    height: 90.0,
+                    height: 70.0,
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 20.0, vertical: 20.0),
+                        horizontal: 20.0, vertical: 0.0),
                     alignment: Alignment.center,
                     child: Modal(
                       buttonText: 'Delete account',
@@ -77,15 +78,42 @@ class ProfileScreen extends StatelessWidget {
   }
 }
 
-class PersonalData extends StatelessWidget {
+class PersonalData extends StatefulWidget {
   const PersonalData({
     Key? key,
   }) : super(key: key);
 
   @override
+  State<PersonalData> createState() => PersonalDataState();
+}
+
+class PersonalDataState extends State<PersonalData> {
+  bool isChangeName = false;
+  String name = '';
+  bool isChangeUsername = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void _changeName(bool changeState) {
+    setState(() {
+      isChangeName = changeState;
+    });
+  }
+
+  void _changeNameText(String value) {
+    if (name == value) return;
+    name = value;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocBuilder<ProfileScreenCubit, ProfileScreenState>(
         builder: (context, state) {
+      final model = context.read<ProfileScreenCubit>();
+      name = state.profile.name ?? state.profile.userName ?? 'Unknown';
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
         child: Row(
@@ -99,10 +127,61 @@ class PersonalData extends StatelessWidget {
                 children: [
                   Align(
                     alignment: Alignment.topLeft,
-                    child: Text(
-                      state.profile.name ?? state.profile.userName ?? 'Unknown',
-                      style: AppFonts.profileName,
-                    ),
+                    child: isChangeName
+                        ? Row(
+                            children: [
+                              Expanded(
+                                child: _TextField(
+                                  title: 'name',
+                                  defaultValue: state.profile.name ??
+                                      state.profile.userName ??
+                                      '',
+                                  onChanged: _changeNameText,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10.0,
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  model.submitName(name, context);
+                                  _changeName(false);
+                                },
+                                icon: const Icon(
+                                  Icons.done,
+                                  color: AppColors.profileButtonSave,
+                                  size: 24.0,
+                                ),
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                              ),
+                            ],
+                          )
+                        : Row(
+                            children: [
+                              TextButton(
+                                onPressed: () => _changeName(true),
+                                child: Text(
+                                  state.profile.name ??
+                                      state.profile.userName ??
+                                      'Unknown',
+                                  style: AppFonts.profileName,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  _changeName(true);
+                                },
+                                icon: const Icon(
+                                  Icons.edit,
+                                  color: AppColors.profileButtonEdit,
+                                  size: 24.0,
+                                ),
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                              ),
+                            ],
+                          ),
                   ),
                   Row(
                     children: [
@@ -151,7 +230,7 @@ class AchievementsView extends StatelessWidget {
         if (state.status == ProfileScreenStateStatus.loading) {
           return Container(
             alignment: Alignment.center,
-            height: 340.0,
+            height: 300.0,
             padding:
                 const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
             child: const CircularProgressIndicator(),
@@ -164,7 +243,7 @@ class AchievementsView extends StatelessWidget {
               padding:
                   const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
               child: Container(
-                height: 340.0,
+                height: 300.0,
                 padding: const EdgeInsets.symmetric(
                     horizontal: 20.0, vertical: 20.0),
                 decoration: BoxDecoration(
@@ -182,7 +261,7 @@ class AchievementsView extends StatelessWidget {
                       style: AppFonts.achText,
                     ),
                     const SizedBox(
-                      height: 240,
+                      height: 200,
                       child: AchievementsList(),
                     ),
                   ],
@@ -219,5 +298,35 @@ class Settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Placeholder();
+  }
+}
+
+class _TextField extends StatelessWidget {
+  const _TextField({
+    Key? key,
+    required this.title,
+    this.hintText = '',
+    this.defaultValue = '',
+    required this.onChanged,
+    this.isPassword = false,
+    this.isUsername = false,
+  }) : super(key: key);
+
+  final String title;
+  final String hintText;
+  final String defaultValue;
+  final Function(String value) onChanged;
+  final bool isPassword;
+  final bool isUsername;
+
+  @override
+  Widget build(BuildContext context) {
+    return MainTextField(
+      isPassword: isPassword,
+      isUsername: isUsername,
+      hintText: hintText,
+      defaultValue: defaultValue,
+      onChanged: onChanged,
+    );
   }
 }

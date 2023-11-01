@@ -382,7 +382,7 @@ class GoalsMainContainer extends StatelessWidget {
                             height: 40.0,
                             child: Row(
                               children: [
-                                const Expanded(child: Placeholder()),
+                                Expanded(child: Container()),
                                 state.goal.isPrivate
                                     ? const Column(children: [
                                         Icon(
@@ -414,6 +414,16 @@ class GoalsMainContainer extends StatelessWidget {
                                           'Private',
                                           style: AppFonts.goalPrivacy,
                                         ),
+                                        /*
+                                        TextButton(
+                                          onPressed: () => model
+                                              .changePrivacy(Privacy.isPrivate),
+                                          child: const Text(
+                                            'Private',
+                                            style: AppFonts.goalPrivacy,
+                                          ),
+                                        ),
+                                        */
                                       ]),
                                 const SizedBox(
                                   width: 20.0,
@@ -485,7 +495,7 @@ class GoalsMainContainer extends StatelessWidget {
                                           style: AppFonts.goalPrivacy,
                                         ),
                                       ]),
-                                const Expanded(child: Placeholder()),
+                                Expanded(child: Container()),
                               ],
                             ),
                           ),
@@ -584,10 +594,34 @@ class GoalItem extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 0.0),
       child: Column(
         children: [
-          Text(
-            goalDate,
-            style: AppFonts.goalHeader,
-            textAlign: TextAlign.center,
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  goalDate,
+                  style: AppFonts.goalHeader,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Column(
+                children: [
+                  Icon(
+                    Icons.favorite,
+                    color: goal.likes > 0
+                        ? AppColors.goalLikeIconActive
+                        : AppColors.goalLikeIcon,
+                    size: 32.0,
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      goal.likes.toString(),
+                      style: AppFonts.goalLikeNumber,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
           Expanded(
             child: Text(

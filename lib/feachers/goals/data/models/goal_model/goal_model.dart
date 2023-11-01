@@ -184,7 +184,7 @@ class GoalModel extends Goal {
       isPrivate: checkIsPrivate,
       like: like,
       likeUsers: likeUsers,
-      likes: likeUsers.length + 1,
+      likes: likeUsers.length,
       isGenerated: checkIsGenerated,
       isAccepted: checkIsAccepted,
     );
@@ -205,7 +205,7 @@ class GoalModel extends Goal {
       'authorRating': authorRating,
       'friendsUsers': friendsUsers,
       'likeUsers': likeUsers,
-      'likes': likeUsers.length + 1,
+      'likes': likeUsers.length,
     };
     return {
       'title': text,

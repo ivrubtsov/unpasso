@@ -5,6 +5,7 @@ import 'package:goal_app/core/consts/achievements.dart';
 import 'package:goal_app/core/consts/app_fonts.dart';
 import 'package:goal_app/core/exceptions/exceptions.dart';
 import 'package:goal_app/core/navigation/app_router.dart';
+import 'package:goal_app/core/widgets/error_presentor.dart';
 import 'package:goal_app/feachers/auth/domain/repos/auth_repo.dart';
 import 'package:goal_app/feachers/profile/domain/entities/profile.dart';
 import 'package:goal_app/feachers/profile/domain/repos/profile_repo.dart';
@@ -93,5 +94,20 @@ class ProfileScreenCubit extends Cubit<ProfileScreenState> {
     _authRepo.logOut();
     // go to the login page
     Navigator.of(context).pushNamed(AuthRoutes.authScreen);
+  }
+
+  void submitName(String name, BuildContext context) async {
+    try {
+      if (name == state.profile.name) return;
+      Profile newProfile = state.profile.copyWith(name: name);
+      await _profileRepo.updateUserData(newProfile);
+      emit(state.copyWith(
+        profile: newProfile,
+      ));
+    } on ServerException {
+      emit(state.copyWith(status: ProfileScreenStateStatus.error));
+      ErrorPresentor.showError(
+          context, 'Unable to update the profile. Check internet connection');
+    }
   }
 }

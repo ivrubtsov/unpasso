@@ -26,6 +26,9 @@ class AppColors {
   static const goalBg = Color.fromRGBO(220, 231, 255, 1);
   static const goalDate = Colors.black;
   static const goalText = Colors.black;
+  static const goalLikeIcon = Color.fromRGBO(80, 85, 92, 1);
+  static const goalLikeIconActive = Color.fromRGBO(43, 39, 239, 1);
+  static const goalLikeNumber = Color.fromRGBO(80, 85, 92, 1);
   static const goalHint = Color.fromRGBO(43, 39, 239, 1);
   static const goalCompleted = Color.fromRGBO(30, 160, 41, 1);
   static const goalInCompleted = Color.fromRGBO(241, 94, 142, 1);
@@ -52,6 +55,8 @@ class AppColors {
   static const profileName = Colors.black;
   static const profileUsername = Color.fromRGBO(80, 85, 92, 1);
   static const profileButtonDeleteAccount = Color.fromRGBO(241, 94, 142, 1);
+  static const profileButtonEdit = Colors.black;
+  static const profileButtonSave = Color.fromRGBO(43, 39, 239, 1);
 
   // Home screen with goals list
   static const homeBg = Colors.white;
