@@ -14,9 +14,14 @@ The app is build with the Flutter framework and is published in the AppStore
 
 ## Current version
 
-2.0.3
+3.737.0
 
 ## Versions notes
+
+3.737.0
+Hi everyone!
+Now Unpasso is a real community. You can be inspired by other people and inspire others in return. You can see and like goals of other members, add friends, and manage the privacy of your goals. There are a lot of other improvements also.
+And another important thing: Unpasso is now powered by a smart machine based on the most advanced machine learning technologies. It can try to understand your personality based on your past goals and help you with your next steps. Ask it for help, and it will generate your new goal. While you try and use it, the AI will become smarter over time and give you more accurate results.
 
 2.0.3
 Hi there! Some people use this app every day. But the problem was that the screen with goals didn't refresh when the app was resumed from the background. It was impossible to add a new goal for today then. It required to completely be closed or moved to the profile screen and backward to refresh. Now the screen is refreshed when the app is resumed, and the date is changed.
