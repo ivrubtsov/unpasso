@@ -1,5 +1,5 @@
 name: goal_app
-description: A new Flutter project.
+description: Unpasso project.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 2.0.3+3
+version: 3.737.0
 
 environment:
   sdk: ">=2.16.2 <3.0.0"
@@ -26,13 +26,15 @@ dependencies:
     sdk: flutter
   flutter_bloc: ^8.0.1
   equatable: ^2.0.3
+  collection: ^1.17.2
   shared_preferences: ^2.0.15
   get_it: ^7.2.0
   flutter_secure_storage: ^5.0.2
   cupertino_icons: ^1.0.2
   dio: ^4.0.6
-  intl: ^0.17.0
+  intl: ^0.18.1
   url_launcher: ^6.1.5
+  pay: ^1.1.2
   
 
 dev_dependencies:
@@ -63,6 +65,7 @@ flutter:
     - assets/achievements/ach13_64.png
     - assets/achievements/ach13_64_off.png
     - assets/achievements/ach13_128.png
+    - assets/avatars/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

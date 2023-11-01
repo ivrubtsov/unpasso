@@ -6,13 +6,17 @@ class MainTextField extends StatefulWidget {
   const MainTextField({
     Key? key,
     required this.hintText,
+    this.defaultValue = '',
     required this.onChanged,
     this.isPassword = false,
+    this.isUsername = false,
   }) : super(key: key);
 
   final String hintText;
+  final String defaultValue;
   final Function(String value) onChanged;
   final bool isPassword;
+  final bool isUsername;
 
   @override
   State<MainTextField> createState() => _MainTextFieldState();
@@ -20,14 +24,29 @@ class MainTextField extends StatefulWidget {
 
 class _MainTextFieldState extends State<MainTextField> {
   bool isHidden = true;
+  TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.defaultValue);
+  }
+
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: _controller,
       obscureText: widget.isPassword && isHidden,
       onChanged: widget.onChanged,
       decoration: InputDecoration(
         filled: true,
         fillColor: AppColors.inputBg,
+        prefixIcon: widget.isUsername
+            ? const Icon(
+                Icons.alternate_email,
+                color: AppColors.disabled,
+              )
+            : null,
         suffixIcon: widget.isPassword
             ? Material(
                 color: Colors.transparent,
@@ -60,5 +79,12 @@ class _MainTextFieldState extends State<MainTextField> {
       ),
       style: AppFonts.input,
     );
+  }
+
+  @override
+  void dispose() {
+    // dispose it here
+    _controller.dispose();
+    super.dispose();
   }
 }

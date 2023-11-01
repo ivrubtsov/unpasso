@@ -110,7 +110,7 @@ class FunnyTasks {
   ];
 
   static String getRandomTask() {
-    final random = new Random();
+    final random = Random();
     final index = random.nextInt(tasks.length);
     return tasks[index];
   }

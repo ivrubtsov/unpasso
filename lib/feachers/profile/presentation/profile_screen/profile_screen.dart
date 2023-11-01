@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:goal_app/core/consts/achievements.dart';
+import 'package:goal_app/core/consts/app_avatars.dart';
 import 'package:goal_app/core/consts/app_colors.dart';
 import 'package:goal_app/core/consts/app_fonts.dart';
+import 'package:goal_app/core/widgets/main_text_field.dart';
+import 'package:goal_app/core/widgets/mega_menu.dart';
 import 'package:goal_app/core/widgets/modal.dart';
 
 import 'package:goal_app/feachers/profile/presentation/profile_screen/cubit/profile_screen_cubit.dart';
@@ -15,7 +18,7 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          automaticallyImplyLeading: true,
+          automaticallyImplyLeading: false,
           backgroundColor: AppColors.profileBg,
           elevation: 0,
           title: const Text(
@@ -30,75 +33,190 @@ class ProfileScreen extends StatelessWidget {
               color: AppColors.headerIcon,
             )
           ],
+          /*
           leading: IconButton(
             onPressed: () =>
                 context.read<ProfileScreenCubit>().onBackTapped(context),
             icon: const Icon(Icons.arrow_back_ios),
             color: AppColors.headerIcon,
           ),
+          */
         ),
         backgroundColor: AppColors.profileBg,
         body: Column(
           children: [
-            PersonalData(),
-            AchievementsView(),
-            // Settings(),
-            Container(
-              height: 90.0,
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
-              alignment: Alignment.center,
-              child: Modal(
-                buttonText: 'Delete account',
-                title: 'Delete account',
-                content:
-                    'Are you sure you want to erase your account and all the data associated with it?',
-                buttonOkText: 'Yes, delete',
-                buttonCancelText: 'Cancel',
-                onPressedOk: () => context
-                    .read<ProfileScreenCubit>()
-                    .onDeleteAccountTapped(context),
-                onPressedCancel: () => Navigator.pop(context),
+            Expanded(
+              child: Column(
+                children: [
+                  const PersonalData(),
+                  const AchievementsView(),
+                  // Settings(),
+                  Container(
+                    height: 70.0,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20.0, vertical: 0.0),
+                    alignment: Alignment.center,
+                    child: Modal(
+                      buttonText: 'Delete account',
+                      title: 'Delete account',
+                      content:
+                          'Are you sure you want to erase your account and all the data associated with it?',
+                      buttonOkText: 'Yes, delete',
+                      buttonCancelText: 'Cancel',
+                      onPressedOk: () => context
+                          .read<ProfileScreenCubit>()
+                          .onDeleteAccountTapped(context),
+                      onPressedCancel: () => Navigator.pop(context),
+                    ),
+                  ),
+                ],
               ),
             ),
+            const MegaMenu(active: 5),
           ],
         ));
   }
 }
 
-class PersonalData extends StatelessWidget {
+class PersonalData extends StatefulWidget {
   const PersonalData({
     Key? key,
   }) : super(key: key);
 
   @override
+  State<PersonalData> createState() => PersonalDataState();
+}
+
+class PersonalDataState extends State<PersonalData> {
+  bool isChangeName = false;
+  String name = '';
+  bool isChangeUsername = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void _changeName(bool changeState) {
+    setState(() {
+      isChangeName = changeState;
+    });
+  }
+
+  void _changeNameText(String value) {
+    if (name == value) return;
+    name = value;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final model = context.read<ProfileScreenCubit>();
-    final name = model.getName();
-    final username = model.getUsername();
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
-      child: Row(
-        children: [
-          const Icon(
-            Icons.person,
-            size: 56.0,
-          ),
-          Column(
-            children: [
-              Text(
-                name,
-                style: AppFonts.profileName,
+    return BlocBuilder<ProfileScreenCubit, ProfileScreenState>(
+        builder: (context, state) {
+      final model = context.read<ProfileScreenCubit>();
+      name = state.profile.name ?? state.profile.userName ?? 'Unknown';
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+        child: Row(
+          children: [
+            AppAvatars.getAvatarImage(state.profile.avatar),
+            const SizedBox(
+              width: 20.0,
+            ),
+            Expanded(
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: isChangeName
+                        ? Row(
+                            children: [
+                              Expanded(
+                                child: _TextField(
+                                  title: 'name',
+                                  defaultValue: state.profile.name ??
+                                      state.profile.userName ??
+                                      '',
+                                  onChanged: _changeNameText,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10.0,
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  model.submitName(name, context);
+                                  _changeName(false);
+                                },
+                                icon: const Icon(
+                                  Icons.done,
+                                  color: AppColors.profileButtonSave,
+                                  size: 24.0,
+                                ),
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                              ),
+                            ],
+                          )
+                        : Row(
+                            children: [
+                              TextButton(
+                                onPressed: () => _changeName(true),
+                                child: Text(
+                                  state.profile.name ??
+                                      state.profile.userName ??
+                                      'Unknown',
+                                  style: AppFonts.profileName,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  _changeName(true);
+                                },
+                                icon: const Icon(
+                                  Icons.edit,
+                                  color: AppColors.profileButtonEdit,
+                                  size: 24.0,
+                                ),
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                              ),
+                            ],
+                          ),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            '@${state.profile.userName}',
+                            style: AppFonts.friendsUsername,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 56.0,
+                        child: Row(children: [
+                          const Icon(
+                            Icons.star,
+                            color: AppColors.friendsIconRating,
+                          ),
+                          Text(
+                            state.profile.rating.toString(),
+                            style: AppFonts.friendsRating,
+                            textAlign: TextAlign.left,
+                          ),
+                        ]),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              Text(
-                username,
-                style: AppFonts.profileUsername,
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
+            ),
+          ],
+        ),
+      );
+    });
   }
 }
 
@@ -112,7 +230,7 @@ class AchievementsView extends StatelessWidget {
         if (state.status == ProfileScreenStateStatus.loading) {
           return Container(
             alignment: Alignment.center,
-            height: 340.0,
+            height: 300.0,
             padding:
                 const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
             child: const CircularProgressIndicator(),
@@ -125,7 +243,7 @@ class AchievementsView extends StatelessWidget {
               padding:
                   const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
               child: Container(
-                height: 340.0,
+                height: 300.0,
                 padding: const EdgeInsets.symmetric(
                     horizontal: 20.0, vertical: 20.0),
                 decoration: BoxDecoration(
@@ -142,8 +260,8 @@ class AchievementsView extends StatelessWidget {
                       '$achCollected of $achTotal collected',
                       style: AppFonts.achText,
                     ),
-                    SizedBox(
-                      height: 240,
+                    const SizedBox(
+                      height: 200,
                       child: AchievementsList(),
                     ),
                   ],
@@ -180,5 +298,35 @@ class Settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Placeholder();
+  }
+}
+
+class _TextField extends StatelessWidget {
+  const _TextField({
+    Key? key,
+    required this.title,
+    this.hintText = '',
+    this.defaultValue = '',
+    required this.onChanged,
+    this.isPassword = false,
+    this.isUsername = false,
+  }) : super(key: key);
+
+  final String title;
+  final String hintText;
+  final String defaultValue;
+  final Function(String value) onChanged;
+  final bool isPassword;
+  final bool isUsername;
+
+  @override
+  Widget build(BuildContext context) {
+    return MainTextField(
+      isPassword: isPassword,
+      isUsername: isUsername,
+      hintText: hintText,
+      defaultValue: defaultValue,
+      onChanged: onChanged,
+    );
   }
 }

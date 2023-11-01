@@ -11,11 +11,13 @@ abstract class GoalsRepo {
 
   // Future<Goal?> getTodaysGoal();
 
-  Future<void> removeTodaysGoal();
+  // Future<void> removeTodaysGoal();
 
-  Future<List<Goal>> getGoals(GetGoalsQueryType queryType);
+  Future<List<Goal>> getCurrentUserGoals(GetGoalsQueryType queryType);
 
   // Future<List<Goal>> getProcessedListGoals();
 
   Future<void> completeGoal(Goal goal);
+
+  Future<String> generateGoal();
 }

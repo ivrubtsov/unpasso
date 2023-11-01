@@ -5,8 +5,8 @@ import 'package:goal_app/core/consts/achievements.dart';
 import 'package:goal_app/core/consts/app_fonts.dart';
 import 'package:goal_app/core/exceptions/exceptions.dart';
 import 'package:goal_app/core/navigation/app_router.dart';
+import 'package:goal_app/core/widgets/error_presentor.dart';
 import 'package:goal_app/feachers/auth/domain/repos/auth_repo.dart';
-import 'package:goal_app/feachers/auth/domain/repos/session_repo.dart';
 import 'package:goal_app/feachers/profile/domain/entities/profile.dart';
 import 'package:goal_app/feachers/profile/domain/repos/profile_repo.dart';
 
@@ -16,43 +16,23 @@ class ProfileScreenCubit extends Cubit<ProfileScreenState> {
   ProfileScreenCubit({
     required ProfileRepo profileRepo,
     required AuthRepo authRepo,
-    required SessionRepo sessionRepo,
   })  : _profileRepo = profileRepo,
         _authRepo = authRepo,
-        _sessionRepo = sessionRepo,
         super(ProfileScreenState.initial());
 
   final ProfileRepo _profileRepo;
   final AuthRepo _authRepo;
-  final SessionRepo _sessionRepo;
-
-// ПОЛУЧАЕМ ДАННЫЕ ПОЛЬЗОВАТЕЛЯ
-  int getUserId() {
-    return _sessionRepo.sessionData!.id;
-  }
-
-  String getName() {
-    return _sessionRepo.sessionData!.username;
-  }
-
-  String getUsername() {
-    return '';
-  }
 
 // ИНИЦИАЛИЗАЦИЯ СТРАНИЦЫ ПРОФИЛЯ
   void initProfileScreen() async {
-    getAchieves();
+    getProfile();
   }
 
-// ПОЛУЧАЕМ АЧИВКИ
-  void getAchieves() async {
+// ПОЛУЧАЕМ АВАТАР, АЧИВКИ, ДРУЗЕЙ И ЗАПРОСЫ НА ДРУЖБУ
+  void getProfile() async {
     emit(state.copyWith(status: ProfileScreenStateStatus.loading));
     try {
-      final achs = await _profileRepo.getAchievements();
-      final profile = Profile(
-        id: _sessionRepo.sessionData!.id,
-        achievements: achs,
-      );
+      final profile = await _profileRepo.getUserData();
 
       emit(state.copyWith(
         status: ProfileScreenStateStatus.loaded,
@@ -114,5 +94,20 @@ class ProfileScreenCubit extends Cubit<ProfileScreenState> {
     _authRepo.logOut();
     // go to the login page
     Navigator.of(context).pushNamed(AuthRoutes.authScreen);
+  }
+
+  void submitName(String name, BuildContext context) async {
+    try {
+      if (name == state.profile.name) return;
+      Profile newProfile = state.profile.copyWith(name: name);
+      await _profileRepo.updateUserData(newProfile);
+      emit(state.copyWith(
+        profile: newProfile,
+      ));
+    } on ServerException {
+      emit(state.copyWith(status: ProfileScreenStateStatus.error));
+      ErrorPresentor.showError(
+          context, 'Unable to update the profile. Check internet connection');
+    }
   }
 }

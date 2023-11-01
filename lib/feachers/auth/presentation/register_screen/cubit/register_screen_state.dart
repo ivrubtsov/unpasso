@@ -4,6 +4,7 @@ enum RegisterScreenStateStatus { loaded, loading }
 
 class RegisterScreenState extends Equatable {
   final String name;
+  final String username;
   final String email;
   final String password;
   final bool isTermsAccepted;
@@ -14,6 +15,7 @@ class RegisterScreenState extends Equatable {
   const RegisterScreenState({
     required this.isTermsAccepted,
     required this.name,
+    required this.username,
     required this.email,
     required this.password,
     required this.status,
@@ -21,6 +23,7 @@ class RegisterScreenState extends Equatable {
 
   factory RegisterScreenState.initial() => const RegisterScreenState(
       name: '',
+      username: '',
       email: '',
       password: '',
       status: RegisterScreenStateStatus.loaded,
@@ -29,6 +32,7 @@ class RegisterScreenState extends Equatable {
   @override
   List<Object> get props => [
         name,
+        username,
         email,
         password,
         status,
@@ -37,6 +41,7 @@ class RegisterScreenState extends Equatable {
 
   RegisterScreenState copyWith({
     String? name,
+    String? username,
     String? email,
     String? password,
     bool? isTermsAccepted,
@@ -44,6 +49,7 @@ class RegisterScreenState extends Equatable {
   }) {
     return RegisterScreenState(
       name: name ?? this.name,
+      username: username ?? this.username,
       email: email ?? this.email,
       password: password ?? this.password,
       isTermsAccepted: isTermsAccepted ?? this.isTermsAccepted,

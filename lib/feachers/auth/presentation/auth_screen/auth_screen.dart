@@ -23,8 +23,8 @@ class AuthScreen extends StatelessWidget {
             children: [
               const SizedBox(height: 30.0),
               // HEADER
-              Center(
-                child: Column(children: const [
+              const Center(
+                child: Column(children: [
                   Text(
                     'Log In',
                     style: AppFonts.header,
@@ -52,10 +52,13 @@ class AuthScreen extends StatelessWidget {
                 onChanged: model.changePassword,
               ),
               // FORGET PASSWORD BUTTON
+              // TODO: Implement forgot password
+              /*
               const Align(
                 alignment: Alignment.centerRight,
                 child: _ForgotPasswordButton(),
               ),
+              */
               // const SizedBox(height: 20.0),
               // LOGIN BUTTON
               Align(

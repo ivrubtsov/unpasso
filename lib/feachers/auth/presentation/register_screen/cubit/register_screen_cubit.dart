@@ -42,6 +42,7 @@ class RegisterScreenCubit extends Cubit<RegisterScreenState> {
         email: state.email,
         password: state.password,
         user: User(
+          username: state.username,
           name: state.name,
         ),
       ));
@@ -77,6 +78,11 @@ class RegisterScreenCubit extends Cubit<RegisterScreenState> {
   void changeName(String value) {
     if (state.name == value) return;
     emit(state.copyWith(name: value));
+  }
+
+  void changeUserName(String value) {
+    if (state.username == value) return;
+    emit(state.copyWith(username: value));
   }
 
   void changeTermsAcception(bool value) {

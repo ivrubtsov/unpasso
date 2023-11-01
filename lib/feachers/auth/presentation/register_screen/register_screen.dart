@@ -25,8 +25,8 @@ class RegisterScreen extends StatelessWidget {
             children: [
               const SizedBox(height: 30.0),
               // HEADER
-              Center(
-                child: Column(children: const [
+              const Center(
+                child: Column(children: [
                   Text(
                     'Create Account',
                     style: AppFonts.header,
@@ -41,9 +41,17 @@ class RegisterScreen extends StatelessWidget {
               const SizedBox(height: 30.0),
               // TEXT FIELD NAME
               _TextField(
-                title: 'username',
-                hintText: 'Username',
+                title: 'name',
+                hintText: 'Your name',
                 onChanged: model.changeName,
+              ),
+              const SizedBox(height: 15.0),
+              // TEXT FIELD USERNAME
+              _TextField(
+                title: 'username',
+                hintText: 'username - how others can find you',
+                isUsername: true,
+                onChanged: model.changeUserName,
               ),
               const SizedBox(height: 15.0),
               // TEXT FIELD EMAIL
@@ -93,12 +101,14 @@ class _TextField extends StatelessWidget {
     required this.hintText,
     required this.onChanged,
     this.isPassword = false,
+    this.isUsername = false,
   }) : super(key: key);
 
   final String title;
   final String hintText;
   final Function(String value) onChanged;
   final bool isPassword;
+  final bool isUsername;
 
   @override
   Widget build(BuildContext context) {
@@ -113,6 +123,7 @@ class _TextField extends StatelessWidget {
         */
         MainTextField(
           isPassword: isPassword,
+          isUsername: isUsername,
           hintText: hintText,
           onChanged: onChanged,
         ),

@@ -1,36 +1,74 @@
+import 'package:goal_app/core/consts/api_key.dart';
+
 class ApiConsts {
   ApiConsts._();
-  static const _baseUrl = 'https://unpasso.org/wp-json/wp/v2';
+  static const _baseUrl = ApiKey.baseUrl;
 
   static const authUser = '$_baseUrl/users/me';
   static String registerUser(
     String email,
     String password,
+    String username,
     String name,
+    String description,
   ) =>
-      '$_baseUrl/users?username=$name&email=$email&password=$password';
+      '$_baseUrl/users?username=$username&name=$name&email=$email&password=$password&description=$description';
+
+  static String registerUserJSON() => '$_baseUrl/users';
 
   static String deleteUser(int id) =>
       '$_baseUrl/users/$id?force=True&reassign=111';
 
-  static String getAchievements(int id) => '$_baseUrl/users/$id';
+  static String getUser(int id) => '$_baseUrl/users/$id';
 
-  static String setAchievements(String description, int id) =>
-      '$_baseUrl/users/$id?description=$description';
+  static String updateUser(
+          int id, String name, String userName, String description) =>
+      '$_baseUrl/users/$id?name=$name&username=$userName&description=$description';
+  static String updateUserJSON(int id) => '$_baseUrl/users/$id';
 
-  static String createGoal(String title, int authorId, String date) =>
-      '$_baseUrl/posts?status=publish&title=$title&author=$authorId&categories=6&date_gmt=$date';
+  static String getFriends() => '$_baseUrl/friends';
 
-  static String getUserGoals(int authorId) =>
-      '$_baseUrl/posts?per_page=100&status=publish,future&author=$authorId';
+  static String getFriendsRequestsReceived() =>
+      '$_baseUrl/friends/requests/received';
+
+  static String getFriendsRequestsSent() => '$_baseUrl/friends/requests/sent';
+
+  static String getFriendsData(int id) => '$_baseUrl/friends/$id';
+
+  static String searchFriends(String text) =>
+      '$_baseUrl/friends/search?text=$text';
+
+  static String processFriendsRequest(int id, String action) =>
+      '$_baseUrl/friends/requests/$id?action=$action';
+  static String processFriendsRequestJSON(int id) =>
+      '$_baseUrl/friends/requests/$id';
+
+/*  static String createGoal(String title, int authorId, String date) =>
+      '$_baseUrl/posts?status=publish&title=$title&author=$authorId&categories=6&date_gmt=$date';*/
+  static String createGoal() => '$_baseUrl/posts';
+
+  static String generateGoal() => '$_baseUrl/posts/generate';
+
+  static String likeGoal(int id) => '$_baseUrl/posts/like/$id';
+
+  static String unLikeGoal(int id) => '$_baseUrl/posts/unlike/$id';
+
+  static int fetchPageLimit = 100;
+
+  static String getUserGoals(int authorId, int page) =>
+      '$_baseUrl/posts?per_page=$fetchPageLimit&page=$page&status=publish,future&categories=6&author=$authorId';
+
+  static String getAvailableGoals(int page) =>
+      '$_baseUrl/posts?per_page=$fetchPageLimit&page=$page&status=publish,future&categories=6';
+
+  static String getGoalById(int id) => '$_baseUrl/posts/$id';
 
   static String completeGoal(int postId) => '$_baseUrl/posts/$postId?tags=8';
+
+  static String updateGoal(int id) => '$_baseUrl/posts/$id';
 
   static const policyPrivacy = 'https://unpasso.org/privacy/';
 
   static const forgotPassword =
       'https://unpasso.org/wp-login.php?action=lostpassword';
-
-  static String getTodaysGoal(int authorId, String date) =>
-      '$_baseUrl/posts?author=$authorId&after=$date';
 }

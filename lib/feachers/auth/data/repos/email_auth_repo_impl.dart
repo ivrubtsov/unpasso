@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:goal_app/core/consts/api_consts.dart';
 import 'package:goal_app/core/consts/api_key.dart';
+import 'package:goal_app/core/consts/app_avatars.dart';
 import 'package:goal_app/core/entities/user/user.dart';
 import 'package:goal_app/feachers/auth/domain/entities/session_data.dart';
 import 'package:goal_app/feachers/auth/domain/repos/auth_repo.dart';
@@ -67,10 +68,11 @@ class EmailAuthRepoImpl implements AuthRepo {
         throw AuthException.type(AuthExceptionType.unknown);
       }
       final id = response.data['id'];
+      final username = response.data['username'];
       await sessionRepo.saveSessionData(SessionData(
         id: id,
         password: credentials.password,
-        username: credentials.username,
+        username: username,
       ));
     } on DioError catch (e) {
       throw AuthException(
@@ -84,22 +86,36 @@ class EmailAuthRepoImpl implements AuthRepo {
   Future<void> registerUser(AuthCredentials credentials) async {
     try {
       credentials as RegisterCreds;
-      final url = ApiConsts.registerUser(
-        credentials.email,
-        credentials.password,
-        credentials.user.name,
+      final int avatar = AppAvatars.chooseAvatar();
+      final description = {
+        'avatar': avatar,
+        'achievements': [],
+        'friends': [],
+        'friendsRequests': [],
+      };
+      final url = ApiConsts.registerUserJSON();
+      final data = {
+        'username': credentials.user.username,
+        'name': credentials.user.name,
+        'email': credentials.email,
+        'password': credentials.password,
+        'description': description,
+      };
+      final response = await _dio().post(
+        url,
+        data: jsonEncode(data),
       );
-      final response = await _dio().post(url);
-
       if (response.data == null) {
         throw AuthException.type(AuthExceptionType.unknown);
       }
 
       final id = response.data['id'];
+      // final username = response.data['username'];
       await sessionRepo.saveSessionData(SessionData(
         id: id,
         password: credentials.password,
-        username: credentials.user.name,
+        // username: username,
+        username: credentials.user.username,
       ));
     } on DioError catch (e) {
       throw AuthException.fromServerMessage(e.response?.data['message']);
@@ -115,8 +131,6 @@ class EmailAuthRepoImpl implements AuthRepo {
   @override
   void logOut() {
     sessionRepo.removeSessionData();
-    // TODO: implement logOut
-    // throw UnimplementedError();
   }
 
   @override

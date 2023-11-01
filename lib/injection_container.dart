@@ -4,8 +4,15 @@ import 'package:goal_app/feachers/auth/domain/repos/auth_repo.dart';
 import 'package:goal_app/feachers/auth/presentation/auth_cubit/auth_cubit.dart';
 import 'package:goal_app/feachers/auth/presentation/auth_screen/auth_screen.dart';
 import 'package:goal_app/feachers/auth/presentation/register_screen/cubit/register_screen_cubit.dart';
+import 'package:goal_app/feachers/friends/data/repos/friends_repo_impl.dart';
+import 'package:goal_app/feachers/friends/domain/repos/friends_repo.dart';
+import 'package:goal_app/feachers/friends/presentation/friends_screen/cubit/friends_screen_cubit.dart';
+import 'package:goal_app/feachers/games/presentation/games_screen/cubit/games_screen_cubit.dart';
 import 'package:goal_app/feachers/goals/domain/repos/goals_repo.dart';
 import 'package:goal_app/feachers/goals/presentation/goal_screen/cubit/goal_screen_cubit.dart';
+import 'package:goal_app/feachers/home/data/repos/home_repo_impl.dart';
+import 'package:goal_app/feachers/home/domain/repos/home_repo.dart';
+import 'package:goal_app/feachers/home/presentation/home_screen/cubit/home_screen_cubit.dart';
 import 'package:goal_app/feachers/profile/domain/repos/profile_repo.dart';
 import 'package:goal_app/feachers/profile/presentation/profile_screen/cubit/profile_screen_cubit.dart';
 
@@ -31,6 +38,19 @@ void init() {
         authRepo: sl(),
       ));
 
+  sl.registerFactory<HomeScreenCubit>(
+    () => HomeScreenCubit(
+      homeRepo: sl(),
+      sessionRepo: sl(),
+    ),
+  );
+
+  sl.registerFactory<FriendsScreenCubit>(
+    () => FriendsScreenCubit(
+      friendsRepo: sl(),
+    ),
+  );
+
   sl.registerFactory<GoalScreenCubit>(
     () => GoalScreenCubit(
       sessionRepo: sl(),
@@ -39,25 +59,33 @@ void init() {
     ),
   );
 
+  sl.registerFactory<GamesScreenCubit>(
+    () => GamesScreenCubit(),
+  );
+
   sl.registerFactory<ProfileScreenCubit>(
     () => ProfileScreenCubit(
-      sessionRepo: sl(),
       authRepo: sl(),
       profileRepo: sl(),
     ),
   );
 
-  //! Экраны
+  //! Screen
 
   sl.registerLazySingleton<AuthScreen>(
     () => const AuthScreen(),
   );
 
-  //! Репозитории
+  //! Repositories
 
   sl.registerLazySingleton<AuthRepo>(() => EmailAuthRepoImpl(sl()));
 
   sl.registerLazySingleton<SessionRepo>(() => SessionRepoImpl());
+
+  sl.registerLazySingleton<HomeRepo>(() => HomeRepoImpl(sessionRepo: sl()));
+
+  sl.registerLazySingleton<FriendsRepo>(
+      () => FriendsRepoImpl(sessionRepo: sl()));
 
   sl.registerLazySingleton<GoalsRepo>(() => GoalsRepoImpl(sessionRepo: sl()));
 

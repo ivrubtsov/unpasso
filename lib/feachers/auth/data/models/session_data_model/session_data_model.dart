@@ -16,7 +16,10 @@ class SessionDataModel extends SessionData {
 
   factory SessionDataModel.fromSessionData(SessionData data) =>
       SessionDataModel(
-          id: data.id, password: data.password, username: data.username);
+        id: data.id,
+        password: data.password,
+        username: data.username,
+      );
   factory SessionDataModel.fromJson(Map<String, dynamic> json) =>
       _$SessionDataModelFromJson(json);
   Map<String, dynamic> toJson() => _$SessionDataModelToJson(this);

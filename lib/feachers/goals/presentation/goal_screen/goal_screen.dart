@@ -1,7 +1,8 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:goal_app/core/widgets/fun.dart';
+import 'package:goal_app/core/consts/keys.dart';
+import 'package:goal_app/core/widgets/error_presentor.dart';
+import 'package:goal_app/core/widgets/mega_menu.dart';
 import 'package:goal_app/feachers/goals/data/models/goal_model/goal_model.dart';
 import 'package:intl/intl.dart';
 import 'package:goal_app/core/consts/app_colors.dart';
@@ -11,6 +12,7 @@ import 'package:goal_app/feachers/goals/presentation/goal_screen/cubit/goal_scre
 
 ScrollController dateListScrollController = ScrollController();
 ScrollController goalsListScrollController = ScrollController();
+TextEditingController textFieldController = TextEditingController();
 
 enum GoalScreenStatus {
   loading,
@@ -33,17 +35,26 @@ class GoalScreen extends StatelessWidget {
           'My goals',
           style: AppFonts.header,
         ),
-        actions: [
+        actions: const [
+          /*
           IconButton(
             onPressed: () =>
                 context.read<GoalScreenCubit>().onProfileTapped(context),
             icon: const Icon(Icons.person),
             color: AppColors.headerIcon,
           )
+          */
         ],
       ),
       backgroundColor: AppColors.bg,
-      body: const GoalScreenContent(),
+      body: const Column(
+        children: [
+          Expanded(
+            child: GoalScreenContent(),
+          ),
+          MegaMenu(active: 3),
+        ],
+      ),
     );
   }
 }
@@ -65,6 +76,9 @@ class GoalScreenContentState extends State<GoalScreenContent>
     setState(() {
       currentDate = DateTime.now();
     });
+    textFieldController = TextEditingController(
+      text: '',
+    );
   }
 
   @override
@@ -80,6 +94,8 @@ class GoalScreenContentState extends State<GoalScreenContent>
       case AppLifecycleState.paused:
         break;
       case AppLifecycleState.detached:
+        break;
+      case AppLifecycleState.hidden:
         break;
     }
   }
@@ -108,13 +124,10 @@ class GoalScreenContentState extends State<GoalScreenContent>
           children: [
             DatesListView(goals: state.goals),
             GoalsMainContainer(goals: state.goals),
-            FunFlipAnimation(),
-            /* Expanded(
-              child: Align(
-                alignment: Alignment.bottomLeft,
-                child: QuoteWidget(),
-              ),
-            ),*/
+            const Expanded(
+              child: AIGoalGenerator(),
+            ),
+            ErrorMessage(message: state.errorMessage),
           ],
         );
       },
@@ -295,48 +308,197 @@ class GoalsMainContainer extends StatelessWidget {
                               ),
                               Align(
                                 alignment: Alignment.topRight,
-                                child: OutlinedButton(
-                                  onPressed: () {
-                                    model.submitGoal(context);
-                                    // final id = state.goal.id;
-                                    // final g = state.goal;
-                                    goals.removeAt(index);
-                                    goals.insert(
-                                        0,
-                                        GoalModel(
-                                          createdAt: DateTime.now(),
-                                          text: state.goal.text,
-                                          authorId: state.goal.authorId,
-                                          isCompleted: false,
-                                          isExist: true,
-                                        ));
-                                  },
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        AppColors.enabled),
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                            side: const BorderSide(
-                                                color: AppColors.enabled))),
-                                  ),
-                                  child: Container(
-                                    height: 30.0,
-                                    width: 40.0,
-                                    alignment: Alignment.center,
-                                    child: const Text(
-                                      'Save',
-                                      style: AppFonts.button,
-                                    ),
-                                  ),
-                                ),
+                                child: state.status ==
+                                        GoalScreenStateStatus.goalIsGenerating
+                                    ? Container(
+                                        height: 30.0,
+                                        width: 30.0,
+                                        alignment: Alignment.center,
+                                        child: const Center(
+                                          child: CircularProgressIndicator(
+                                            color: AppColors.enabled,
+                                          ),
+                                        ))
+                                    : OutlinedButton(
+                                        onPressed: () {
+                                          model.submitGoal(context);
+                                          // final id = state.goal.id;
+                                          // final g = state.goal;
+                                          goals.removeAt(index);
+                                          goals.insert(
+                                              0,
+                                              GoalModel(
+                                                createdAt: DateTime.now(),
+                                                text: state.goal.text,
+                                                authorId: state.goal.authorId,
+                                                authorName: state.profile.name,
+                                                authorUserName:
+                                                    state.profile.userName,
+                                                authorAvatar:
+                                                    state.profile.avatar,
+                                                isCompleted: false,
+                                                isExist: true,
+                                                isPublic: true,
+                                                isFriends: false,
+                                                isPrivate: false,
+                                                likeUsers: const [],
+                                                likes: 0,
+                                                isGenerated: false,
+                                                isAccepted: false,
+                                              ));
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  AppColors.enabled),
+                                          shape: MaterialStateProperty.all<
+                                                  RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                  side: const BorderSide(
+                                                      color:
+                                                          AppColors.enabled))),
+                                        ),
+                                        child: Container(
+                                          height: 30.0,
+                                          width: 40.0,
+                                          alignment: Alignment.center,
+                                          child: const Text(
+                                            'Save',
+                                            style: AppFonts.button,
+                                          ),
+                                        ),
+                                      ),
                               ),
                             ],
                           ),
                           // GOAL TEXT INPUT FIELD
-                          GoalTextField(),
+                          const Expanded(
+                            child: GoalTextField(),
+                          ),
+                          // GOAL PRIVACY (VISIBILITY) BUTTONS
+                          SizedBox(
+                            height: 40.0,
+                            child: Row(
+                              children: [
+                                Expanded(child: Container()),
+                                state.goal.isPrivate
+                                    ? const Column(children: [
+                                        Icon(
+                                          Icons.person,
+                                          color: AppColors.goalPrivacyActive,
+                                          size: 20.0,
+                                        ),
+                                        Text(
+                                          'Private',
+                                          style: AppFonts.goalPrivacyActive,
+                                        ),
+                                      ])
+                                    : Column(children: [
+                                        IconButton(
+                                          onPressed: () {
+                                            model.changePrivacy(
+                                                Privacy.isPrivate);
+                                          },
+                                          icon: const Icon(
+                                            Icons.person,
+                                            color: AppColors.goalPrivacy,
+                                            size: 20.0,
+                                          ),
+                                          iconSize: 20.0,
+                                          padding: EdgeInsets.zero,
+                                          constraints: const BoxConstraints(),
+                                        ),
+                                        const Text(
+                                          'Private',
+                                          style: AppFonts.goalPrivacy,
+                                        ),
+                                        /*
+                                        TextButton(
+                                          onPressed: () => model
+                                              .changePrivacy(Privacy.isPrivate),
+                                          child: const Text(
+                                            'Private',
+                                            style: AppFonts.goalPrivacy,
+                                          ),
+                                        ),
+                                        */
+                                      ]),
+                                const SizedBox(
+                                  width: 20.0,
+                                ),
+                                state.goal.isFriends
+                                    ? const Column(children: [
+                                        Icon(
+                                          Icons.people,
+                                          color: AppColors.goalPrivacyActive,
+                                          size: 20.0,
+                                        ),
+                                        Text(
+                                          'Friends',
+                                          style: AppFonts.goalPrivacyActive,
+                                        ),
+                                      ])
+                                    : Column(children: [
+                                        IconButton(
+                                          onPressed: () {
+                                            model.changePrivacy(
+                                                Privacy.isFriends);
+                                          },
+                                          icon: const Icon(
+                                            Icons.people,
+                                            color: AppColors.goalPrivacy,
+                                            size: 20.0,
+                                          ),
+                                          iconSize: 20.0,
+                                          padding: EdgeInsets.zero,
+                                          constraints: const BoxConstraints(),
+                                        ),
+                                        const Text(
+                                          'Friends',
+                                          style: AppFonts.goalPrivacy,
+                                        ),
+                                      ]),
+                                const SizedBox(
+                                  width: 20.0,
+                                ),
+                                state.goal.isPublic
+                                    ? const Column(children: [
+                                        Icon(
+                                          Icons.public,
+                                          color: AppColors.goalPrivacyActive,
+                                          size: 20.0,
+                                        ),
+                                        Text(
+                                          'Public',
+                                          style: AppFonts.goalPrivacyActive,
+                                        ),
+                                      ])
+                                    : Column(children: [
+                                        IconButton(
+                                          onPressed: () {
+                                            model.changePrivacy(
+                                                Privacy.isPublic);
+                                          },
+                                          icon: const Icon(
+                                            Icons.public,
+                                            color: AppColors.goalPrivacy,
+                                            size: 20.0,
+                                          ),
+                                          iconSize: 20.0,
+                                          padding: EdgeInsets.zero,
+                                          constraints: const BoxConstraints(),
+                                        ),
+                                        const Text(
+                                          'Public',
+                                          style: AppFonts.goalPrivacy,
+                                        ),
+                                      ]),
+                                Expanded(child: Container()),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     );
@@ -369,8 +531,18 @@ class GoalsMainContainer extends StatelessWidget {
                               createdAt: state.goal.createdAt,
                               text: state.goal.text,
                               authorId: state.goal.authorId,
+                              authorName: state.goal.authorName,
+                              authorUserName: state.goal.authorUserName,
+                              authorAvatar: state.goal.authorAvatar,
                               isCompleted: true,
                               isExist: true,
+                              isPublic: state.goal.isPublic,
+                              isFriends: state.goal.isFriends,
+                              isPrivate: state.goal.isPrivate,
+                              likeUsers: state.goal.likeUsers,
+                              likes: state.goal.likes,
+                              isGenerated: false,
+                              isAccepted: false,
                             ));
                       },
                       background: const CompleteGoalBG(),
@@ -422,10 +594,34 @@ class GoalItem extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 0.0),
       child: Column(
         children: [
-          Text(
-            goalDate,
-            style: AppFonts.goalHeader,
-            textAlign: TextAlign.center,
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  goalDate,
+                  style: AppFonts.goalHeader,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Column(
+                children: [
+                  Icon(
+                    Icons.favorite,
+                    color: goal.likes > 0
+                        ? AppColors.goalLikeIconActive
+                        : AppColors.goalLikeIcon,
+                    size: 32.0,
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      goal.likes.toString(),
+                      style: AppFonts.goalLikeNumber,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
           Expanded(
             child: Text(
@@ -460,7 +656,7 @@ class CompletedStatus extends StatelessWidget {
         return Container(
           height: 40.0,
           alignment: Alignment.center,
-          child: Column(children: const [
+          child: const Column(children: [
             Icon(
               Icons.update,
               color: AppColors.goalHint,
@@ -477,7 +673,7 @@ class CompletedStatus extends StatelessWidget {
         return Container(
           height: 40.0,
           alignment: Alignment.center,
-          child: Column(children: const [
+          child: const Column(children: [
             Icon(
               Icons.check_circle,
               color: AppColors.goalCompleted,
@@ -494,7 +690,7 @@ class CompletedStatus extends StatelessWidget {
           return Container(
             height: 40.0,
             alignment: Alignment.center,
-            child: Column(children: const [
+            child: const Column(children: [
               Icon(
                 Icons.arrow_circle_down,
                 color: AppColors.goalHint,
@@ -510,7 +706,7 @@ class CompletedStatus extends StatelessWidget {
           return Container(
             height: 40.0,
             alignment: Alignment.center,
-            child: Column(children: const [
+            child: const Column(children: [
               Icon(
                 Icons.unpublished,
                 color: AppColors.goalInCompleted,
@@ -540,34 +736,6 @@ class CompleteGoalBG extends StatelessWidget {
   }
 }
 
-/*
-class QuoteWidget extends StatelessWidget {
-  const QuoteWidget({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: const [
-        Text(
-          '"A journey of a thousand miles begins with a single step"',
-          style: AppFonts.goal,
-        ),
-        SizedBox(height: 20.0),
-        Align(
-          alignment: Alignment.bottomRight,
-          child: Text(
-            'Lao Tzu',
-            style: AppFonts.goalHint,
-          ),
-        ),
-      ],
-    );
-  }
-}
-*/
 class GoalTextField extends StatelessWidget {
   const GoalTextField({
     Key? key,
@@ -577,7 +745,7 @@ class GoalTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = context.read<GoalScreenCubit>();
     return TextFormField(
-      initialValue: '',
+      controller: textFieldController,
       onChanged: model.changeGoal,
       style: AppFonts.goal,
       decoration: const InputDecoration(
@@ -585,53 +753,81 @@ class GoalTextField extends StatelessWidget {
         hintStyle: AppFonts.goal,
         border: InputBorder.none,
       ),
+      maxLines: Keys.goalInputFieldMaxLines,
     );
   }
 }
 
-class FunFlipAnimation extends StatelessWidget {
-  const FunFlipAnimation({
-    Key? key,
-  }) : super(key: key);
-
+class AIGoalGenerator extends StatelessWidget {
+  const AIGoalGenerator({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    final model = context.read<GoalScreenCubit>();
-
     return BlocBuilder<GoalScreenCubit, GoalScreenState>(
-        builder: (context, state) {
-      return GestureDetector(
-        onTap: () => model.flipFunCard(),
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 800),
-          transitionBuilder: __transitionBuilder,
-          layoutBuilder: (widget, list) =>
-              Stack(children: [widget ?? const FunFront(), ...list]),
-          switchInCurve: Curves.easeInBack,
-          switchOutCurve: Curves.easeInBack.flipped,
-          child: model.getFunGoalWidget(),
-        ),
-      );
-    });
+      builder: (context, state) {
+        if ((state.status == GoalScreenStateStatus.ready ||
+                state.status == GoalScreenStateStatus.goalIsGenerating) &&
+            Keys.aiGeneratorEnabled == true &&
+            (state.goal.id == 0 || state.goal.id == null)) {
+          return Container(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+            height: 100.0,
+            child: Center(
+              child: OutlinedButton(
+                onPressed: () =>
+                    context.read<GoalScreenCubit>().generateAIGoal(context),
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(AppColors.goalGenerateBg),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          side: const BorderSide(
+                              color: AppColors.goalGenerateBg))),
+                ),
+                child: SizedBox(
+                  height: 70.0,
+                  width: 200.0,
+                  child: Row(
+                    children: [
+                      state.status == GoalScreenStateStatus.goalIsGenerating
+                          ? Container(
+                              height: 64.0,
+                              width: 64.0,
+                              alignment: Alignment.center,
+                              child: const Center(
+                                child: CircularProgressIndicator(
+                                  color: AppColors.goalGenerateIcon,
+                                ),
+                              ))
+                          : const Icon(
+                              Icons.psychology,
+                              size: 64.0,
+                              color: AppColors.goalGenerateIcon,
+                            ),
+                      const SizedBox(
+                        width: 20.0,
+                      ),
+                      const Expanded(
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            'Generate a new goal for me \n(~1 min)',
+                            textAlign: TextAlign.center,
+                            style: AppFonts.goalGenerateText,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        } else {
+          return Container();
+        }
+      },
+    );
   }
-}
-
-Widget __transitionBuilder(Widget widget, Animation<double> animation) {
-  final rotateAnim = Tween(begin: pi, end: 0.0).animate(animation);
-  return AnimatedBuilder(
-    animation: rotateAnim,
-    child: widget,
-    builder: (context, widget) {
-      final model = context.read<GoalScreenCubit>();
-      final isUnder = (ValueKey(model.getDisplayFunFront()) != widget?.key);
-      var tilt = ((animation.value - 0.5).abs() - 0.5) * 0.003;
-      tilt *= isUnder ? -1.0 : 1.0;
-      final value = isUnder ? min(rotateAnim.value, pi / 2) : rotateAnim.value;
-      return Transform(
-        transform: Matrix4.rotationY(value)..setEntry(3, 0, tilt),
-        alignment: Alignment.center,
-        child: widget,
-      );
-    },
-  );
 }

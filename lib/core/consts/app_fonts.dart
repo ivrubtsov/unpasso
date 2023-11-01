@@ -4,6 +4,13 @@ import 'package:goal_app/core/consts/app_colors.dart';
 class AppFonts {
   AppFonts._();
 
+  static const error = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w500,
+    fontSize: 16.0,
+    color: AppColors.error,
+  );
+
   static const header = TextStyle(
     fontFamily: 'Fredoka',
     fontWeight: FontWeight.w500,
@@ -63,8 +70,15 @@ class AppFonts {
   static const goalHeader = TextStyle(
     fontFamily: 'Fredoka',
     fontWeight: FontWeight.w500,
-    fontSize: 40.0,
+    fontSize: 36.0,
     color: AppColors.goalDate,
+  );
+
+  static const goalLikeNumber = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 12.0,
+    color: AppColors.goalLikeNumber,
   );
 
   static const goal = TextStyle(
@@ -93,6 +107,27 @@ class AppFonts {
     fontWeight: FontWeight.w400,
     fontSize: 12.0,
     color: AppColors.goalInCompleted,
+  );
+
+  static const goalPrivacy = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 12.0,
+    color: AppColors.goalPrivacy,
+  );
+
+  static const goalPrivacyActive = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w600,
+    fontSize: 12.0,
+    color: AppColors.goalPrivacyActive,
+  );
+
+  static const goalGenerateText = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w600,
+    fontSize: 16.0,
+    color: AppColors.goalGenerateText,
   );
 
   static const funHeader = TextStyle(
@@ -184,5 +219,89 @@ class AppFonts {
     fontWeight: FontWeight.w700,
     fontSize: 16.0,
     color: AppColors.modalButtonCancelText,
+  );
+
+  static const homeGoalTitle = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w500,
+    fontSize: 16.0,
+    color: AppColors.homeGoalTitle,
+  );
+
+  static const homeGoalAuthorName = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 12.0,
+    color: AppColors.homeGoalAuthorName,
+  );
+
+  static const homeGoalAuthorUserName = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 12.0,
+    color: AppColors.homeGoalAuthorUserName,
+  );
+
+  static const homeGoalAuthorRating = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 12.0,
+    color: AppColors.homeGoalAuthorRating,
+  );
+
+  static const homeGoalLikeNumber = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 12.0,
+    color: AppColors.homeGoalLikeNumber,
+  );
+
+  static const homeEndOfList = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 12.0,
+    color: AppColors.homeGoalAuthorName,
+  );
+
+  static const friendsHeader = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w500,
+    fontSize: 32.0,
+    color: AppColors.friendsHeader,
+  );
+
+  static const friendsName = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w500,
+    fontSize: 24.0,
+    color: AppColors.friendsName,
+  );
+
+  static const friendsUsername = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 12.0,
+    color: AppColors.friendsUsername,
+  );
+
+  static const friendsRating = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 12.0,
+    color: AppColors.friendsRating,
+  );
+
+  static const megaMenu = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 12.0,
+    color: AppColors.megaMenu,
+  );
+
+  static const megaMenuActive = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w600,
+    fontSize: 12.0,
+    color: AppColors.megaMenuActive,
   );
 }
