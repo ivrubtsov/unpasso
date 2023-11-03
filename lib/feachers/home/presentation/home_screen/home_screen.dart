@@ -384,6 +384,9 @@ class GoalListItemState extends State<GoalListItem> {
                 ],
               ),
             ),
+            const SizedBox(
+              width: 20.0,
+            ),
             Column(
               children: [
                 like
