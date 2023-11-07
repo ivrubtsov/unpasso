@@ -185,6 +185,7 @@ class FriendsScreenContentState extends State<FriendsScreenContent>
         final timeDiff = currentDate.difference(state.currentDate).inMinutes;
         if (timeDiff > Keys.refreshTimeoutFriends) {
           model.getFriendsnRequests();
+          model.setCurrentDateNow();
         }
         if (state.status == FriendsScreenStateStatus.loading) {
           return const Center(
@@ -508,7 +509,7 @@ class FriendProfileState extends State<FriendProfile> {
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
       child: Row(
         children: [
-          AppAvatars.getAvatarImage(profile.avatar),
+          AppAvatars.getAvatarImage(profile.avatar, true),
           const SizedBox(
             width: 20.0,
           ),

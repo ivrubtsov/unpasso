@@ -171,4 +171,9 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
       ));
     }
   }
+
+  // REFRESH THE CURRENT TIME TO CALCULATE DELAY ON APP RESUME
+  void setCurrentDateNow() {
+    emit(state.copyWith(currentDate: DateTime.now()));
+  }
 }

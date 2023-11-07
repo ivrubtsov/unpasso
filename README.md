@@ -14,9 +14,15 @@ The app is build with the Flutter framework and is published in the AppStore
 
 ## Current version
 
-3.737.0
+3.737.1
 
 ## Versions notes
+
+3.737.1
+Hey there!
+With this version you can not only support your friends' goals, but also personalise your appearance - now you can select your avatar by clicking on the image in the profile section.
+And don't forget to set and complete a new goal today!
+If you don't know what to do today - ask the machine for the help (the "generate a new goal" button).
 
 3.737.0
 Hi everyone!
