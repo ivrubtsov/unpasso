@@ -10,7 +10,7 @@ class AppAvatars {
   static List<String> headers = [
     'Animals',
     'Robot',
-    'Users',
+    'People',
     'Professionals',
     'Travel',
     'Sports',
