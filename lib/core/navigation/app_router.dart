@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:goal_app/feachers/profile/presentation/profile_screen/avatar_screen.dart';
 import 'package:goal_app/injection_container.dart';
 import 'package:goal_app/feachers/auth/presentation/auth_screen/auth_screen.dart';
 import 'package:goal_app/feachers/auth/presentation/auth_screen/cubit/auth_screen_cubit.dart';
@@ -29,6 +30,7 @@ abstract class MainRoutes {
   static const goalScreen = '/goalScreen';
   static const gamesScreen = '/gamesScreen';
   static const profileScreen = '/profileScreen';
+  static const avatarScreen = '/avatarsScreen';
 }
 
 class AppRouter {
@@ -58,6 +60,8 @@ class AppRouter {
         return _buildGamesScreen();
       case MainRoutes.profileScreen:
         return _buildProfileScreen();
+      case MainRoutes.avatarScreen:
+        return _buildAvatarScreen();
       default:
         return _buildNavigationUnkwown();
     }
@@ -133,6 +137,17 @@ class AppRouter {
                 authRepo: sl(),
               )..initProfileScreen(),
               child: const ProfileScreen(),
+            ));
+  }
+
+  Route _buildAvatarScreen() {
+    return MaterialPageRoute(
+        builder: (context) => BlocProvider.value(
+              value: ProfileScreenCubit(
+                profileRepo: sl(),
+                authRepo: sl(),
+              )..initAvatarScreen(),
+              child: const AvatarScreen(),
             ));
   }
 

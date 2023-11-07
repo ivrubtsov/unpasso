@@ -297,12 +297,20 @@ class GoalsMainContainer extends StatelessWidget {
                           // CARD HEADER WITH A BUTTON
                           Row(
                             children: [
-                              const Expanded(
+                              Expanded(
                                 child: SizedBox(
-                                  child: Text(
-                                    'Today',
-                                    style: AppFonts.goalHeader,
-                                    textAlign: TextAlign.left,
+                                  child: TextButton(
+                                    onPressed: (() => FocusManager
+                                        .instance.primaryFocus
+                                        ?.unfocus()),
+                                    child: const Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        'Today',
+                                        style: AppFonts.goalHeader,
+                                        textAlign: TextAlign.left,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),

@@ -4,6 +4,7 @@ import 'package:goal_app/core/consts/achievements.dart';
 import 'package:goal_app/core/consts/app_avatars.dart';
 import 'package:goal_app/core/consts/app_colors.dart';
 import 'package:goal_app/core/consts/app_fonts.dart';
+import 'package:goal_app/core/widgets/error_presentor.dart';
 import 'package:goal_app/core/widgets/main_text_field.dart';
 import 'package:goal_app/core/widgets/mega_menu.dart';
 import 'package:goal_app/core/widgets/modal.dart';
@@ -115,10 +116,19 @@ class PersonalDataState extends State<PersonalData> {
       final model = context.read<ProfileScreenCubit>();
       name = state.profile.name ?? state.profile.userName ?? 'Unknown';
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 0.0),
         child: Row(
           children: [
-            AppAvatars.getAvatarImage(state.profile.avatar),
+            OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                padding: EdgeInsets.zero,
+                shape: const LinearBorder(),
+                side: const BorderSide(width: 0),
+                backgroundColor: AppColors.profileBg,
+              ),
+              onPressed: () => model.onAvatarOpenTapped(context),
+              child: AppAvatars.getAvatarImage(state.profile.avatar, true),
+            ),
             const SizedBox(
               width: 20.0,
             ),
@@ -128,59 +138,65 @@ class PersonalDataState extends State<PersonalData> {
                   Align(
                     alignment: Alignment.topLeft,
                     child: isChangeName
-                        ? Row(
-                            children: [
-                              Expanded(
-                                child: _TextField(
-                                  title: 'name',
-                                  defaultValue: state.profile.name ??
-                                      state.profile.userName ??
-                                      '',
-                                  onChanged: _changeNameText,
+                        ? SizedBox(
+                            height: 64.0,
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: _TextField(
+                                    title: 'name',
+                                    defaultValue: state.profile.name ??
+                                        state.profile.userName ??
+                                        '',
+                                    onChanged: _changeNameText,
+                                  ),
                                 ),
-                              ),
-                              SizedBox(
-                                width: 10.0,
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  model.submitName(name, context);
-                                  _changeName(false);
-                                },
-                                icon: const Icon(
-                                  Icons.done,
-                                  color: AppColors.profileButtonSave,
-                                  size: 24.0,
+                                const SizedBox(
+                                  width: 10.0,
                                 ),
-                                padding: EdgeInsets.zero,
-                                constraints: const BoxConstraints(),
-                              ),
-                            ],
+                                IconButton(
+                                  onPressed: () {
+                                    model.submitName(name, context);
+                                    _changeName(false);
+                                  },
+                                  icon: const Icon(
+                                    Icons.done,
+                                    color: AppColors.profileButtonSave,
+                                    size: 24.0,
+                                  ),
+                                  padding: EdgeInsets.zero,
+                                  constraints: const BoxConstraints(),
+                                ),
+                              ],
+                            ),
                           )
-                        : Row(
-                            children: [
-                              TextButton(
-                                onPressed: () => _changeName(true),
-                                child: Text(
-                                  state.profile.name ??
-                                      state.profile.userName ??
-                                      'Unknown',
-                                  style: AppFonts.profileName,
+                        : SizedBox(
+                            height: 64.0,
+                            child: Row(
+                              children: [
+                                TextButton(
+                                  onPressed: () => _changeName(true),
+                                  child: Text(
+                                    state.profile.name ??
+                                        state.profile.userName ??
+                                        'Unknown',
+                                    style: AppFonts.profileName,
+                                  ),
                                 ),
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  _changeName(true);
-                                },
-                                icon: const Icon(
-                                  Icons.edit,
-                                  color: AppColors.profileButtonEdit,
-                                  size: 24.0,
+                                IconButton(
+                                  onPressed: () {
+                                    _changeName(true);
+                                  },
+                                  icon: const Icon(
+                                    Icons.edit,
+                                    color: AppColors.profileButtonEdit,
+                                    size: 24.0,
+                                  ),
+                                  padding: EdgeInsets.zero,
+                                  constraints: const BoxConstraints(),
                                 ),
-                                padding: EdgeInsets.zero,
-                                constraints: const BoxConstraints(),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                   ),
                   Row(

@@ -57,6 +57,10 @@ class AppColors {
   static const profileButtonDeleteAccount = Color.fromRGBO(241, 94, 142, 1);
   static const profileButtonEdit = Colors.black;
   static const profileButtonSave = Color.fromRGBO(43, 39, 239, 1);
+  static const avatarBg = Color.fromRGBO(237, 242, 255, 1);
+  static const avatarHeader = Colors.black;
+  static const avatarShaded = Color.fromRGBO(237, 242, 255, 1);
+  static const avatarHint = Color.fromRGBO(43, 39, 239, 1);
 
   // Home screen with goals list
   static const homeBg = Colors.white;

@@ -23,8 +23,13 @@ class ProfileScreenCubit extends Cubit<ProfileScreenState> {
   final ProfileRepo _profileRepo;
   final AuthRepo _authRepo;
 
-// ИНИЦИАЛИЗАЦИЯ СТРАНИЦЫ ПРОФИЛЯ
+// INITIALIZATION OF THE PROFILE SCREEN
   void initProfileScreen() async {
+    getProfile();
+  }
+
+// INITIALIZATION OF THE AVATAR SELECTION SCREEN
+  void initAvatarScreen() async {
     getProfile();
   }
 
@@ -37,6 +42,7 @@ class ProfileScreenCubit extends Cubit<ProfileScreenState> {
       emit(state.copyWith(
         status: ProfileScreenStateStatus.loaded,
         profile: profile,
+        errorMessage: '',
       ));
     } on ServerException {
       emit(state.copyWith(status: ProfileScreenStateStatus.error));
@@ -76,16 +82,35 @@ class ProfileScreenCubit extends Cubit<ProfileScreenState> {
     return achs;
   }
 
-// КНОПКА НАЗАД
-  void onBackTapped(BuildContext context) {
-    Navigator.of(context).pushNamed(MainRoutes.goalScreen);
-  }
-
-// КНОПКА ВЫХОДА НА ЭКРАН АУТЕНТИФИКАЦИИ
+// LOG OUT BUTTON
   void onLogOutTapped(BuildContext context) {
     _authRepo.logOut();
     Navigator.of(context).pushNamed(AuthRoutes.authScreen);
   }
+
+// BUTTON TO RETURN TO THE PROFILE SCREEN
+/*
+  void onAvatarBackTapped(BuildContext context) {
+    Navigator.of(context).pushNamed(MainRoutes.profileScreen);
+  }
+*/
+
+// BUTTON TO OPEN THE AVATARS SELECTION SCREEN
+  void onAvatarOpenTapped(BuildContext context) {
+    Navigator.of(context).pushNamed(MainRoutes.avatarScreen);
+  }
+
+// BUTTON TO SAVE THE NEW AVATAR
+  void onAvatarAcceptTapped(BuildContext context) {
+    // submitAvatar(context);
+    Navigator.of(context).pushNamed(MainRoutes.profileScreen);
+  }
+
+/*
+  int getCurrentAvatar() {
+    return state.profile.avatar ?? 0;
+  }
+*/
 
 // ACCOUNT DELETION BUTTON
   void onDeleteAccountTapped(BuildContext context) {
@@ -96,6 +121,7 @@ class ProfileScreenCubit extends Cubit<ProfileScreenState> {
     Navigator.of(context).pushNamed(AuthRoutes.authScreen);
   }
 
+// NAME CHANGE REQUEST
   void submitName(String name, BuildContext context) async {
     try {
       if (name == state.profile.name) return;
@@ -103,11 +129,34 @@ class ProfileScreenCubit extends Cubit<ProfileScreenState> {
       await _profileRepo.updateUserData(newProfile);
       emit(state.copyWith(
         profile: newProfile,
+        errorMessage: '',
       ));
     } on ServerException {
       emit(state.copyWith(status: ProfileScreenStateStatus.error));
       ErrorPresentor.showError(
           context, 'Unable to update the profile. Check internet connection');
     }
+  }
+
+// AVATAR CHANGE REQUEST
+  void submitAvatar(BuildContext context, int avatar) async {
+    try {
+      emit(state.copyWith(
+        profile: state.profile.copyWith(avatar: avatar),
+        errorMessage: '',
+      ));
+      await _profileRepo.updateUserData(state.profile);
+    } on ServerException {
+      emit(state.copyWith(status: ProfileScreenStateStatus.error));
+      ErrorPresentor.showError(
+          context, 'Unable to update the profile. Check internet connection');
+    }
+  }
+
+// AVATAR SELECTION
+  void changeAvatar(int avatar) async {
+    emit(state.copyWith(
+      profile: state.profile.copyWith(avatar: avatar),
+    ));
   }
 }

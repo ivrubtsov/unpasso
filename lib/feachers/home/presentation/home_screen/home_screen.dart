@@ -103,6 +103,7 @@ class HomeScreenContentState extends State<HomeScreenContent>
         final timeDiff = currentDate.difference(state.currentDate).inMinutes;
         if (timeDiff > Keys.refreshTimeoutHome) {
           model.getFirstGoals();
+          model.setCurrentDateNow();
         }
         if (state.status == HomeScreenStateStatus.loading) {
           return const Center(
@@ -167,7 +168,7 @@ class GoalItem extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
       child: Row(
         children: [
-          AppAvatars.getAvatarImage(goal.authorAvatar),
+          AppAvatars.getAvatarImage(goal.authorAvatar, true),
           const SizedBox(
             width: 20.0,
           ),
@@ -353,7 +354,7 @@ class GoalListItemState extends State<GoalListItem> {
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
         child: Row(
           children: [
-            AppAvatars.getAvatarImage(goal.authorAvatar),
+            AppAvatars.getAvatarImage(goal.authorAvatar, true),
             const SizedBox(
               width: 20.0,
             ),
@@ -420,7 +421,7 @@ class GoalListItemState extends State<GoalListItem> {
                   height: 5.0,
                 ),
                 Align(
-                  alignment: Alignment.topLeft,
+                  alignment: Alignment.topCenter,
                   child: Text(
                     likes.toString(),
                     style: AppFonts.homeGoalLikeNumber,

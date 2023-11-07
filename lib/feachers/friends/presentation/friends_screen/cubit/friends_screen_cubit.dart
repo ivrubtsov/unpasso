@@ -180,4 +180,9 @@ class FriendsScreenCubit extends Cubit<FriendsScreenState> {
     if (!state.searchOpen) return;
     emit(state.copyWith(searchOpen: false));
   }
+
+// REFRESH THE CURRENT TIME TO CALCULATE DELAY ON APP RESUME
+  void setCurrentDateNow() {
+    emit(state.copyWith(currentDate: DateTime.now()));
+  }
 }
