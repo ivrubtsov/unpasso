@@ -151,6 +151,27 @@ class AppFonts {
     color: AppColors.funHint,
   );
 
+  static const funQuote = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 24.0,
+    color: AppColors.funQuote,
+  );
+
+  static const funQuoteAuthor = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 12.0,
+    color: AppColors.funQuoteAuthor,
+  );
+
+  static const funSubHeader = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 12.0,
+    color: AppColors.funSubHeader,
+  );
+
   static const profileName = TextStyle(
     fontFamily: 'Fredoka',
     fontWeight: FontWeight.w500,
@@ -303,6 +324,13 @@ class AppFonts {
     fontWeight: FontWeight.w400,
     fontSize: 12.0,
     color: AppColors.friendsRating,
+  );
+
+  static const friendsSearchHint = TextStyle(
+    fontFamily: 'Fredoka',
+    fontWeight: FontWeight.w400,
+    fontSize: 24.0,
+    color: AppColors.friendsSearchHint,
   );
 
   static const megaMenu = TextStyle(

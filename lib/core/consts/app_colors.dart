@@ -40,8 +40,11 @@ class AppColors {
   // Funny goals
   static const funBg = Color.fromRGBO(248, 250, 251, 1);
   static const funHeader = Colors.black;
+  static const funSubHeader = Colors.black;
   static const funText = Colors.black;
   static const funHint = Color.fromRGBO(43, 39, 239, 1);
+  static const funQuote = Colors.black;
+  static const funQuoteAuthor = Color.fromRGBO(43, 39, 239, 1);
 
   // Profile and achievements
   static const achBg = Color.fromRGBO(0, 26, 52, 0.9);
@@ -85,6 +88,8 @@ class AppColors {
   static const friendsInvite = Color.fromRGBO(80, 85, 92, 1);
   static const friendsInviteActive = Color.fromRGBO(43, 39, 239, 1);
   static const friendsRemove = Colors.black;
+  static const friendsSearchHint = Colors.black;
+  static const friendsSearchNotFoundIcon = Color.fromRGBO(80, 85, 92, 1);
 
   // Modal windows
   static const modalBg = Color.fromRGBO(220, 231, 255, 1);

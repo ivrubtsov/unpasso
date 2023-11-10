@@ -17,7 +17,7 @@ class MegaMenu extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 4.0),
       color: AppColors.megaMenuBg,
-      height: 64,
+      height: 64.0,
       child: Row(
         children: [
           Expanded(

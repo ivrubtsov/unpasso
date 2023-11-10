@@ -16,7 +16,9 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -75,7 +77,9 @@ class ProfileScreen extends StatelessWidget {
             ),
             const MegaMenu(active: 5),
           ],
-        ));
+        ),
+      ),
+    );
   }
 }
 

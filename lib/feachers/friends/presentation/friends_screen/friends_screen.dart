@@ -111,18 +111,28 @@ class FriendsSearchDelegate extends SearchDelegate {
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.data != null) {
           final sData = snapshot.data as List<Profile>;
-          return ListView.builder(
-            itemBuilder: (context, index) {
-              return FriendProfile(
-                profile: sData[index],
-                isFriend: false,
-                isRequest: false,
-                isSearch: true,
-                cubit: cubit,
-              );
-            },
-            itemCount: sData.length,
-          );
+          if (sData.isEmpty) {
+            return const Center(
+              child: Icon(
+                Icons.search,
+                color: AppColors.friendsSearchNotFoundIcon,
+                size: 200.0,
+              ),
+            );
+          } else {
+            return ListView.builder(
+              itemBuilder: (context, index) {
+                return FriendProfile(
+                  profile: sData[index],
+                  isFriend: false,
+                  isRequest: false,
+                  isSearch: true,
+                  cubit: cubit,
+                );
+              },
+              itemCount: sData.length,
+            );
+          }
         } else {
           return const Center(
             child: CircularProgressIndicator(),
@@ -210,6 +220,17 @@ class FriendsScreenContentState extends State<FriendsScreenContent>
                         ? const Expanded(
                             flex: 2,
                             child: FriendsList(),
+                          )
+                        : Container(),
+                    (state.friendsRequestsReceived.isEmpty &&
+                            state.friends.isEmpty)
+                        ? const Expanded(
+                            child: Center(
+                              child: Text(
+                                'Individually we can participate, but together we can win. Add friends and move towards the goal together!',
+                                style: AppFonts.friendsSearchHint,
+                              ),
+                            ),
                           )
                         : Container(),
                   ],

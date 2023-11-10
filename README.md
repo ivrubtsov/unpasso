@@ -14,9 +14,12 @@ The app is build with the Flutter framework and is published in the AppStore
 
 ## Current version
 
-3.737.1
+3.737.2
 
 ## Versions notes
+
+3.737.2
+
 
 3.737.1
 Hey there!
