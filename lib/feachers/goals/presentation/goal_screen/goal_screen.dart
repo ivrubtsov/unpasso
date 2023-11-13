@@ -369,7 +369,7 @@ class GoalsMainContainer extends StatelessWidget {
                                                   RoundedRectangleBorder>(
                                               RoundedRectangleBorder(
                                                   borderRadius:
-                                                      BorderRadius.circular(15),
+                                                      BorderRadius.circular(20),
                                                   side: const BorderSide(
                                                       color:
                                                           AppColors.enabled))),
@@ -785,7 +785,8 @@ class AIGoalGenerator extends StatelessWidget {
           return Container(
             padding:
                 const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-            height: 80.0,
+            alignment: Alignment.topCenter,
+            height: 70.0,
             child: Center(
               child: OutlinedButton(
                 onPressed: () =>
@@ -795,12 +796,12 @@ class AIGoalGenerator extends StatelessWidget {
                       MaterialStateProperty.all(AppColors.goalGenerateBg),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(30),
                           side: const BorderSide(
                               color: AppColors.goalGenerateBg))),
                 ),
                 child: SizedBox(
-                  height: 60.0,
+                  height: 50.0,
                   //width: 200.0,
                   child: Row(
                     children: [
