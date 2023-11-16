@@ -224,13 +224,29 @@ class FriendsScreenContentState extends State<FriendsScreenContent>
                         : Container(),
                     (state.friendsRequestsReceived.isEmpty &&
                             state.friends.isEmpty)
-                        ? const Expanded(
-                            child: Center(
-                              child: Text(
-                                'Individually we can participate, but together we can win. Add friends and move towards the goal together!',
-                                style: AppFonts.friendsSearchHint,
-                              ),
-                            ),
+                        ? Expanded(
+                            child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 20.0),
+                                child: Column(
+                                  children: [
+                                    Expanded(child: Container()),
+                                    const Text(
+                                      'Individually we can participate, but together we can win.',
+                                      style: AppFonts.friendsSearchHint,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    const SizedBox(
+                                      height: 10.0,
+                                    ),
+                                    const Text(
+                                      'Add friends and move towards the goal together!',
+                                      style: AppFonts.friendsSearchHint,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Expanded(child: Container())
+                                  ],
+                                )),
                           )
                         : Container(),
                   ],

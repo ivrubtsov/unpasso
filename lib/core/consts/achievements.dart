@@ -65,7 +65,7 @@ class Achievements {
     // 12
     'A weekend without a backward thought',
     // 13
-    'A special achievement from Dasha',
+    'A secret achievement from Dasha',
   ];
 
   static List<IconData> icons = [
