@@ -201,6 +201,8 @@ class FriendsScreenContentState extends State<FriendsScreenContent>
           return const Center(
             child: CircularProgressIndicator(),
           );
+        } else {
+          model.checkFriendsAchs(context);
         }
         return Column(
           children: [

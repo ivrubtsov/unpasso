@@ -94,6 +94,7 @@ class AppRouter {
               value: HomeScreenCubit(
                 homeRepo: sl(),
                 sessionRepo: sl(),
+                profileRepo: sl(),
               )..initHomeScreen(),
               child: const HomeScreen(),
             ));
@@ -104,6 +105,7 @@ class AppRouter {
         builder: (context) => BlocProvider.value(
               value: FriendsScreenCubit(
                 friendsRepo: sl(),
+                profileRepo: sl(),
               )..initFriendsScreen(),
               child: const FriendsScreen(),
             ));

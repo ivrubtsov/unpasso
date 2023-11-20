@@ -9,6 +9,7 @@ enum FriendsScreenStateStatus {
 
 class FriendsScreenState extends Equatable {
   final DateTime currentDate;
+  final Profile profile;
   final List<Profile> friends;
   final List<Profile> friendsRequestsReceived;
   final List<Profile> friendsRequestsSent;
@@ -22,6 +23,7 @@ class FriendsScreenState extends Equatable {
 
   const FriendsScreenState({
     required this.currentDate,
+    required this.profile,
     required this.friends,
     required this.friendsRequestsReceived,
     required this.friendsRequestsSent,
@@ -36,6 +38,7 @@ class FriendsScreenState extends Equatable {
 
   factory FriendsScreenState.initial() => FriendsScreenState(
         currentDate: DateTime.now(),
+        profile: Profile(id: 0),
         friends: const [],
         friendsRequestsReceived: const [],
         friendsRequestsSent: const [],
@@ -50,6 +53,7 @@ class FriendsScreenState extends Equatable {
 
   FriendsScreenState copyWith({
     DateTime? currentDate,
+    Profile? profile,
     List<Profile>? friends,
     List<Profile>? friendsRequestsReceived,
     List<Profile>? friendsRequestsSent,
@@ -63,6 +67,7 @@ class FriendsScreenState extends Equatable {
   }) {
     return FriendsScreenState(
       currentDate: currentDate ?? this.currentDate,
+      profile: profile ?? this.profile,
       friends: friends ?? this.friends,
       friendsRequestsReceived:
           friendsRequestsReceived ?? this.friendsRequestsReceived,
@@ -82,6 +87,7 @@ class FriendsScreenState extends Equatable {
   @override
   List<Object> get props => [
         currentDate,
+        profile,
         friends,
         friendsRequestsReceived,
         friendsRequestsSent,

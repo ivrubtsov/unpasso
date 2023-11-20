@@ -113,8 +113,8 @@ class GoalScreenContentState extends State<GoalScreenContent>
   Widget build(BuildContext context) {
     return BlocBuilder<GoalScreenCubit, GoalScreenState>(
       builder: (context, state) {
+        final model = context.read<GoalScreenCubit>();
         if (state.currentDate.day != currentDate.day) {
-          final model = context.read<GoalScreenCubit>();
           model.getAllGoals();
           model.setSelectedDateToday();
         }
@@ -122,6 +122,8 @@ class GoalScreenContentState extends State<GoalScreenContent>
           return const Center(
             child: CircularProgressIndicator(),
           );
+        } else {
+          model.checkLikedGoalsAchs(context);
         }
         return Column(
           children: [

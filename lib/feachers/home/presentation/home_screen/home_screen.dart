@@ -153,6 +153,7 @@ class HomeScreenContentState extends State<HomeScreenContent>
   }
 }
 
+/*
 // WIDGET TO SHOW A GOAL
 class GoalItem extends StatelessWidget {
   const GoalItem({
@@ -297,6 +298,7 @@ class GoalLikeInActive extends StatelessWidget {
     });
   }
 }
+*/
 
 class GoalListItem extends StatefulWidget {
   const GoalListItem({Key? key, required this.goal}) : super(key: key);
@@ -393,7 +395,7 @@ class GoalListItemState extends State<GoalListItem> {
                 like
                     ? IconButton(
                         onPressed: () {
-                          model.setUnLikeGoal(goal);
+                          model.setUnLikeGoal(goal, context);
                           _unLikeMe();
                         },
                         icon: const Icon(
@@ -406,7 +408,7 @@ class GoalListItemState extends State<GoalListItem> {
                       )
                     : IconButton(
                         onPressed: () {
-                          model.setLikeGoal(goal);
+                          model.setLikeGoal(goal, context);
                           _likeMe();
                         },
                         icon: const Icon(

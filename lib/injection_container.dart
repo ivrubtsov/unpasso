@@ -42,12 +42,14 @@ void init() {
     () => HomeScreenCubit(
       homeRepo: sl(),
       sessionRepo: sl(),
+      profileRepo: sl(),
     ),
   );
 
   sl.registerFactory<FriendsScreenCubit>(
     () => FriendsScreenCubit(
       friendsRepo: sl(),
+      profileRepo: sl(),
     ),
   );
 
