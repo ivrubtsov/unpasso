@@ -197,4 +197,56 @@ class Achievements {
       return getNonActiveIcon(ach);
     }
   }
+
+  // SHOW MODAL WINDOW WITH AN ACHIEVEMENT
+  static void showAchieveModal(int ach, BuildContext parentContext) {
+    showModalBottomSheet<void>(
+      context: parentContext,
+      builder: (BuildContext context) {
+        return Container(
+          height: 300,
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+          decoration: const BoxDecoration(
+            color: AppColors.achBg,
+            // borderRadius: BorderRadius.circular(30.0),
+          ),
+          child: Column(
+            // mainAxisAlignment: MainAxisAlignment.center,
+            // mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  const Expanded(
+                    child: Text(
+                      'Congratulations!!!',
+                      style: AppFonts.achModalHeader,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                        onPressed: () =>
+                            Navigator.of(context, rootNavigator: true).pop(),
+                        icon: const Icon(Icons.close),
+                        color: AppColors.achCloseIcon),
+                  ),
+                ],
+              ),
+              Expanded(
+                child: Center(
+                  child: getNewAchievement(ach),
+                ),
+              ),
+              Text(
+                congrats[ach],
+                style: AppFonts.achModalText,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 }

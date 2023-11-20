@@ -21,7 +21,7 @@ https://github.com/ivrubtsov/unpasso_server
 ## Versions notes
 
 3.737.2
-Hi! There are several interface improvements based on Alexey Milchenko's feedback. The social achievements are added.
+Hi! There are several interface improvements based on Alexey Milchenko's feedback. Social achievements are added.
 Also the AI goal generator is upgraded, now it works faster and processes more requests simultaneously.
 However, generally speaking, it is a minor update, more news will come soon.
 

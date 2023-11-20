@@ -2,8 +2,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:goal_app/core/consts/achievements.dart';
-import 'package:goal_app/core/consts/app_colors.dart';
-import 'package:goal_app/core/consts/app_fonts.dart';
 import 'package:goal_app/core/consts/keys.dart';
 import 'package:goal_app/core/exceptions/exceptions.dart';
 import 'package:goal_app/core/navigation/app_router.dart';
@@ -396,63 +394,12 @@ class GoalScreenCubit extends Cubit<GoalScreenState> {
       emit(state.copyWith(
         profile: newProfile,
       ));
-      showAchieveModal(newAch, context);
+      Achievements.showAchieveModal(newAch, context);
     } on ServerException {
       emit(state.copyWith(status: GoalScreenStateStatus.error));
       ErrorPresentor.showError(
           context, 'Unable to update achievements. Check internet connection');
     }
-  }
-
-  // SHOW MODAL WINDOW WITH AN ACHIEVEMENT
-  static void showAchieveModal(int ach, BuildContext context) {
-    showModalBottomSheet<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-          height: 300,
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
-          decoration: const BoxDecoration(
-            color: AppColors.achBg,
-            // borderRadius: BorderRadius.circular(30.0),
-          ),
-          child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center,
-            // mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                children: [
-                  const Expanded(
-                    child: Text(
-                      'Congratulations!!!',
-                      style: AppFonts.achModalHeader,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: IconButton(
-                        onPressed: () => Navigator.pop(context),
-                        icon: const Icon(Icons.close),
-                        color: AppColors.achCloseIcon),
-                  ),
-                ],
-              ),
-              Expanded(
-                child: Center(
-                  child: Achievements.getNewAchievement(ach),
-                ),
-              ),
-              Text(
-                Achievements.congrats[ach],
-                style: AppFonts.achModalText,
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        );
-      },
-    );
   }
 
 // COUNTING THE NUMBER OF COMPLETED GOALS DURING A PERIOD OF TIME
@@ -482,8 +429,8 @@ class GoalScreenCubit extends Cubit<GoalScreenState> {
 
 // COUNTING THE NUMBER OF LIKED GOALS AND SHOWING ACHIEVEMENTS
   void checkLikedGoalsAchs(BuildContext context) {
-    final likes = state.goals.map((goal) => goal.likes);
-    final totalLikes =
+    var likes = state.goals.map((goal) => goal.likes);
+    var totalLikes =
         likes.fold<int>(0, (previousValue, element) => previousValue + element);
     // Check and add achievements
     // 19 'Your goal was liked by others',

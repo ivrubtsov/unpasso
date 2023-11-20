@@ -527,15 +527,15 @@ class FriendProfileState extends State<FriendProfile> {
     });
   }
 
-  void _requestMe() {
-    widget.cubit.inviteFriend(profile, context);
+  void _requestMe(BuildContext parentContext) {
+    widget.cubit.inviteFriend(profile, parentContext);
     setState(() {
       isRequestSent = true;
     });
   }
 
-  void _acceptThem() {
-    widget.cubit.acceptRequest(profile, context);
+  void _acceptThem(BuildContext parentContext) {
+    widget.cubit.acceptRequest(profile, parentContext);
     setState(() {
       isRequestReceived = false;
       isFriend = true;
@@ -685,7 +685,7 @@ class FriendProfileState extends State<FriendProfile> {
                               width: 32.0,
                               child: Center(
                                 child: IconButton(
-                                  onPressed: () => _acceptThem(),
+                                  onPressed: () => _acceptThem(context),
                                   icon: const Icon(
                                     Icons.check_box,
                                     color: AppColors.friendsApprove,
@@ -701,7 +701,7 @@ class FriendProfileState extends State<FriendProfile> {
                               width: 32.0,
                               child: Center(
                                 child: IconButton(
-                                  onPressed: () => _requestMe(),
+                                  onPressed: () => _requestMe(context),
                                   icon: const Icon(
                                     Icons.person_add,
                                     color: AppColors.friendsInviteActive,
