@@ -10,13 +10,20 @@ Unpasso isn't a website or just an app. It's a community of people who aren't af
 
 ## Technology
 
-The app is build with the Flutter framework and is published in the AppStore
+The app is build with the Flutter framework and is published in the AppStore.
+The server side is REST API-based, created using Python scripts with Flask framework, and hosted in the AWS cloud.
+https://github.com/ivrubtsov/unpasso_server
 
 ## Current version
 
-3.737.1
+3.737.2
 
 ## Versions notes
+
+3.737.2
+Hi! There are several interface improvements based on Alexey Milchenko's feedback. Social achievements are added.
+Also the AI goal generator is upgraded, now it works faster and processes more requests simultaneously.
+However, generally speaking, it is a minor update, more news will come soon.
 
 3.737.1
 Hey there!

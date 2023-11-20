@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:goal_app/core/consts/api_consts.dart';
+import 'package:goal_app/core/consts/app_avatars.dart';
 import 'package:goal_app/core/exceptions/exceptions.dart';
 import 'package:goal_app/feachers/auth/domain/repos/session_repo.dart';
 import 'package:goal_app/feachers/friends/domain/repos/friends_repo.dart';
@@ -83,16 +84,83 @@ class FriendsRepoImpl implements FriendsRepo {
       final id = _sessionRepo.sessionData!.id;
       final response = await _dio().get(ApiConsts.getFriendsData(id));
 
-      if (response.data == null) throw ServerException();
-      if (response.data['description'] == null ||
-          response.data['description'] == '') {
+      if (response.data == null || response.data!.isEmpty) {
+        throw ServerException();
+      }
+
+      String name;
+      int avatar;
+      List<int> achievements;
+      int rating;
+      bool isPaid;
+      avatar = 0;
+      achievements = [];
+      rating = 0;
+      isPaid = false;
+
+      final json = response.data;
+      if (json['name'] == null || json['name'] == '') {
+        name = json['username'] ?? 'Unknown';
+      } else {
+        name = json['name'];
+      }
+
+      if (!(json['description'] == null || json['description'] == '')) {
+        final Map<String, dynamic> description = json['description'];
+        if (!(description['avatar'] == null ||
+            description['avatar'] == '' ||
+            description['avatar'] == 0)) {
+          avatar = description['avatar'] as int;
+        }
+        if (!(description['achievements'] == null ||
+            description['achievements'] == '' ||
+            description['achievements'] == [])) {
+          achievements = List<int>.from(description['achievements']);
+        }
+        if (!(description['rating'] == null ||
+            description['rating'] == '' ||
+            description['rating'] == 0)) {
+          rating = description['rating'] as int;
+        }
+        if (!(description['isPaid'] == null ||
+            description['isPaid'] == '' ||
+            description['isPaid'] == false ||
+            description['isPaid'] == 'false')) {
+          isPaid = true;
+        }
+        if (avatar == 0) {
+          avatar = AppAvatars.chooseAvatar();
+        }
+
         return {
+          'profile': {
+            'id': json['id'] as int,
+            'name': name,
+            'userName': json['username'] ?? '',
+            'avatar': avatar,
+            'achievements': achievements,
+            'rating': rating,
+            'isPaid': isPaid,
+          },
+          'friends': description['friends'],
+          'friendsRequestsReceived': description['friendsRequestsReceived'],
+          'friendsRequestsSent': description['friendsRequestsSent'],
+        };
+      } else {
+        return {
+          'profile': {
+            'id': json['id'] as int,
+            'name': name,
+            'userName': json['username'] ?? '',
+            'avatar': AppAvatars.chooseAvatar(),
+            'achievements': [],
+            'rating': 0,
+            'isPaid': false,
+          },
           'friends': [],
           'friendsRequestsReceived': [],
           'friendsRequestsSent': [],
         };
-      } else {
-        return response.data['description'];
       }
     } on DioError {
       throw ServerException();

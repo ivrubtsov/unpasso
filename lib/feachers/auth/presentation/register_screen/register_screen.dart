@@ -14,79 +14,85 @@ class RegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = context.read<RegisterScreenCubit>();
-    return Scaffold(
-      backgroundColor: AppColors.altBg,
-      resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 30.0),
-              // HEADER
-              const Center(
-                child: Column(children: [
-                  Text(
-                    'Create Account',
-                    style: AppFonts.header,
-                  ),
-                  Text(
-                    'First step towards a big goal',
-                    style: AppFonts.subHeader,
-                  ),
-                ]),
-              ),
-              // FORM
-              const SizedBox(height: 30.0),
-              // TEXT FIELD NAME
-              _TextField(
-                title: 'name',
-                hintText: 'Your name',
-                onChanged: model.changeName,
-              ),
-              const SizedBox(height: 15.0),
-              // TEXT FIELD USERNAME
-              _TextField(
-                title: 'username',
-                hintText: 'username - how others can find you',
-                isUsername: true,
-                onChanged: model.changeUserName,
-              ),
-              const SizedBox(height: 15.0),
-              // TEXT FIELD EMAIL
-              _TextField(
-                title: 'e-mail',
-                hintText: 'E-mail',
-                onChanged: model.changeEmail,
-              ),
-              const SizedBox(height: 15.0),
-              // TEXT FIELD ПАРОЛЬ
-              _TextField(
-                title: 'password',
-                hintText: 'Password',
-                isPassword: true,
-                onChanged: model.changePassword,
-              ),
-              const SizedBox(height: 5.0),
-              const _PrivacyPolicyWidget(),
-              const SizedBox(height: 15.0),
-              // REGISTRATION BUTTON
-              Align(
-                alignment: Alignment.center,
-                child: MainButton(
-                  onPressed: () => model.onSignUpTapped(context),
-                  title: 'Create account',
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        backgroundColor: AppColors.altBg,
+        resizeToAvoidBottomInset: false,
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 30.0),
+                // HEADER
+                const Center(
+                  child: Column(children: [
+                    Text(
+                      'Create Account',
+                      style: AppFonts.header,
+                    ),
+                    Text(
+                      'First step towards a big goal',
+                      style: AppFonts.subHeader,
+                    ),
+                  ]),
                 ),
-              ),
-              const SizedBox(height: 15.0),
-              // LOG IN BUTTON
-              const Align(
-                alignment: Alignment.center,
-                child: _LogInButton(),
-              ),
-              Expanded(child: Container()),
-            ],
+                // FORM
+                const SizedBox(height: 30.0),
+                // TEXT FIELD NAME
+                _TextField(
+                  title: 'name',
+                  hintText: 'Your name',
+                  onChanged: model.changeName,
+                ),
+                const SizedBox(height: 15.0),
+                // TEXT FIELD USERNAME
+                _TextField(
+                  title: 'username',
+                  hintText: 'username - how others can find you',
+                  isUsername: true,
+                  onChanged: model.changeUserName,
+                ),
+                const SizedBox(height: 15.0),
+                // TEXT FIELD EMAIL
+                _TextField(
+                  title: 'e-mail',
+                  hintText: 'E-mail',
+                  onChanged: model.changeEmail,
+                ),
+                const SizedBox(height: 15.0),
+                // TEXT FIELD ПАРОЛЬ
+                _TextField(
+                  title: 'password',
+                  hintText: 'Password',
+                  isPassword: true,
+                  onChanged: model.changePassword,
+                ),
+                const SizedBox(height: 5.0),
+                const _PrivacyPolicyWidget(),
+                const SizedBox(height: 15.0),
+                // REGISTRATION BUTTON
+                Align(
+                  alignment: Alignment.center,
+                  child: MainButton(
+                    onPressed: () {
+                      FocusManager.instance.primaryFocus?.unfocus();
+                      model.onSignUpTapped(context);
+                    },
+                    title: 'Create account',
+                  ),
+                ),
+                const SizedBox(height: 15.0),
+                // LOG IN BUTTON
+                const Align(
+                  alignment: Alignment.center,
+                  child: _LogInButton(),
+                ),
+                Expanded(child: Container()),
+              ],
+            ),
           ),
         ),
       ),
@@ -148,8 +154,8 @@ class _PrivacyPolicyWidget extends StatelessWidget {
               onChanged: (value) {
                 model.changeTermsAcception(value ?? false);
               },
-              checkColor: AppColors.bg,
-              fillColor: MaterialStateProperty.all(AppColors.enabled),
+              checkColor: AppColors.enabled,
+              fillColor: MaterialStateProperty.all(AppColors.bg),
             ),
             RichText(
               text: TextSpan(

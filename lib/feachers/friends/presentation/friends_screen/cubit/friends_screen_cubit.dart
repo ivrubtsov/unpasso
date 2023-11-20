@@ -1,21 +1,26 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:goal_app/core/consts/achievements.dart';
 import 'package:goal_app/core/exceptions/exceptions.dart';
 import 'package:goal_app/core/widgets/error_presentor.dart';
 import 'package:goal_app/feachers/friends/domain/repos/friends_repo.dart';
 import 'package:goal_app/feachers/profile/data/models/profile_model/profile_model.dart';
 import 'package:goal_app/feachers/profile/domain/entities/profile.dart';
+import 'package:goal_app/feachers/profile/domain/repos/profile_repo.dart';
 
 part 'friends_screen_state.dart';
 
 class FriendsScreenCubit extends Cubit<FriendsScreenState> {
   FriendsScreenCubit({
     required FriendsRepo friendsRepo,
+    required ProfileRepo profileRepo,
   })  : _friendsRepo = friendsRepo,
+        _profileRepo = profileRepo,
         super(FriendsScreenState.initial());
 
   final FriendsRepo _friendsRepo;
+  final ProfileRepo _profileRepo;
 
 // FRIENDS PAGE INITIALIZATION
   void initFriendsScreen() async {
@@ -73,8 +78,24 @@ class FriendsScreenCubit extends Cubit<FriendsScreenState> {
       );
       final Map<String, dynamic> userData = await _friendsRepo.getFriendsData();
       processFriendsResponse(userData);
+
+      // final profile = await _profileRepo.getUserData();
+      final profileData = userData['profile'];
+      final profile = Profile(
+        id: profileData['id'],
+        name: profileData['name'],
+        userName: profileData['userName'],
+        avatar: profileData['avatar'],
+        achievements: profileData['achievements'],
+        rating: profileData['rating'],
+        isPaid: profileData['isPaid'],
+        friends: state.friendsIds,
+        friendsRequestsReceived: state.friendsRequestsReceivedIds,
+        friendsRequestsSent: state.friendsRequestsSentIds,
+      );
       emit(
         state.copyWith(
+          profile: profile,
           status: FriendsScreenStateStatus.ready,
           errorMessage: '',
         ),
@@ -93,6 +114,11 @@ class FriendsScreenCubit extends Cubit<FriendsScreenState> {
     try {
       final Map<String, dynamic> userData =
           await _friendsRepo.processRequest(profile, 'accept');
+      // Check and add achievements
+      // 14 'A request for a friendship is accepted',
+      if (!state.profile.achievements.contains(14)) {
+        newAchieve(14, context);
+      }
       processFriendsResponse(userData);
       return;
     } on ServerException {
@@ -132,6 +158,11 @@ class FriendsScreenCubit extends Cubit<FriendsScreenState> {
     try {
       final Map<String, dynamic> userData =
           await _friendsRepo.processRequest(profile, 'invite');
+      // Check and add achievements
+      // 15 'A request for a friendship is sent',
+      if (!state.profile.achievements.contains(15)) {
+        newAchieve(15, context);
+      }
       processFriendsResponse(userData);
       return;
     } on ServerException {
@@ -184,5 +215,42 @@ class FriendsScreenCubit extends Cubit<FriendsScreenState> {
 // REFRESH THE CURRENT TIME TO CALCULATE DELAY ON APP RESUME
   void setCurrentDateNow() {
     emit(state.copyWith(currentDate: DateTime.now()));
+  }
+
+// COUNTING THE NUMBER OF FRIENDS AND SHOWING ACHIEVEMENTS
+  void checkFriendsAchs(BuildContext context) {
+    // Check and add achievements
+    // 16 'Five friends',
+    if (!state.profile.achievements.contains(16) &&
+        state.friendsIds.length > 4) {
+      newAchieve(16, context);
+    }
+    // 17 'Football team: eleven friends',
+    if (!state.profile.achievements.contains(17) &&
+        state.friendsIds.length > 10) {
+      newAchieve(17, context);
+    }
+  }
+
+// ADD A NEW ACHIEVEMENT (SAVE THE LIST)
+  void newAchieve(int newAch, BuildContext context) async {
+    try {
+      var achs = state.profile.achievements;
+      if (achs.contains(newAch)) {
+        return;
+      }
+      achs.add(newAch);
+      await _profileRepo.setAchievements(achs);
+      Profile newProfile = state.profile;
+      newProfile.achievements = achs;
+      emit(state.copyWith(
+        profile: newProfile,
+      ));
+      Achievements.showAchieveModal(newAch, context);
+    } on ServerException {
+      emit(state.copyWith(status: FriendsScreenStateStatus.error));
+      ErrorPresentor.showError(
+          context, 'Unable to update achievements. Check internet connection');
+    }
   }
 }

@@ -16,7 +16,9 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -44,38 +46,53 @@ class ProfileScreen extends StatelessWidget {
           */
         ),
         backgroundColor: AppColors.profileBg,
-        body: Column(
+        body: const Column(
           children: [
             Expanded(
-              child: Column(
-                children: [
-                  const PersonalData(),
-                  const AchievementsView(),
-                  // Settings(),
-                  Container(
-                    height: 70.0,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20.0, vertical: 0.0),
-                    alignment: Alignment.center,
-                    child: Modal(
-                      buttonText: 'Delete account',
-                      title: 'Delete account',
-                      content:
-                          'Are you sure you want to erase your account and all the data associated with it?',
-                      buttonOkText: 'Yes, delete',
-                      buttonCancelText: 'Cancel',
-                      onPressedOk: () => context
-                          .read<ProfileScreenCubit>()
-                          .onDeleteAccountTapped(context),
-                      onPressedCancel: () => Navigator.pop(context),
-                    ),
-                  ),
-                ],
-              ),
+              child: ProfileScreenContent(),
             ),
-            const MegaMenu(active: 5),
+            MegaMenu(active: 5),
           ],
-        ));
+        ),
+      ),
+    );
+  }
+}
+
+class ProfileScreenContent extends StatelessWidget {
+  const ProfileScreenContent({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ProfileScreenCubit, ProfileScreenState>(
+        builder: (context, state) {
+      return Column(
+        children: [
+          const PersonalData(),
+          const AchievementsView(),
+          // Settings(),
+          Container(
+            height: 70.0,
+            padding:
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 0.0),
+            alignment: Alignment.center,
+            child: Modal(
+              buttonText: 'Delete account',
+              title: 'Delete account',
+              content:
+                  'Are you sure you want to erase your account and all the data associated with it?',
+              buttonOkText: 'Yes, delete',
+              buttonCancelText: 'Cancel',
+              onPressedOk: () => context
+                  .read<ProfileScreenCubit>()
+                  .onDeleteAccountTapped(context),
+              onPressedCancel: () => Navigator.pop(context),
+            ),
+          ),
+          ErrorMessage(message: state.errorMessage),
+        ],
+      );
+    });
   }
 }
 

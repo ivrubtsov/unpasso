@@ -12,68 +12,74 @@ class AuthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = context.read<AuthScreenCubit>();
-    return Scaffold(
-      backgroundColor: AppColors.altBg,
-      resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 30.0),
-              // HEADER
-              const Center(
-                child: Column(children: [
-                  Text(
-                    'Log In',
-                    style: AppFonts.header,
-                  ),
-                  Text(
-                    'First step towards a big goal',
-                    style: AppFonts.subHeader,
-                  ),
-                ]),
-              ),
-              const SizedBox(height: 30.0),
-              // FORM
-              // TEXT FIELD EMAIL
-              _TextField(
-                title: 'username',
-                hintText: 'Username',
-                onChanged: model.changeEmail,
-              ),
-              const SizedBox(height: 15.0),
-              // TEXT FIELD ПАРОЛЬ
-              _TextField(
-                title: 'password',
-                hintText: 'Password',
-                isPassword: true,
-                onChanged: model.changePassword,
-              ),
-              // FORGET PASSWORD BUTTON
-              // TODO: Implement forgot password
-              /*
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        backgroundColor: AppColors.altBg,
+        resizeToAvoidBottomInset: false,
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 30.0),
+                // HEADER
+                const Center(
+                  child: Column(children: [
+                    Text(
+                      'Log In',
+                      style: AppFonts.header,
+                    ),
+                    Text(
+                      'First step towards a big goal',
+                      style: AppFonts.subHeader,
+                    ),
+                  ]),
+                ),
+                const SizedBox(height: 30.0),
+                // FORM
+                // TEXT FIELD EMAIL
+                _TextField(
+                  title: 'username',
+                  hintText: 'Username',
+                  onChanged: model.changeEmail,
+                ),
+                const SizedBox(height: 15.0),
+                // TEXT FIELD ПАРОЛЬ
+                _TextField(
+                  title: 'password',
+                  hintText: 'Password',
+                  isPassword: true,
+                  onChanged: model.changePassword,
+                ),
+                // FORGET PASSWORD BUTTON
+                // TODO: Implement forgot password
+                /*
               const Align(
                 alignment: Alignment.centerRight,
                 child: _ForgotPasswordButton(),
               ),
               */
-              // const SizedBox(height: 20.0),
-              // LOGIN BUTTON
-              Align(
-                alignment: Alignment.center,
-                child: MainButton(
-                  onPressed: () => model.onLoginTapped(context),
-                  title: 'Log in',
+                const SizedBox(height: 20.0),
+                // LOGIN BUTTON
+                Align(
+                  alignment: Alignment.center,
+                  child: MainButton(
+                    onPressed: () {
+                      FocusManager.instance.primaryFocus?.unfocus();
+                      model.onLoginTapped(context);
+                    },
+                    title: 'Log in',
+                  ),
                 ),
-              ),
-              // SIGN UP BUTTON
-              const Center(
-                child: _SignUpButton(),
-              ),
-              Expanded(child: Container()),
-            ],
+                // SIGN UP BUTTON
+                const Center(
+                  child: _SignUpButton(),
+                ),
+                Expanded(child: Container()),
+              ],
+            ),
           ),
         ),
       ),

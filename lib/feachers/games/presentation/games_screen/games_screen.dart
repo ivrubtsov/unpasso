@@ -57,19 +57,26 @@ class GamesScreenContentState extends State<GamesScreenContent>
             child: CircularProgressIndicator(),
           );
         }
-        return const Column(
+        return Column(
           children: [
-            Expanded(
+            Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 0.0),
+                child: const Text(
+                  'To progress and complete your goals, you need strength and energy. Playing games with friends helps to replenish it. This game has cards with fun random tasks that you can do with friends and family.',
+                  style: AppFonts.funSubHeader,
+                )),
+            const Expanded(
               child: Align(
                 alignment: Alignment.topCenter,
                 child: Games(),
               ),
             ),
-            Padding(
+            const Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
               child: QuoteWidget(),
             ),
-            MegaMenu(active: 4),
+            const MegaMenu(active: 4),
           ],
         );
       },

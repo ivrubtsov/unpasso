@@ -25,18 +25,20 @@ class GoalScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: AppColors.bg,
-        elevation: 0,
-        title: const Text(
-          'My goals',
-          style: AppFonts.header,
-        ),
-        actions: const [
-          /*
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: AppColors.bg,
+          elevation: 0,
+          title: const Text(
+            'My goals',
+            style: AppFonts.header,
+          ),
+          actions: const [
+            /*
           IconButton(
             onPressed: () =>
                 context.read<GoalScreenCubit>().onProfileTapped(context),
@@ -44,16 +46,17 @@ class GoalScreen extends StatelessWidget {
             color: AppColors.headerIcon,
           )
           */
-        ],
-      ),
-      backgroundColor: AppColors.bg,
-      body: const Column(
-        children: [
-          Expanded(
-            child: GoalScreenContent(),
-          ),
-          MegaMenu(active: 3),
-        ],
+          ],
+        ),
+        backgroundColor: AppColors.bg,
+        body: const Column(
+          children: [
+            Expanded(
+              child: GoalScreenContent(),
+            ),
+            MegaMenu(active: 3),
+          ],
+        ),
       ),
     );
   }
@@ -110,8 +113,8 @@ class GoalScreenContentState extends State<GoalScreenContent>
   Widget build(BuildContext context) {
     return BlocBuilder<GoalScreenCubit, GoalScreenState>(
       builder: (context, state) {
+        final model = context.read<GoalScreenCubit>();
         if (state.currentDate.day != currentDate.day) {
-          final model = context.read<GoalScreenCubit>();
           model.getAllGoals();
           model.setSelectedDateToday();
         }
@@ -119,6 +122,8 @@ class GoalScreenContentState extends State<GoalScreenContent>
           return const Center(
             child: CircularProgressIndicator(),
           );
+        } else {
+          model.checkLikedGoalsAchs(context);
         }
         return Column(
           children: [
@@ -215,6 +220,7 @@ class DateButton extends StatelessWidget {
           final double winWidth = MediaQuery.of(context).size.width;
           return FloatingActionButton.small(
             onPressed: () {
+              FocusManager.instance.primaryFocus?.unfocus();
               model.setSelectedDate(goal.createdAt, winWidth);
             },
             backgroundColor: AppColors.dateBg,
@@ -297,21 +303,21 @@ class GoalsMainContainer extends StatelessWidget {
                           // CARD HEADER WITH A BUTTON
                           Row(
                             children: [
-                              Expanded(
+                              const Expanded(
                                 child: SizedBox(
-                                  child: TextButton(
-                                    onPressed: (() => FocusManager
-                                        .instance.primaryFocus
-                                        ?.unfocus()),
-                                    child: const Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        'Today',
-                                        style: AppFonts.goalHeader,
-                                        textAlign: TextAlign.left,
-                                      ),
+                                  // child: TextButton(
+                                  //   onPressed: (() => FocusManager
+                                  //       .instance.primaryFocus
+                                  //       ?.unfocus()),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'Today',
+                                      style: AppFonts.goalHeader,
+                                      textAlign: TextAlign.left,
                                     ),
                                   ),
+                                  // ),
                                 ),
                               ),
                               Align(
@@ -329,6 +335,8 @@ class GoalsMainContainer extends StatelessWidget {
                                         ))
                                     : OutlinedButton(
                                         onPressed: () {
+                                          FocusManager.instance.primaryFocus
+                                              ?.unfocus();
                                           model.submitGoal(context);
                                           // final id = state.goal.id;
                                           // final g = state.goal;
@@ -363,7 +371,7 @@ class GoalsMainContainer extends StatelessWidget {
                                                   RoundedRectangleBorder>(
                                               RoundedRectangleBorder(
                                                   borderRadius:
-                                                      BorderRadius.circular(15),
+                                                      BorderRadius.circular(20),
                                                   side: const BorderSide(
                                                       color:
                                                           AppColors.enabled))),
@@ -778,8 +786,9 @@ class AIGoalGenerator extends StatelessWidget {
             (state.goal.id == 0 || state.goal.id == null)) {
           return Container(
             padding:
-                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
-            height: 100.0,
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+            alignment: Alignment.topCenter,
+            height: 70.0,
             child: Center(
               child: OutlinedButton(
                 onPressed: () =>
@@ -789,19 +798,19 @@ class AIGoalGenerator extends StatelessWidget {
                       MaterialStateProperty.all(AppColors.goalGenerateBg),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(30),
                           side: const BorderSide(
                               color: AppColors.goalGenerateBg))),
                 ),
                 child: SizedBox(
-                  height: 70.0,
-                  width: 200.0,
+                  height: 50.0,
+                  //width: 200.0,
                   child: Row(
                     children: [
                       state.status == GoalScreenStateStatus.goalIsGenerating
                           ? Container(
-                              height: 64.0,
-                              width: 64.0,
+                              height: 32.0,
+                              width: 32.0,
                               alignment: Alignment.center,
                               child: const Center(
                                 child: CircularProgressIndicator(
@@ -810,7 +819,7 @@ class AIGoalGenerator extends StatelessWidget {
                               ))
                           : const Icon(
                               Icons.psychology,
-                              size: 64.0,
+                              size: 32.0,
                               color: AppColors.goalGenerateIcon,
                             ),
                       const SizedBox(

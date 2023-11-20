@@ -20,45 +20,48 @@ class FriendsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: AppColors.friendsBg,
-        elevation: 0,
-        title: const Text(
-          'My dear friends',
-          style: AppFonts.header,
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              //context.read<FriendsScreenCubit>().openSearchBar();
-              showSearch(
-                context: context,
-                delegate: FriendsSearchDelegate(
-                  /*
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: AppColors.friendsBg,
+          elevation: 0,
+          title: const Text(
+            'My dear friends',
+            style: AppFonts.header,
+          ),
+          actions: [
+            IconButton(
+              onPressed: () {
+                //context.read<FriendsScreenCubit>().openSearchBar();
+                showSearch(
+                  context: context,
+                  delegate: FriendsSearchDelegate(
+                    /*
                   (query) {
                     context.read<FriendsScreenCubit>().searchFriends(query);
                   },
                   */
-                  context.read<FriendsScreenCubit>(),
-                ),
-              );
-            },
-            icon: const Icon(Icons.search),
-            color: AppColors.headerIcon,
-          ),
-        ],
-      ),
-      backgroundColor: AppColors.friendsBg,
-      body: const Column(
-        children: [
-          Expanded(
-            child: FriendsScreenContent(),
-          ),
-          MegaMenu(active: 2),
-        ],
+                    context.read<FriendsScreenCubit>(),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.search),
+              color: AppColors.headerIcon,
+            ),
+          ],
+        ),
+        backgroundColor: AppColors.friendsBg,
+        body: const Column(
+          children: [
+            Expanded(
+              child: FriendsScreenContent(),
+            ),
+            MegaMenu(active: 2),
+          ],
+        ),
       ),
     );
   }
@@ -111,18 +114,28 @@ class FriendsSearchDelegate extends SearchDelegate {
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.data != null) {
           final sData = snapshot.data as List<Profile>;
-          return ListView.builder(
-            itemBuilder: (context, index) {
-              return FriendProfile(
-                profile: sData[index],
-                isFriend: false,
-                isRequest: false,
-                isSearch: true,
-                cubit: cubit,
-              );
-            },
-            itemCount: sData.length,
-          );
+          if (sData.isEmpty) {
+            return const Center(
+              child: Icon(
+                Icons.search,
+                color: AppColors.friendsSearchNotFoundIcon,
+                size: 200.0,
+              ),
+            );
+          } else {
+            return ListView.builder(
+              itemBuilder: (context, index) {
+                return FriendProfile(
+                  profile: sData[index],
+                  isFriend: false,
+                  isRequest: false,
+                  isSearch: true,
+                  cubit: cubit,
+                );
+              },
+              itemCount: sData.length,
+            );
+          }
         } else {
           return const Center(
             child: CircularProgressIndicator(),
@@ -191,6 +204,8 @@ class FriendsScreenContentState extends State<FriendsScreenContent>
           return const Center(
             child: CircularProgressIndicator(),
           );
+        } else {
+          model.checkFriendsAchs(context);
         }
         return Column(
           children: [
@@ -210,6 +225,33 @@ class FriendsScreenContentState extends State<FriendsScreenContent>
                         ? const Expanded(
                             flex: 2,
                             child: FriendsList(),
+                          )
+                        : Container(),
+                    (state.friendsRequestsReceived.isEmpty &&
+                            state.friends.isEmpty)
+                        ? Expanded(
+                            child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 20.0),
+                                child: Column(
+                                  children: [
+                                    Expanded(child: Container()),
+                                    const Text(
+                                      'Individually we can participate, but together we can win.',
+                                      style: AppFonts.friendsSearchHint,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    const SizedBox(
+                                      height: 10.0,
+                                    ),
+                                    const Text(
+                                      'Add friends and move towards the goal together!',
+                                      style: AppFonts.friendsSearchHint,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Expanded(child: Container())
+                                  ],
+                                )),
                           )
                         : Container(),
                   ],
@@ -488,15 +530,15 @@ class FriendProfileState extends State<FriendProfile> {
     });
   }
 
-  void _requestMe() {
-    widget.cubit.inviteFriend(profile, context);
+  void _requestMe(BuildContext parentContext) {
+    widget.cubit.inviteFriend(profile, parentContext);
     setState(() {
       isRequestSent = true;
     });
   }
 
-  void _acceptThem() {
-    widget.cubit.acceptRequest(profile, context);
+  void _acceptThem(BuildContext parentContext) {
+    widget.cubit.acceptRequest(profile, parentContext);
     setState(() {
       isRequestReceived = false;
       isFriend = true;
@@ -646,7 +688,7 @@ class FriendProfileState extends State<FriendProfile> {
                               width: 32.0,
                               child: Center(
                                 child: IconButton(
-                                  onPressed: () => _acceptThem(),
+                                  onPressed: () => _acceptThem(context),
                                   icon: const Icon(
                                     Icons.check_box,
                                     color: AppColors.friendsApprove,
@@ -662,7 +704,7 @@ class FriendProfileState extends State<FriendProfile> {
                               width: 32.0,
                               child: Center(
                                 child: IconButton(
-                                  onPressed: () => _requestMe(),
+                                  onPressed: () => _requestMe(context),
                                   icon: const Icon(
                                     Icons.person_add,
                                     color: AppColors.friendsInviteActive,
