@@ -20,45 +20,48 @@ class FriendsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: AppColors.friendsBg,
-        elevation: 0,
-        title: const Text(
-          'My dear friends',
-          style: AppFonts.header,
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              //context.read<FriendsScreenCubit>().openSearchBar();
-              showSearch(
-                context: context,
-                delegate: FriendsSearchDelegate(
-                  /*
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: AppColors.friendsBg,
+          elevation: 0,
+          title: const Text(
+            'My dear friends',
+            style: AppFonts.header,
+          ),
+          actions: [
+            IconButton(
+              onPressed: () {
+                //context.read<FriendsScreenCubit>().openSearchBar();
+                showSearch(
+                  context: context,
+                  delegate: FriendsSearchDelegate(
+                    /*
                   (query) {
                     context.read<FriendsScreenCubit>().searchFriends(query);
                   },
                   */
-                  context.read<FriendsScreenCubit>(),
-                ),
-              );
-            },
-            icon: const Icon(Icons.search),
-            color: AppColors.headerIcon,
-          ),
-        ],
-      ),
-      backgroundColor: AppColors.friendsBg,
-      body: const Column(
-        children: [
-          Expanded(
-            child: FriendsScreenContent(),
-          ),
-          MegaMenu(active: 2),
-        ],
+                    context.read<FriendsScreenCubit>(),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.search),
+              color: AppColors.headerIcon,
+            ),
+          ],
+        ),
+        backgroundColor: AppColors.friendsBg,
+        body: const Column(
+          children: [
+            Expanded(
+              child: FriendsScreenContent(),
+            ),
+            MegaMenu(active: 2),
+          ],
+        ),
       ),
     );
   }

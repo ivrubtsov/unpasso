@@ -155,7 +155,7 @@ class Achievements {
   ];
 
   static Widget getNewAchievement(int ach) {
-    if (ach == 23) {
+    if (ach == 22) {
       return Image.asset('assets/achievements/ach13_128.png');
     } else {
       return Icon(
@@ -167,7 +167,7 @@ class Achievements {
   }
 
   static Widget getActiveIcon(int ach) {
-    if (ach == 23) {
+    if (ach == 22) {
       return Image.asset('assets/achievements/ach13_64.png');
     } else {
       return Icon(
@@ -179,7 +179,7 @@ class Achievements {
   }
 
   static Widget getNonActiveIcon(int ach) {
-    if (ach == 23) {
+    if (ach == 22) {
       return Image.asset('assets/achievements/ach13_64_off.png');
     } else {
       return Icon(
@@ -199,9 +199,9 @@ class Achievements {
   }
 
   // SHOW MODAL WINDOW WITH AN ACHIEVEMENT
-  static void showAchieveModal(int ach, BuildContext parentContext) {
+  static void showAchieveModal(int ach, BuildContext context) {
     showModalBottomSheet<void>(
-      context: parentContext,
+      context: context,
       builder: (BuildContext context) {
         return Container(
           height: 300,
@@ -226,8 +226,7 @@ class Achievements {
                   Align(
                     alignment: Alignment.topRight,
                     child: IconButton(
-                        onPressed: () =>
-                            Navigator.of(context, rootNavigator: true).pop(),
+                        onPressed: () => Navigator.of(context).pop(),
                         icon: const Icon(Icons.close),
                         color: AppColors.achCloseIcon),
                   ),
