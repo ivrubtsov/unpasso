@@ -234,7 +234,8 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
   // ADD A NEW ACHIEVEMENT (SAVE THE LIST)
   void newAchieve(int newAch, BuildContext context) async {
     try {
-      var achs = state.profile.achievements;
+      List<int> achs;
+      achs = state.profile.achievements;
       if (achs.contains(newAch)) {
         return;
       }

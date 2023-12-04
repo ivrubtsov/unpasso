@@ -162,10 +162,13 @@ class PersonalDataState extends State<PersonalData> {
                                 Expanded(
                                   child: _TextField(
                                     title: 'name',
+                                    hintText: '',
                                     defaultValue: state.profile.name ??
                                         state.profile.userName ??
                                         '',
                                     onChanged: _changeNameText,
+                                    isPassword: false,
+                                    isUsername: false,
                                   ),
                                 ),
                                 const SizedBox(

@@ -11,7 +11,6 @@ class Goal {
   bool isExist;
   bool isPublic;
   bool isFriends;
-  List<int> friendsUsers;
   bool isPrivate;
   bool like;
   List<int> likeUsers;
@@ -32,7 +31,6 @@ class Goal {
     this.isExist = true,
     this.isPublic = false,
     this.isFriends = false,
-    this.friendsUsers = const [],
     this.isPrivate = true,
     this.like = false,
     this.likeUsers = const [],
@@ -54,7 +52,6 @@ class Goal {
     bool? isExist,
     bool? isPublic,
     bool? isFriends,
-    List<int>? friendsUsers,
     bool? isPrivate,
     bool? like,
     List<int>? likeUsers,
@@ -75,7 +72,6 @@ class Goal {
       isExist: isExist ?? this.isExist,
       isPublic: isPublic ?? this.isPublic,
       isFriends: isFriends ?? this.isFriends,
-      friendsUsers: friendsUsers ?? this.friendsUsers,
       isPrivate: isPrivate ?? this.isPrivate,
       like: like ?? this.like,
       likeUsers: likeUsers ?? this.likeUsers,
@@ -98,7 +94,6 @@ class Goal {
         isExist,
         isPublic,
         isFriends,
-        friendsUsers,
         isPrivate,
         like,
         likeUsers,

@@ -14,7 +14,6 @@ class GoalModel extends Goal {
     required bool isExist,
     bool? isPublic,
     bool? isFriends,
-    List<int>? friendsUsers,
     bool? isPrivate,
     bool? like,
     List<int>? likeUsers,
@@ -34,7 +33,6 @@ class GoalModel extends Goal {
           isExist: isExist,
           isPublic: isPublic ?? false,
           isFriends: isFriends ?? false,
-          friendsUsers: friendsUsers ?? [],
           isPrivate: isPrivate ?? true,
           like: like ?? false,
           likeUsers: likeUsers ?? [],
@@ -55,7 +53,6 @@ class GoalModel extends Goal {
         isExist: goal.isExist,
         isPublic: goal.isPublic,
         isFriends: goal.isFriends,
-        friendsUsers: goal.friendsUsers,
         isPrivate: goal.isPrivate,
         like: goal.like,
         likeUsers: goal.likeUsers,
@@ -72,7 +69,6 @@ class GoalModel extends Goal {
     bool checkIsAccepted;
     bool checkIsPublic;
     bool checkIsFriends;
-    List<int> friendsUsers;
     bool checkIsPrivate;
     String authorName;
     String authorUserName;
@@ -114,10 +110,8 @@ class GoalModel extends Goal {
         authorUserName = '';
         authorAvatar = 0;
         authorRating = 0;
-        friendsUsers = [];
         likeUsers = [];
       } else {
-        friendsUsers = [];
         likeUsers = [];
         if (description['authorUserName'] != null &&
             description['authorUserName'] != '') {
@@ -143,12 +137,6 @@ class GoalModel extends Goal {
         } else {
           authorRating = 0;
         }
-        if (description['friendsUsers'].isNotEmpty) {
-          final List<int> idsList = List<int>.from(description['friendsUsers']);
-          for (int user in idsList) {
-            friendsUsers.add(user);
-          }
-        }
         if (description['likeUsers'].isNotEmpty) {
           final List<int> idsList = List<int>.from(description['likeUsers']);
           for (int user in idsList) {
@@ -161,7 +149,6 @@ class GoalModel extends Goal {
       authorUserName = '';
       authorAvatar = 0;
       authorRating = 0;
-      friendsUsers = [];
       likeUsers = [];
     }
     if (id != null && likeUsers.contains(id)) {
@@ -180,7 +167,6 @@ class GoalModel extends Goal {
       isExist: true,
       isPublic: checkIsPublic,
       isFriends: checkIsFriends,
-      friendsUsers: friendsUsers,
       isPrivate: checkIsPrivate,
       like: like,
       likeUsers: likeUsers,
@@ -203,7 +189,6 @@ class GoalModel extends Goal {
       'authorUserName': authorUserName,
       'authorAvatar': authorAvatar,
       'authorRating': authorRating,
-      'friendsUsers': friendsUsers,
       'likeUsers': likeUsers,
       'likes': likeUsers.length,
     };

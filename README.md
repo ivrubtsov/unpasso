@@ -16,9 +16,12 @@ https://github.com/ivrubtsov/unpasso_server
 
 ## Current version
 
-3.737.2
+3.737.3
 
 ## Versions notes
+
+3.737.2
+The new improvements
 
 3.737.2
 Hi! There are several interface improvements based on Alexey Milchenko's feedback. Social achievements are added.
